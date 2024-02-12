@@ -49,7 +49,7 @@ public class QualityUtils {
      * @param bonus  Additional bonus to luck (i.e. higher chance for quality)
      */
     public static void applyQuality(final ItemStack stack, final Player player, float bonus) {
-        if (player.getLevel().isClientSide()) {
+        if (player.level().isClientSide()) {
             return;
         }
 
@@ -61,7 +61,7 @@ public class QualityUtils {
      * @param player The player whose random variable and luck stat is relevant
      */
     public static void applyQuality(final ItemStack stack, final Player player) {
-        if (player.getLevel().isClientSide()) {
+        if (player.level().isClientSide()) {
             return;
         }
 
@@ -73,7 +73,7 @@ public class QualityUtils {
      * @param livingEntity The entity whose random variable will be used
      */
     public static void applyQuality(final ItemStack stack, final LivingEntity livingEntity) {
-        if (livingEntity.getLevel().isClientSide()) {
+        if (livingEntity.level().isClientSide()) {
             return;
         }
 

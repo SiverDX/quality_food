@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ForgeEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleFishing(final ItemFishedEvent event) {
-        if (event.getEntity().getLevel().isClientSide()) {
+        if (event.getEntity().level().isClientSide()) {
             return;
         }
 
@@ -33,13 +33,13 @@ public class ForgeEvents {
         }
 
         float luck = attacker instanceof Player player ? player.getLuck() : 0;
-        RandomSource random = attacker instanceof LivingEntity livingAttacker ? livingAttacker.getRandom() : attacker.getLevel().getRandom();
+        RandomSource random = attacker instanceof LivingEntity livingAttacker ? livingAttacker.getRandom() : attacker.level().getRandom();
         event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), random, luck));
     }
 
     @SubscribeEvent
     public static void handleCrafting(final PlayerEvent.ItemCraftedEvent event) {
-        if (event.getEntity().getLevel().isClientSide()) {
+        if (event.getEntity().level().isClientSide()) {
             return;
         }
 

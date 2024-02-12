@@ -1,5 +1,6 @@
 {
   "values": [
+    "minecraft:sugar",
     "#forge:eggs",
     "#forge:crops",
     {
@@ -9,7 +10,6 @@
     {
       "id": "#forge:dough",
       "required": false
-    },
-    "minecraft:sugar"
+    }
   ]
 }
