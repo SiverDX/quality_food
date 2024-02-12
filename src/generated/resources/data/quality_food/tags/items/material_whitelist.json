@@ -1,0 +1,15 @@
+{
+  "values": [
+    "#forge:eggs",
+    "#forge:crops",
+    {
+      "id": "#farmersdelight:wild_crops",
+      "required": false
+    },
+    {
+      "id": "#forge:dough",
+      "required": false
+    },
+    "minecraft:sugar"
+  ]
+}

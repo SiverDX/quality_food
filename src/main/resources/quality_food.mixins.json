@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.cadentem.quality_food.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "quality_food.refmap.json",
+  "plugin": "de.cadentem.quality_food.mixin.ApplyMixinPlugin",
+  "mixins": [
+    "farmersdelight.CookingPotMenuMixin",
+    "farmersdelight.CuttingBoardBlockEntityMixin",
+    "farmersdelight.FeastBlockMixin",
+    "AbstractFurnaceMenuMixin",
+    "BlockMixin",
+    "CraftingMenuMixin",
+    "EntityMixin",
+    "ItemMixin",
+    "SweetBerryBushBlockMixin"
+  ],
+  "client": [
+    "client.ItemRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
