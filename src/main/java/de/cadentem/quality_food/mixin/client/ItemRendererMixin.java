@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.mixin.client;
 
+import de.cadentem.quality_food.util.OverlayUtils;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +20,7 @@ public abstract class ItemRendererMixin {
         }
 
         blitOffset += 100;
-        renderGuiItem(QualityUtils.getOverlay(stack), x, y);
+        renderGuiItem(OverlayUtils.getOverlay(stack), x, y);
         blitOffset -= 100;
     }
 

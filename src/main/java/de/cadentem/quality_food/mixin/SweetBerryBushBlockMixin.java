@@ -13,11 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class SweetBerryBushBlockMixin {
     @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/SweetBerryBushBlock;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"), index = 2)
     private ItemStack food_quality$applyQuality(final ItemStack stack, @Local(argsOnly = true) final Player player) {
-        if (player.getLevel().isClientSide()) {
-            return stack;
-        }
-
-        QualityUtils.applyQuality(stack, player.getRandom(), player.getLuck());
+        QualityUtils.applyQuality(stack, player);
         return stack;
     }
 }

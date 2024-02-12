@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.events;
 
 import de.cadentem.quality_food.util.QualityUtils;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,16 +21,20 @@ public class ForgeEvents {
             return;
         }
 
-        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop, event.getEntity().getRandom(), event.getEntity().getLuck()));
+        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop, event.getEntity()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleLoot(final LivingDropsEvent event) {
         Entity attacker = event.getSource().getEntity();
 
-        if (attacker instanceof LivingEntity livingAttacker) {
-            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker.getRandom(), livingAttacker instanceof Player player ? player.getLuck() : 0));
+        if (attacker == null) {
+            return;
         }
+
+        float luck = attacker instanceof Player player ? player.getLuck() : 0;
+        RandomSource random = attacker instanceof LivingEntity livingAttacker ? livingAttacker.getRandom() : attacker.getLevel().getRandom();
+        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), random, luck));
     }
 
     @SubscribeEvent
@@ -49,6 +54,6 @@ public class ForgeEvents {
             }
         }
 
-        QualityUtils.applyQuality(event.getCrafting(), event.getEntity().getRandom(), event.getEntity().getLuck() + qualityBonus);
+        QualityUtils.applyQuality(event.getCrafting(), event.getEntity(), qualityBonus);
     }
 }

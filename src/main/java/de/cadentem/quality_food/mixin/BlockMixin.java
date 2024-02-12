@@ -13,12 +13,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class BlockMixin {
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
     private static ItemStack food_quality$applyQuality(final ItemStack stack, /* Method arguments: */ final Level level) {
-        if (level.isClientSide()) {
-            return stack;
-        }
-
         if (stack.is(Items.GLOW_BERRIES)) {
-            QualityUtils.applyQuality(stack, level.getRandom());
+            QualityUtils.applyQuality(stack, level);
         }
 
         return stack;

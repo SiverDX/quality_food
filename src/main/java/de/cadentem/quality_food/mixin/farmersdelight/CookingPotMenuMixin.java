@@ -21,10 +21,6 @@ public abstract class CookingPotMenuMixin extends RecipeBookMenu<Container> {
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lvectorwing/farmersdelight/common/block/entity/container/CookingPotMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void food_quality$applyQuality(final Player player, int slot, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        if (player.getLevel().isClientSide()) {
-            return;
-        }
-
-        QualityUtils.applyQuality(stack, player.getRandom(), player.getLuck() + QualityUtils.getQualityBonus(slots, getResultSlotIndex()));
+        QualityUtils.applyQuality(stack, player, QualityUtils.getQualityBonus(slots, getResultSlotIndex()));
     }
 }
