@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin {
     @Inject(method = "tryRenderGuiItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;IIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItem(Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/client/resources/model/BakedModel;)V", shift = At.Shift.AFTER))
-    private void renderIcon(final LivingEntity entity, final ItemStack stack, int x, int y, int modelSeed, int blitOffset3D, final CallbackInfo callback) {
-        if (!QualityUtils.hasQuality(stack)) {
+    private void quality_food$renderIcon(final LivingEntity entity, final ItemStack stack, int x, int y, int modelSeed, int blitOffset3D, final CallbackInfo callback) {
+        if (!QualityUtils.hasQuality(stack) || OverlayUtils.isOverlay(stack)) {
             return;
         }
 

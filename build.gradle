@@ -20,7 +20,7 @@ apply plugin: 'org.spongepowered.mixin'
 version = minecraft_version + "-" + mod_version
 
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
+    mappings channel: mapping_channel, version: mapping_version
 
     copyIdeResources = true
 
