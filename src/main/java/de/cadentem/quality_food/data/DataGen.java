@@ -17,5 +17,6 @@ public class DataGen {
 
         generator.addProvider(event.includeServer(), new QFItemTags(generator, new BlockTagsProvider(generator, QualityFood.MODID, fileHelper), fileHelper));
         generator.addProvider(event.includeServer(), new QFLootModifiers(generator));
+        generator.addProvider(event.includeServer(), new QFEffectTags(generator, fileHelper));
     }
 }
