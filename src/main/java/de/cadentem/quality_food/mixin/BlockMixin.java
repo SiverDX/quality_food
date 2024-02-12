@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(Block.class)
 public class BlockMixin {
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
-    private static ItemStack applyRarity(final ItemStack stack, /* Method arguments: */ final Level level) {
+    private static ItemStack food_quality$applyQuality(final ItemStack stack, /* Method arguments: */ final Level level) {
         if (level.isClientSide()) {
             return stack;
         }
 
         if (stack.is(Items.GLOW_BERRIES)) {
-            RarityUtils.applyRarity(stack, level.getRandom());
+            QualityUtils.applyQuality(stack, level.getRandom());
         }
 
         return stack;

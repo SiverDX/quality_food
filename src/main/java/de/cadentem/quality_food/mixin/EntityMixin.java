@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class EntityMixin {
     @Inject(method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;<init>(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
-    private void applyRarity(final ItemStack stack, float offsetY, final CallbackInfoReturnable<ItemEntity> callback) {
+    private void food_quality$applyQuality(final ItemStack stack, float offsetY, final CallbackInfoReturnable<ItemEntity> callback) {
         if ((Object) this instanceof Chicken chicken && !chicken.getLevel().isClientSide() && stack.is(Tags.Items.EGGS)) {
-            RarityUtils.applyRarity(stack, chicken.getRandom());
+            QualityUtils.applyQuality(stack, chicken.getRandom());
         }
     }
 }

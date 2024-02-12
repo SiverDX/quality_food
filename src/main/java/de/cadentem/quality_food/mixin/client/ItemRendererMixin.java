@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin.client;
 
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ItemRendererMixin {
     @Inject(method = "tryRenderGuiItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;IIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderGuiItem(Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/client/resources/model/BakedModel;)V", shift = At.Shift.AFTER))
     private void renderIcon(final LivingEntity entity, final ItemStack stack, int x, int y, int modelSeed, int blitOffset3D, final CallbackInfo callback) {
-        if (!RarityUtils.hasRarity(stack)) {
+        if (!QualityUtils.hasQuality(stack)) {
             return;
         }
 
         blitOffset += 100;
-        renderGuiItem(RarityUtils.getOverlay(stack), x, y);
+        renderGuiItem(QualityUtils.getOverlay(stack), x, y);
         blitOffset -= 100;
     }
 

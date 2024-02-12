@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.events;
 
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ public class ForgeEvents {
             return;
         }
 
-        event.getDrops().forEach(drop -> RarityUtils.applyRarity(drop, event.getEntity().getRandom(), event.getEntity().getLuck()));
+        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop, event.getEntity().getRandom(), event.getEntity().getLuck()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -28,7 +28,7 @@ public class ForgeEvents {
         Entity attacker = event.getSource().getEntity();
 
         if (attacker instanceof LivingEntity livingAttacker) {
-            event.getDrops().forEach(drop -> RarityUtils.applyRarity(drop.getItem(), livingAttacker.getRandom(), livingAttacker instanceof Player player ? player.getLuck() : 0));
+            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker.getRandom(), livingAttacker instanceof Player player ? player.getLuck() : 0));
         }
     }
 
@@ -39,16 +39,16 @@ public class ForgeEvents {
         }
 
         int size = event.getInventory().getContainerSize();
-        float rarityBonus = 0;
+        float qualityBonus = 0;
 
         for (int slot = 0; slot < size; slot++) {
             ItemStack stack = event.getInventory().getItem(slot);
 
             if (stack != event.getCrafting()) {
-                rarityBonus += RarityUtils.getRarity(stack).ordinal() * 3;
+                qualityBonus += QualityUtils.getQuality(stack).ordinal() * 3;
             }
         }
 
-        RarityUtils.applyRarity(event.getCrafting(), event.getEntity().getRandom(), event.getEntity().getLuck() + rarityBonus);
+        QualityUtils.applyQuality(event.getCrafting(), event.getEntity().getRandom(), event.getEntity().getLuck() + qualityBonus);
     }
 }

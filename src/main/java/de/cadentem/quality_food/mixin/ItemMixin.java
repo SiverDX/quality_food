@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.mixin;
 
 import com.mojang.datafixers.util.Pair;
-import de.cadentem.quality_food.core.Rarity;
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -23,22 +23,22 @@ import java.util.List;
 public abstract class ItemMixin implements IForgeItem {
     /** Fallback for unsupported containers */
     @Inject(method = "onCraftedBy", at = @At("HEAD"))
-    private void affixItem(final ItemStack stack, final Level level, final Player player, final CallbackInfo callback) {
+    private void food_quality$applyQuality(final ItemStack stack, final Level level, final Player player, final CallbackInfo callback) {
         if (level.isClientSide()) {
             return;
         }
 
-        RarityUtils.applyRarity(stack, player.getRandom(), player.getLuck());
+        QualityUtils.applyQuality(stack, player.getRandom(), player.getLuck());
     }
 
     @Override
     public @Nullable FoodProperties getFoodProperties(final ItemStack stack, @Nullable final LivingEntity entity) {
         FoodProperties foodProperties = IForgeItem.super.getFoodProperties(stack, entity);
 
-        if (foodProperties != null && RarityUtils.hasRarity(stack)) {
-            Rarity rarity = RarityUtils.getRarity(stack);
-            int nutrition = (int) (foodProperties.getNutrition() * RarityUtils.getNutritionMultiplier(rarity));
-            float saturationModifier = (float) (foodProperties.getSaturationModifier() * RarityUtils.getSaturationMultiplier(rarity));
+        if (foodProperties != null && QualityUtils.hasQuality(stack)) {
+            Quality quality = QualityUtils.getQuality(stack);
+            int nutrition = (int) (foodProperties.getNutrition() * QualityUtils.getNutritionMultiplier(quality));
+            float saturationModifier = (float) (foodProperties.getSaturationModifier() * QualityUtils.getSaturationMultiplier(quality));
 
             FoodProperties.Builder builder = new FoodProperties.Builder();
             builder.nutrition(nutrition);

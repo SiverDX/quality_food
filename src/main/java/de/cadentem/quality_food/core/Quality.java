@@ -1,12 +1,12 @@
 package de.cadentem.quality_food.core;
 
-public enum Rarity {
+public enum Quality {
     NONE,
     IRON,
     GOLD,
     DIAMOND;
 
-    public static Rarity get(int ordinal) {
+    public static Quality get(int ordinal) {
         if (ordinal < 0 || ordinal >= values().length) {
             return NONE;
         }

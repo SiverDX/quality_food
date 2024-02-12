@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.CraftingMenu;
@@ -20,11 +20,11 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
     }
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/CraftingMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
-    private void applyRarity(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
+    private void food_quality$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
         if (player.getLevel().isClientSide()) {
             return;
         }
 
-        RarityUtils.applyRarity(stack, player.getRandom(), player.getLuck() + RarityUtils.getRarityBonus(slots, getResultSlotIndex()));
+        QualityUtils.applyQuality(stack, player.getRandom(), player.getLuck() + QualityUtils.getQualityBonus(slots, getResultSlotIndex()));
     }
 }

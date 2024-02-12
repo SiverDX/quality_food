@@ -2,7 +2,7 @@ package de.cadentem.quality_food.core.loot_modifiers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cadentem.quality_food.util.RarityUtils;
+import de.cadentem.quality_food.util.QualityUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +36,7 @@ public class HarvestLootModifier extends LootModifier {
         if (state.is(BlockTags.CROPS)) {
             Entity entity = context.hasParam(LootContextParams.THIS_ENTITY) ? context.getParam(LootContextParams.THIS_ENTITY) : null;
             float luck = entity instanceof Player player ? player.getLuck() : 0;
-            generatedLoot.stream().filter(stack -> stack.is(Tags.Items.CROPS)).forEach(stack -> RarityUtils.applyRarity(stack, context.getRandom(), luck));
+            generatedLoot.stream().filter(stack -> stack.is(Tags.Items.CROPS)).forEach(stack -> QualityUtils.applyQuality(stack, context.getRandom(), luck));
         }
 
         return generatedLoot;
