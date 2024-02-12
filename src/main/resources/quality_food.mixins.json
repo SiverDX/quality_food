@@ -9,6 +9,7 @@
     "farmersdelight.CookingPotMenuMixin",
     "farmersdelight.CuttingBoardBlockEntityMixin",
     "farmersdelight.FeastBlockMixin",
+    "farmersdelight.TextUtilsMixin",
     "AbstractFurnaceMenuMixin",
     "BlockMixin",
     "CraftingMenuMixin",
