@@ -14,8 +14,8 @@ public class QualityUtils {
     private static ItemStack GOLD_OVERLAY;
     private static ItemStack DIAMOND_OVERLAY;
 
-    public static final String STATE_QUALITY_TAG = "quality_crops_quality";
-    private static final String QUALITY_TAG = "quality_crops.quality";
+    public static final String STATE_QUALITY_TAG = "food_quality";
+    private static final String QUALITY_TAG = "food_quality.quality";
     private static final String HAS_QUALITY_KEY = "has_quality";
     private static final String QUALITY_KEY = "quality";
 
