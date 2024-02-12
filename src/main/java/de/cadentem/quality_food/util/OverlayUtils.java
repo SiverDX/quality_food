@@ -55,4 +55,8 @@ public class OverlayUtils {
             default -> ItemStack.EMPTY;
         };
     }
+
+    public static boolean isOverlay(final ItemStack stack) {
+        return stack == IRON_OVERLAY || stack == GOLD_OVERLAY || stack == DIAMOND_OVERLAY;
+    }
 }
