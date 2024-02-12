@@ -84,7 +84,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     /* --- Compatibility --- */
-    implementation fg.deobf("curse.maven:farmers-delight-398521:5051241") // 1.19.2 - 1.2.4
+    compileOnly fg.deobf("curse.maven:farmers-delight-398521:5051241") // 1.19.2 - 1.2.4
 
     /* --- Mixin Configuration --- */
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
