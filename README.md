@@ -12,3 +12,5 @@ Quality of items can impact the result of a newly crafted item (if said newly cr
 - the luck stat also improves the chance for (higher) quality
 
 ![Example](https://i.imgur.com/hUnpNUh.png)
+
+Credits for the quality icons go to https://twitter.com/concernedape
