@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[43,)"
+loaderVersion = "[46,)"
 license="${mod_license}"
 
 [[mods]]
@@ -16,13 +16,13 @@ itemIcon = "minecraft:cooked_chicken"
 [[dependencies.quality_food]]
 modId = "forge"
 mandatory = true
-versionRange = "[43,)"
+versionRange = "[46,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.quality_food]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.2,)"
+versionRange = "[1.20,)"
 ordering = "NONE"
 side = "BOTH"

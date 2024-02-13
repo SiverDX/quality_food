@@ -75,7 +75,7 @@ public class QualityUtils {
      * @param livingEntity The entity whose random variable will be used
      */
     public static void applyQuality(final ItemStack stack, final LivingEntity livingEntity, float bonus) {
-        if (livingEntity.getLevel().isClientSide()) {
+        if (livingEntity.level().isClientSide()) {
             return;
         }
 

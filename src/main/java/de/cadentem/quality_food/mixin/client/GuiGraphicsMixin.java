@@ -30,7 +30,7 @@ public abstract class GuiGraphicsMixin {
 
     @Unique
     private void quality_food$renderIcon(final LivingEntity entity, final Level level, final ItemStack stack, int x, int y, int seed, int guiOffset) {
-        if (!QualityUtils.hasQuality(stack)) {
+        if (!QualityUtils.hasQuality(stack) || OverlayUtils.isOverlay(stack)) {
             return;
         }
 

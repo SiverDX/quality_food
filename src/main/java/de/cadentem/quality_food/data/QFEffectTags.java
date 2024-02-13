@@ -1,26 +1,29 @@
 package de.cadentem.quality_food.data;
 
 import de.cadentem.quality_food.QualityFood;
-import net.minecraft.core.Registry;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeRegistryTagsProvider;
-import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QFEffectTags extends ForgeRegistryTagsProvider<MobEffect> {
-    public static final TagKey<MobEffect> BENEFICIAL_BLACKLIST = new TagKey<>(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(QualityFood.MODID, "beneficial_blacklist"));
-    public static final TagKey<MobEffect> HARMFUL_BLACKLIST = new TagKey<>(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(QualityFood.MODID, "harmful_blacklist"));
+import java.util.concurrent.CompletableFuture;
 
-    public QFEffectTags(final DataGenerator generator, @Nullable final ExistingFileHelper fileHelper) {
-        super(generator, ForgeRegistries.MOB_EFFECTS, QualityFood.MODID, fileHelper);
+public class QFEffectTags extends TagsProvider<MobEffect> {
+    public static final TagKey<MobEffect> BENEFICIAL_BLACKLIST = new TagKey<>(Registries.MOB_EFFECT, new ResourceLocation(QualityFood.MODID, "beneficial_blacklist"));
+    public static final TagKey<MobEffect> HARMFUL_BLACKLIST = new TagKey<>(Registries.MOB_EFFECT, new ResourceLocation(QualityFood.MODID, "harmful_blacklist"));
+
+    public QFEffectTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper fileHelper) {
+        super(output, Registries.MOB_EFFECT, provider, QualityFood.MODID, fileHelper);
     }
 
     @Override
-    protected void addTags() {
+    protected void addTags(@NotNull final HolderLookup.Provider provider) {
         tag(BENEFICIAL_BLACKLIST);
         tag(HARMFUL_BLACKLIST);
     }

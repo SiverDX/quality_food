@@ -15,6 +15,6 @@ public class DataGen {
 
         generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), fileHelper));
         generator.addProvider(event.includeServer(), new QFLootModifiers(generator.getPackOutput()));
-        generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), fileHelper));
+        generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), event.getLookupProvider(), fileHelper));
     }
 }
