@@ -1,6 +1,6 @@
 {
   "entries": [
-    "quality_food:harvest_loot_modifier"
+    "quality_food:block_loot_modifier"
   ],
   "replace": false
 }
