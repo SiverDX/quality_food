@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import vectorwing.farmersdelight.common.block.FeastBlock;
 
+/** Add support for the quality block state */
 @Mixin(FeastBlock.class)
 public class FeastBlockMixin {
     @Inject(method = "createBlockStateDefinition", at = @At(value = "TAIL"))

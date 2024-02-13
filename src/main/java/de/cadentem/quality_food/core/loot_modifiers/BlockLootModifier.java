@@ -17,18 +17,22 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
-public class HarvestLootModifier extends LootModifier {
-    public static final String ID = "harvest_loot_modifier";
-    public static final Codec<HarvestLootModifier> CODEC = RecordCodecBuilder.create(instance -> LootModifier.codecStart(instance).apply(instance, HarvestLootModifier::new));
+public class BlockLootModifier extends LootModifier {
+    public static final String ID = "block_loot_modifier";
+    public static final Codec<BlockLootModifier> CODEC = RecordCodecBuilder.create(instance -> LootModifier.codecStart(instance).apply(instance, BlockLootModifier::new));
 
-    public HarvestLootModifier(final LootItemCondition[] conditionsIn) {
+    public BlockLootModifier(final LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(final ObjectArrayList<ItemStack> generatedLoot, final LootContext context) {
-        BlockState state = context.hasParam(LootContextParams.BLOCK_STATE) ? context.getParam(LootContextParams.BLOCK_STATE) : null;
-        Quality quality = state != null && state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
+        if (generatedLoot.isEmpty() || !context.hasParam(LootContextParams.BLOCK_STATE)) {
+            return generatedLoot;
+        }
+
+        BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
+        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
 
         Entity entity = context.hasParam(LootContextParams.THIS_ENTITY) ? context.getParam(LootContextParams.THIS_ENTITY) : null;
         float luck = entity instanceof Player player ? player.getLuck() : 0;
