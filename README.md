@@ -1,7 +1,7 @@
 This mod adds quality to food and certain food-related material (e.g. crops)
 - Quality increases the nutrition and saturation food gives
 - It also increases the duration, level and probability of beneficial effects while decreasing those values for harmful ones
-  - Effects can be blacklisted from this behaviour with the effect tags `quality_food:beneficial_blacklist` and `quality_food:harmful_blacklist`
+  - Effects can be blacklisted from this behaviour with the mob effect tag `quality_food:blacklist`
 
 This does not introduce new items - the quality is based on item tags and should therefor be compatible with most items by default
 - There is a whitelist item tag to allow non-food items to gain quality: `quality_food:material_whitelist`, it contains:

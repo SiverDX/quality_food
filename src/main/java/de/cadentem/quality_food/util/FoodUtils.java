@@ -35,8 +35,7 @@ public class FoodUtils {
         List<Pair<MobEffectInstance, Float>> effects = original.getEffects();
 
         ITagManager<MobEffect> tagManager = Objects.requireNonNull(ForgeRegistries.MOB_EFFECTS.tags());
-        ITag<MobEffect> beneficialBlacklist = tagManager.getTag(QFEffectTags.BENEFICIAL_BLACKLIST);
-        ITag<MobEffect> harmfulBlacklist = tagManager.getTag(QFEffectTags.HARMFUL_BLACKLIST);
+        ITag<MobEffect> blacklist = tagManager.getTag(QFEffectTags.BLACKLIST);
 
         effects.forEach(effect -> {
             MobEffectInstance originalInstance = effect.getFirst();
@@ -46,14 +45,16 @@ public class FoodUtils {
             int amplifier = originalInstance.getAmplifier();
             float probability = effect.getSecond();
 
-            if (originalEffect.isBeneficial() && !beneficialBlacklist.contains(originalEffect)) {
-                duration = (int) (duration * getDurationMultiplier(quality));
-                amplifier = amplifier + getAmplifierAddition(quality);
-                probability = probability + getProbabilityMultiplier(quality);
-            } else if (originalEffect.getCategory() == MobEffectCategory.HARMFUL && !harmfulBlacklist.contains(originalEffect)) {
-                duration = (int) (duration / getDurationMultiplier(quality));
-                amplifier = amplifier - getAmplifierAddition(quality);
-                probability = probability - getProbabilityMultiplier(quality);
+            if (!blacklist.contains(originalEffect)) {
+                if (originalEffect.isBeneficial()) {
+                    duration = (int) (duration * getDurationMultiplier(quality));
+                    amplifier = amplifier + getAmplifierAddition(quality);
+                    probability = probability + getProbabilityMultiplier(quality);
+                } else if (originalEffect.getCategory() == MobEffectCategory.HARMFUL) {
+                    duration = (int) (duration / getDurationMultiplier(quality));
+                    amplifier = amplifier - getAmplifierAddition(quality);
+                    probability = probability - getProbabilityMultiplier(quality);
+                }
             }
 
             if (amplifier >= 0 && duration > 0) {
