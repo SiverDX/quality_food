@@ -1,6 +1,8 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
+import de.cadentem.quality_food.config.QualityConfig;
+import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFEffectTags;
 import net.minecraft.util.Mth;
@@ -21,7 +23,7 @@ public class FoodUtils {
     public static @NotNull FoodProperties calculateFoodProperties(final ItemStack stack, final FoodProperties original) {
         Quality quality = QualityUtils.getQuality(stack);
         int nutrition = (int) (original.getNutrition() * getNutritionMultiplier(quality));
-        float saturationModifier = (float) (original.getSaturationModifier() * getSaturationMultiplier(quality));
+        float saturationModifier = original.getSaturationModifier() * getSaturationMultiplier(quality);
 
         FoodProperties.Builder builder = new FoodProperties.Builder();
         builder.nutrition(nutrition);
@@ -46,17 +48,17 @@ public class FoodUtils {
 
             if (originalEffect.isBeneficial() && !beneficialBlacklist.contains(originalEffect)) {
                 duration = (int) (duration * getDurationMultiplier(quality));
-                amplifier = amplifier + quality.ordinal();
-                probability = probability + (quality.ordinal() / 10f);
+                amplifier = amplifier + getAmplifierAddition(quality);
+                probability = probability + getProbabilityMultiplier(quality);
             } else if (originalEffect.getCategory() == MobEffectCategory.HARMFUL && !harmfulBlacklist.contains(originalEffect)) {
                 duration = (int) (duration / getDurationMultiplier(quality));
-                amplifier = amplifier - quality.ordinal();
-                probability = probability - (quality.ordinal() / 10f);
+                amplifier = amplifier - getAmplifierAddition(quality);
+                probability = probability - getProbabilityMultiplier(quality);
             }
 
             if (amplifier >= 0 && duration > 0) {
                 int finalDuration = duration;
-                int finalAmplifier = amplifier;
+                int finalAmplifier = Math.min(255, amplifier);
                 builder.effect(() -> new MobEffectInstance(originalEffect, finalDuration, finalAmplifier), Mth.clamp(probability, 0, 1));
             }
         });
@@ -65,29 +67,52 @@ public class FoodUtils {
     }
 
     public static double getDurationMultiplier(final Quality quality) {
-        return switch (quality) {
-            case IRON -> 1.5;
-            case GOLD -> 2;
-            case DIAMOND -> 2.5;
-            default -> 1;
-        };
+        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (qualityConfig != null) {
+            return qualityConfig.durationMultiplier.get();
+        }
+
+        return QualityConfig.getDefaultDurationMultiplier(quality);
+    }
+
+    public static float getProbabilityMultiplier(final Quality quality) {
+        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (qualityConfig != null) {
+            return qualityConfig.probabilityAddition.get().floatValue();
+        }
+
+        return QualityConfig.getDefaultProbabilityAddition(quality);
+    }
+
+    public static int getAmplifierAddition(final Quality quality) {
+        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (qualityConfig != null) {
+            return qualityConfig.amplifierAddition.get();
+        }
+
+        return QualityConfig.getDefaultAmplifierAddition(quality);
     }
 
     public static double getNutritionMultiplier(final Quality quality) {
-        return switch (quality) {
-            case IRON -> 1.5;
-            case GOLD -> 2;
-            case DIAMOND -> 2.5;
-            default -> 1;
-        };
+        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (qualityConfig != null) {
+            return qualityConfig.nutritionMultiplier.get();
+        }
+
+        return QualityConfig.getDefaultNutritionMultiplier(quality);
     }
 
-    public static double getSaturationMultiplier(final Quality quality) {
-        return switch (quality) {
-            case IRON -> 1.25;
-            case GOLD -> 1.5;
-            case DIAMOND -> 1.75;
-            default -> 1;
-        };
+    public static float getSaturationMultiplier(final Quality quality) {
+        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (qualityConfig != null) {
+            return qualityConfig.saturationMultiplier.get().floatValue();
+        }
+
+        return (float) QualityConfig.getDefaultSaturationMultiplier(quality);
     }
 }

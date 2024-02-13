@@ -15,11 +15,7 @@ public class OverlayUtils {
 
         if (tag != null) {
             CompoundTag qualityTag = tag.getCompound(QualityUtils.QUALITY_TAG);
-            boolean hasQuality = qualityTag.getBoolean(QualityUtils.HAS_QUALITY_KEY);
-
-            if (hasQuality) {
-                return getOverlay(qualityTag.getInt(QualityUtils.QUALITY_KEY));
-            }
+            return getOverlay(qualityTag.getInt(QualityUtils.QUALITY_KEY));
         }
 
         return ItemStack.EMPTY;

@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
+import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.util.FoodUtils;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Item.class)
 public abstract class ItemMixin implements IForgeItem {
-    /**
-     * Fallback for unsupported containers
-     */
+    /** Fallback for unsupported containers */
     @Inject(method = "onCraftedBy", at = @At("HEAD"))
-    private void food_quality$applyQuality(final ItemStack stack, final Level level, final Player player, final CallbackInfo callback) {
-        QualityUtils.applyQuality(stack, player);
+    private void quality_food$applyQuality(final ItemStack stack, final Level level, final Player player, final CallbackInfo callback) {
+        if (ServerConfig.ENABLE_FALLBACK.get()) {
+            QualityUtils.applyQuality(stack, player);
+        }
     }
 
     @Override

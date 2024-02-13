@@ -3,6 +3,7 @@ package de.cadentem.quality_food.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -20,7 +21,7 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container>
     }
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractFurnaceMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
-    private void food_quality$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        QualityUtils.applyQuality(stack, player, QualityUtils.getQualityBonus(slots, getResultSlotIndex()));
+    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
+        QualityUtils.applyQuality(stack, player, QualityUtils.getQualityBonus(slots, slot -> !(slot.container instanceof Inventory)) /* Alternative would be to cache whatever was being cooked */ + 0.03f);
     }
 }

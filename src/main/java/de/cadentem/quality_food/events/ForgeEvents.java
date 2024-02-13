@@ -5,7 +5,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -47,11 +46,7 @@ public class ForgeEvents {
         float qualityBonus = 0;
 
         for (int slot = 0; slot < size; slot++) {
-            ItemStack stack = event.getInventory().getItem(slot);
-
-            if (stack != event.getCrafting()) {
-                qualityBonus += QualityUtils.getQuality(stack).ordinal() * 3;
-            }
+            qualityBonus += QualityUtils.getQuality(event.getInventory().getItem(slot)).ordinal();
         }
 
         QualityUtils.applyQuality(event.getCrafting(), event.getEntity(), qualityBonus);

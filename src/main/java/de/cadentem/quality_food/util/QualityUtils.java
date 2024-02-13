@@ -1,7 +1,8 @@
 package de.cadentem.quality_food.util;
 
+import de.cadentem.quality_food.config.QualityConfig;
+import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
-import de.cadentem.quality_food.data.QFItemTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
@@ -10,11 +11,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
 
 public class QualityUtils {
-    public static final String STATE_QUALITY_TAG = "food_quality";
-    public static final String QUALITY_TAG = "food_quality.quality";
-    public static final String HAS_QUALITY_KEY = "has_quality";
+    public static final String QUALITY_TAG = "quality_food";
     public static final String QUALITY_KEY = "quality";
 
     public static boolean hasQuality(final ItemStack stack) {
@@ -24,19 +26,19 @@ public class QualityUtils {
             return false;
         }
 
-        return stack.getTag().getCompound(QUALITY_TAG).getBoolean(HAS_QUALITY_KEY);
+        return stack.getTag().getCompound(QUALITY_TAG).getInt(QUALITY_KEY) != 0;
     }
 
     /**
-     * @param slots           Slots which may contain crafting materials with quality (will apply a bonus)
-     * @param resultSlotIndex The slot to ignore the quality of
+     * @param slots       Slots which may contain crafting materials with quality (will apply a bonus)
+     * @param isSlotValid To test whether the slot is relevant or not (since the list usually contains the inventory as well)
      */
-    public static float getQualityBonus(final NonNullList<Slot> slots, int resultSlotIndex) {
+    public static float getQualityBonus(final NonNullList<Slot> slots, final Predicate<Slot> isSlotValid) {
         float bonus = 0;
 
         for (Slot slot : slots) {
-            if (slot.getSlotIndex() != resultSlotIndex) {
-                bonus += QualityUtils.getQuality(slot.getItem()).ordinal() * 3;
+            if (isSlotValid.test(slot)) {
+                bonus += QualityUtils.getQuality(slot.getItem()).ordinal();
             }
         }
 
@@ -66,6 +68,18 @@ public class QualityUtils {
         }
 
         applyQuality(stack, player.getRandom(), player.getLuck());
+    }
+
+    /**
+     * @param stack        The item to apply quality to
+     * @param livingEntity The entity whose random variable will be used
+     */
+    public static void applyQuality(final ItemStack stack, final LivingEntity livingEntity, float bonus) {
+        if (livingEntity.getLevel().isClientSide()) {
+            return;
+        }
+
+        applyQuality(stack, livingEntity.getRandom(), bonus);
     }
 
     /**
@@ -103,18 +117,41 @@ public class QualityUtils {
     /**
      * @param stack  The item to apply quality to
      * @param random To calculate the chance
-     * @param luck   Increases the chance to roll quality
+     * @param bonus  Increases the chance to roll quality
      */
-    public static void applyQuality(final ItemStack stack, final RandomSource random, float luck) {
-        float luckBonus = luck / 100f;
-
-        if (random.nextFloat() <= 0.05f + luckBonus) {
-            applyQuality(stack, Quality.DIAMOND);
-        } else if (random.nextFloat() <= 0.15f + luckBonus) {
-            applyQuality(stack, Quality.GOLD);
-        } else if (random.nextFloat() <= 0.25f + luckBonus) {
-            applyQuality(stack, Quality.IRON);
+    public static void applyQuality(final ItemStack stack, final RandomSource random, float bonus) {
+        if (Utils.LAST_STACK.get() == stack) {
+            return;
         }
+
+        Utils.LAST_STACK.set(stack);
+
+        bonus = bonus / 100f;
+        float roll = random.nextFloat();
+
+        if (checkAndRoll(stack, roll, bonus, Quality.DIAMOND)) {
+            return;
+        }
+
+        if (checkAndRoll(stack, roll, bonus, Quality.GOLD)) {
+            return;
+        }
+
+        if (checkAndRoll(stack, roll, bonus, Quality.IRON)) {
+            return;
+        }
+    }
+
+    private static boolean checkAndRoll(final ItemStack stack, float roll, float bonus, final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+        float chance = config != null ? config.chance.get().floatValue() : QualityConfig.getDefaultChance(quality);
+
+        if (roll <= chance + bonus) {
+            applyQuality(stack, quality);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -122,31 +159,26 @@ public class QualityUtils {
      * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
      */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
-        if (quality == Quality.NONE || hasQuality(stack)) {
-            return;
-        }
-
-        if (stack.getFoodProperties(null) == null && !Utils.isFeastBlock(stack) && !stack.is(QFItemTags.MATERIAL_WHITELIST)) {
+        if (quality == Quality.NONE || hasQuality(stack) || !Utils.isValidItem(stack)) {
             return;
         }
 
         CompoundTag qualityTag = new CompoundTag();
-        qualityTag.putBoolean(HAS_QUALITY_KEY, true);
         qualityTag.putInt(QUALITY_KEY, quality.ordinal());
         CompoundTag tag = stack.getOrCreateTag();
         tag.put(QUALITY_TAG, qualityTag);
     }
 
-    public static Quality getQuality(final ItemStack stack) {
+    public static Quality getQuality(@Nullable final ItemStack stack) {
+        if (stack == null) {
+            return Quality.NONE;
+        }
+
         CompoundTag tag = stack.getTag();
 
         if (tag != null) {
             CompoundTag qualityTag = tag.getCompound(QUALITY_TAG);
-            boolean hasQuality = qualityTag.getBoolean(HAS_QUALITY_KEY);
-
-            if (hasQuality) {
-                return Quality.get(qualityTag.getInt(QUALITY_KEY));
-            }
+            return Quality.get(qualityTag.getInt(QUALITY_KEY));
         }
 
         return Quality.NONE;
