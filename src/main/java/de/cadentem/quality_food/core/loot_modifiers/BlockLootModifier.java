@@ -6,7 +6,6 @@ import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,14 +33,15 @@ public class BlockLootModifier extends LootModifier {
         BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
         Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
 
-        Entity entity = context.hasParam(LootContextParams.THIS_ENTITY) ? context.getParam(LootContextParams.THIS_ENTITY) : null;
-        float luck = entity instanceof Player player ? player.getLuck() : 0;
-
         generatedLoot.stream().filter(Utils::isValidItem).forEach(stack -> {
             if (quality != Quality.NONE) {
                 QualityUtils.applyQuality(stack, quality);
             } else {
-                QualityUtils.applyQuality(stack, context.getRandom(), luck);
+                if (context.hasParam(LootContextParams.THIS_ENTITY) && context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player) {
+                    QualityUtils.applyQuality(stack, player);
+                } else {
+                    QualityUtils.applyQuality(stack, context.getRandom());
+                }
             }
         });
 
