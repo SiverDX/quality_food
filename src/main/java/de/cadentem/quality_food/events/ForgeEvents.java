@@ -31,9 +31,11 @@ public class ForgeEvents {
             return;
         }
 
-        float luck = attacker instanceof Player player ? player.getLuck() : 0;
-        RandomSource random = attacker instanceof LivingEntity livingAttacker ? livingAttacker.getRandom() : attacker.getLevel().getRandom();
-        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), random, luck));
+        if (attacker instanceof Player player) {
+            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), player));
+        } else {
+            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), attacker instanceof LivingEntity livingAttacker ? livingAttacker.getRandom() : attacker.getLevel().getRandom()));
+        }
     }
 
     @SubscribeEvent

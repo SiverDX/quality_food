@@ -65,7 +65,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() / 100f + bonus);
+        applyQuality(stack, player.getRandom(), player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue() + bonus);
     }
 
     /**
@@ -77,7 +77,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() / 100f);
+        applyQuality(stack, player.getRandom(), player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue());
     }
 
     /**
