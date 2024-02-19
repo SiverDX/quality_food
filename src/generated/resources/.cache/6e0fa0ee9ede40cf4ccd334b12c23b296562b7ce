@@ -1,3 +1,2 @@
-// 1.20.1	2024-02-13T13:40:00.857691	Tags for minecraft:mob_effect mod id quality_food
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/quality_food/tags/mob_effect/beneficial_blacklist.json
-35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/quality_food/tags/mob_effect/harmful_blacklist.json
+// 1.20.1	2024-02-19T12:02:53.4601716	Tags for minecraft:mob_effect mod id quality_food
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/quality_food/tags/mob_effect/blacklist.json
