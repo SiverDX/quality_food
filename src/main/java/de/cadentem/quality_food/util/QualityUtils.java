@@ -7,7 +7,6 @@ import de.cadentem.quality_food.core.Quality;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -65,7 +64,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() / 100f + bonus);
+        applyQuality(stack, player.getRandom(), player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue() + bonus);
     }
 
     /**
@@ -77,7 +76,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() / 100f);
+        applyQuality(stack, player.getRandom(), player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue());
     }
 
     /**
