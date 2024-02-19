@@ -22,6 +22,6 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container>
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractFurnaceMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        QualityUtils.applyQuality(stack, player, QualityUtils.getQualityBonus(slots, slot -> !(slot.container instanceof Inventory)) /* Alternative would be to cache whatever was being cooked */ + 0.03f);
+        QualityUtils.applyQuality(stack, player, QualityUtils.getQualityBonus(slots, slot -> !(slot.container instanceof Inventory)) /* Alternative would be to cache whatever was being cooked */ + 0.1f);
     }
 }

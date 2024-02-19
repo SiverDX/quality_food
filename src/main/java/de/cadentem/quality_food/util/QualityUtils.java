@@ -47,7 +47,7 @@ public class QualityUtils {
 
         for (Slot slot : slots) {
             if (isSlotValid.test(slot)) {
-                bonus += QualityUtils.getQuality(slot.getItem()).ordinal();
+                bonus += getBonus(QualityUtils.getQuality(slot.getItem()));
             }
         }
 
@@ -192,6 +192,15 @@ public class QualityUtils {
 
         CompoundTag tag = stack.getOrCreateTag();
         tag.put(QUALITY_TAG, qualityTag);
+    }
+
+    public static float getBonus(final Quality quality) {
+        return switch (quality) {
+            case NONE -> 0;
+            case IRON -> 0.05f;
+            case GOLD -> 0.1f;
+            case DIAMOND -> 0.15f;
+        };
     }
 
     public static Quality getQuality(@Nullable final ItemStack stack) {

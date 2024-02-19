@@ -46,7 +46,7 @@ public class ForgeEvents {
         float qualityBonus = 0;
 
         for (int slot = 0; slot < size; slot++) {
-            qualityBonus += QualityUtils.getQuality(event.getInventory().getItem(slot)).ordinal();
+            qualityBonus += QualityUtils.getBonus(QualityUtils.getQuality(event.getInventory().getItem(slot)));
         }
 
         QualityUtils.applyQuality(event.getCrafting(), event.getEntity(), qualityBonus);
