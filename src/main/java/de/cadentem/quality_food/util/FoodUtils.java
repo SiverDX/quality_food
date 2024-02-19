@@ -32,18 +32,18 @@ public class FoodUtils {
         if (original.canAlwaysEat()) builder.alwaysEat();
         if (original.isFastFood()) builder.fast();
 
-        List<Pair<MobEffectInstance, Float>> effects = original.getEffects();
+        List<Pair<MobEffectInstance, Float>> originalEffects = original.getEffects();
 
         ITagManager<MobEffect> tagManager = Objects.requireNonNull(ForgeRegistries.MOB_EFFECTS.tags());
         ITag<MobEffect> blacklist = tagManager.getTag(QFEffectTags.BLACKLIST);
 
-        effects.forEach(effect -> {
-            MobEffectInstance originalInstance = effect.getFirst();
+        originalEffects.forEach(originalData -> {
+            MobEffectInstance originalInstance = originalData.getFirst();
             MobEffect originalEffect = originalInstance.getEffect();
 
             int duration = originalInstance.getDuration();
             int amplifier = originalInstance.getAmplifier();
-            float probability = effect.getSecond();
+            float probability = originalData.getSecond();
 
             if (!blacklist.contains(originalEffect)) {
                 if (originalEffect.isBeneficial()) {
@@ -63,6 +63,9 @@ public class FoodUtils {
                 builder.effect(() -> new MobEffectInstance(originalEffect, finalDuration, finalAmplifier), Mth.clamp(probability, 0, 1));
             }
         });
+
+        List<Pair<Double, MobEffectInstance>> effects = QualityUtils.getEffects(stack);
+        effects.forEach(data -> builder.effect(data::getSecond, data.getFirst().floatValue()));
 
         return builder.build();
     }
