@@ -1,11 +1,14 @@
 package de.cadentem.quality_food.util;
 
+import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -13,11 +16,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class QualityUtils {
     public static final String QUALITY_TAG = "quality_food";
     public static final String QUALITY_KEY = "quality";
+    public static final String EFFECT_TAG = "effects";
+    public static final String EFFECT_PROBABILITY_KEY = "chance";
+
+    private static final RandomSource RANDOM = RandomSource.create();
 
     public static boolean hasQuality(final ItemStack stack) {
         boolean hasTag = stack.getTag() != null && stack.getTag().get(QUALITY_TAG) != null;
@@ -165,6 +174,22 @@ public class QualityUtils {
 
         CompoundTag qualityTag = new CompoundTag();
         qualityTag.putInt(QUALITY_KEY, quality.ordinal());
+
+        if (stack.getFoodProperties(null) != null) {
+            QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+            ListTag effects = new ListTag();
+
+            config.getEffects().forEach(effect -> {
+                if (RANDOM.nextDouble() <= effect.chance()) {
+                    CompoundTag effectTag = new CompoundTag();
+                    effectTag.putDouble(EFFECT_PROBABILITY_KEY, effect.probability());
+                    effects.add(new MobEffectInstance(effect.effect(), effect.duration(), effect.amplifier()).save(effectTag));
+                }
+            });
+
+            qualityTag.put(EFFECT_TAG, effects);
+        }
+
         CompoundTag tag = stack.getOrCreateTag();
         tag.put(QUALITY_TAG, qualityTag);
     }
@@ -182,5 +207,28 @@ public class QualityUtils {
         }
 
         return Quality.NONE;
+    }
+
+    public static List<Pair<Double, MobEffectInstance>> getEffects(@Nullable final ItemStack stack) {
+        if (stack == null) {
+            return List.of();
+        }
+
+        List<Pair<Double, MobEffectInstance>> effects = new ArrayList<>();
+        CompoundTag tag = stack.getTag();
+
+        if (tag != null) {
+            ListTag effectList = tag.getCompound(QUALITY_TAG).getList(EFFECT_TAG, ListTag.TAG_COMPOUND);
+
+            for (int i = 0; i < effectList.size(); i++) {
+                CompoundTag effectTag = effectList.getCompound(i);
+                double probability = effectTag.getDouble(EFFECT_PROBABILITY_KEY);
+                MobEffectInstance effect = MobEffectInstance.load(effectTag);
+
+                effects.add(Pair.of(probability, effect));
+            }
+        }
+
+        return effects;
     }
 }
