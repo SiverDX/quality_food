@@ -7,6 +7,7 @@ import de.cadentem.quality_food.core.Quality;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,7 +65,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() + bonus);
+        applyQuality(stack, player.getRandom(), player.getLuck() / 100f + bonus);
     }
 
     /**
@@ -76,7 +77,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck());
+        applyQuality(stack, player.getRandom(), player.getLuck() / 100f);
     }
 
     /**
@@ -134,8 +135,6 @@ public class QualityUtils {
         }
 
         Utils.LAST_STACK.set(stack);
-
-        bonus = bonus / 100f;
         float roll = random.nextFloat();
 
         if (checkAndRoll(stack, roll, bonus, Quality.DIAMOND)) {
