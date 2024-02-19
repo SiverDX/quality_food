@@ -135,8 +135,6 @@ public class QualityUtils {
         }
 
         Utils.LAST_STACK.set(stack);
-
-        bonus = Mth.clamp(bonus, 0, 1);
         float roll = random.nextFloat();
 
         if (checkAndRoll(stack, roll, bonus, Quality.DIAMOND)) {
