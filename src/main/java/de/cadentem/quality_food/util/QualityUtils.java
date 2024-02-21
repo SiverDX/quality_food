@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.util;
 
-import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
@@ -16,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 
 public class QualityUtils {
@@ -134,17 +131,16 @@ public class QualityUtils {
         }
 
         Utils.LAST_STACK.set(stack);
-        float roll = random.nextFloat();
 
-        if (checkAndRoll(stack, roll, bonus, Quality.DIAMOND)) {
+        if (checkAndRoll(stack, random.nextFloat(), bonus, Quality.DIAMOND)) {
             return;
         }
 
-        if (checkAndRoll(stack, roll, bonus, Quality.GOLD)) {
+        if (checkAndRoll(stack, random.nextFloat(), bonus, Quality.GOLD)) {
             return;
         }
 
-        if (checkAndRoll(stack, roll, bonus, Quality.IRON)) {
+        if (checkAndRoll(stack, random.nextFloat(), bonus, Quality.IRON)) {
             return;
         }
     }
@@ -201,6 +197,17 @@ public class QualityUtils {
         };
     }
 
+    public static float getCookingBonus(final ItemStack stack) {
+        Quality quality = getQuality(stack);
+
+        return switch (quality) {
+            case NONE -> 0;
+            case IRON -> 1 / 128f;
+            case GOLD -> 1 / 64f;
+            case DIAMOND -> 1 / 32f;
+        };
+    }
+
     public static Quality getQuality(@Nullable final ItemStack stack) {
         if (stack == null) {
             return Quality.NONE;
@@ -216,26 +223,4 @@ public class QualityUtils {
         return Quality.NONE;
     }
 
-    public static List<Pair<Double, MobEffectInstance>> getEffects(@Nullable final ItemStack stack) {
-        if (stack == null) {
-            return List.of();
-        }
-
-        List<Pair<Double, MobEffectInstance>> effects = new ArrayList<>();
-        CompoundTag tag = stack.getTag();
-
-        if (tag != null) {
-            ListTag effectList = tag.getCompound(QUALITY_TAG).getList(EFFECT_TAG, ListTag.TAG_COMPOUND);
-
-            for (int i = 0; i < effectList.size(); i++) {
-                CompoundTag effectTag = effectList.getCompound(i);
-                double probability = effectTag.getDouble(EFFECT_PROBABILITY_KEY);
-                MobEffectInstance effect = MobEffectInstance.load(effectTag);
-
-                effects.add(Pair.of(probability, effect));
-            }
-        }
-
-        return effects;
-    }
 }

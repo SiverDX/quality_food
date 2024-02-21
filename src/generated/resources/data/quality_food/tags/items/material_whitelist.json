@@ -2,6 +2,7 @@
   "values": [
     "#forge:eggs",
     "#forge:crops",
+    "#forge:mushrooms",
     {
       "id": "#farmersdelight:wild_crops",
       "required": false

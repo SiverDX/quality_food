@@ -19,11 +19,9 @@ public class ServerConfig {
 
     public static Map<Integer, QualityConfig> QUALITY_CONFIG = new HashMap<>();
 
-    public static ForgeConfigSpec.BooleanValue ENABLE_FALLBACK;
     public static ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
 
     static {
-        ENABLE_FALLBACK = BUILDER.comment("Enable the fallback logic to apply quality to crafted items (this may lead to the quality of other input not being considered)").define("enable_fallback", false);
         LUCK_MULTIPLIER = BUILDER.comment("Determines by how much a single point of luck impacts the chance of quality (additive) (luck * <luck_multiplier>) (e.g. 5 * 0.03 = 15%)").defineInRange("luck_multiplier", 0.03d, 0f, 1f);
 
         for (Quality quality : Quality.values()) {

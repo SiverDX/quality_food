@@ -86,6 +86,9 @@ dependencies {
     /* --- Compatibility --- */
     implementation fg.deobf("curse.maven:farmers-delight-398521:5051241") // 1.19.2 - 1.2.4
 
+    /* --- Test --- */
+    implementation fg.deobf("curse.maven:appleskin-248787:3872808")
+
     /* --- Mixin Configuration --- */
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")) {

@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Block.class)
 public class BlockMixin {
+    /** Enable Cave Vines with Glow Berries to drop them with quality */
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
     private static ItemStack quality_food$applyQuality(final ItemStack stack, /* Method arguments: */ final Level level) {
         if (stack.is(Items.GLOW_BERRIES)) {
@@ -27,6 +28,7 @@ public class BlockMixin {
         return stack;
     }
 
+    /** Support for quality block state */
     @Inject(method = "createBlockStateDefinition", at = @At(value = "TAIL"))
     private void quality_food$addQualityProperty(final StateDefinition.Builder<Block, BlockState> builder, final CallbackInfo callback) {
         if (Utils.isValidBlock((Block) (Object) this)) {
@@ -34,6 +36,7 @@ public class BlockMixin {
         }
     }
 
+    /** Support for quality block state */
     @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
     private BlockState quality_food$setQualityState(final BlockState original, /* Method parameters: */ BlockPlaceContext context) {
         ItemStack itemInHand = context.getItemInHand();

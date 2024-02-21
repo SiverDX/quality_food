@@ -24,6 +24,7 @@ public class QFItemTags extends ItemTagsProvider {
         tag(MATERIAL_WHITELIST)
                 .addTag(Tags.Items.EGGS)
                 .addTag(Tags.Items.CROPS)
+                .addTag(Tags.Items.MUSHROOMS)
                 .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
                 .addOptionalTag(new ResourceLocation("forge", "dough"))
                 .add(Items.SUGAR);
