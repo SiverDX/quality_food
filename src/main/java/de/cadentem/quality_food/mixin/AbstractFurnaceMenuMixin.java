@@ -35,8 +35,8 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container>
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
         AtomicDouble bonus = new AtomicDouble(0);
 
-        if (quality_food$blockEntityPosition != null && !player.getLevel().isClientSide()) {
-            BlockEntity blockEntity = player.getLevel().getBlockEntity(quality_food$blockEntityPosition);
+        if (quality_food$blockEntityPosition != null && !player.level().isClientSide()) {
+            BlockEntity blockEntity = player.level().getBlockEntity(quality_food$blockEntityPosition);
             BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality()));
         }
 

@@ -25,7 +25,7 @@ public abstract class FurnaceResultSlotMixin extends Slot {
 
     @Inject(method = "checkTakeAchievements", at = @At(value = "RETURN"))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
-        if (player.getLevel().isClientSide()) {
+        if (player.level().isClientSide()) {
             return;
         }
 
