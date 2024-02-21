@@ -5,6 +5,8 @@ import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFEffectTags;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -14,13 +16,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class FoodUtils {
-    public static @NotNull FoodProperties calculateFoodProperties(final ItemStack stack, final FoodProperties original) {
+    public static @Nullable FoodProperties handleFoodProperties(final ItemStack stack, @Nullable final FoodProperties original) {
+        if (original == null || !QualityUtils.hasQuality(stack)) {
+            return original;
+        }
+
         Quality quality = QualityUtils.getQuality(stack);
         int nutrition = (int) (original.getNutrition() * getNutritionMultiplier(quality));
         float saturationModifier = original.getSaturationModifier() * getSaturationMultiplier(quality);
@@ -64,10 +71,33 @@ public class FoodUtils {
             }
         });
 
-        List<Pair<Double, MobEffectInstance>> effects = QualityUtils.getEffects(stack);
+        List<Pair<Double, MobEffectInstance>> effects = FoodUtils.getEffects(stack);
         effects.forEach(data -> builder.effect(data::getSecond, data.getFirst().floatValue()));
 
         return builder.build();
+    }
+
+    public static List<Pair<Double, MobEffectInstance>> getEffects(@Nullable final ItemStack stack) {
+        if (stack == null) {
+            return List.of();
+        }
+
+        List<Pair<Double, MobEffectInstance>> effects = new ArrayList<>();
+        CompoundTag tag = stack.getTag();
+
+        if (tag != null) {
+            ListTag effectList = tag.getCompound(QualityUtils.QUALITY_TAG).getList(QualityUtils.EFFECT_TAG, ListTag.TAG_COMPOUND);
+
+            for (int i = 0; i < effectList.size(); i++) {
+                CompoundTag effectTag = effectList.getCompound(i);
+                double probability = effectTag.getDouble(QualityUtils.EFFECT_PROBABILITY_KEY);
+                MobEffectInstance effect = MobEffectInstance.load(effectTag);
+
+                effects.add(Pair.of(probability, effect));
+            }
+        }
+
+        return effects;
     }
 
     public static double getDurationMultiplier(final Quality quality) {

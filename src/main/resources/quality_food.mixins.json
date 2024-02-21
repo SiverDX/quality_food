@@ -6,17 +6,22 @@
   "refmap": "quality_food.refmap.json",
   "plugin": "de.cadentem.quality_food.mixin.ApplyMixinPlugin",
   "mixins": [
+    "AbstractFurnaceBlockEntityMixin",
     "AbstractFurnaceMenuMixin",
     "BlockMixin",
     "CakeBlockMixin",
     "CandleCakeBlockMixin",
     "CraftingMenuMixin",
     "EntityMixin",
+    "FurnaceResultSlotMixin",
     "ItemMixin",
     "SweetBerryBushBlockMixin",
+    "farmersdelight.CookingPotBlockEntityMixin",
     "farmersdelight.CookingPotMenuMixin",
+    "farmersdelight.CookingPotResultSlotMixin",
     "farmersdelight.CuttingBoardBlockEntityMixin",
     "farmersdelight.FeastBlockMixin",
+    "farmersdelight.RiceRollMedleyBlockMixin",
     "farmersdelight.TextUtilsMixin"
   ],
   "client": [
