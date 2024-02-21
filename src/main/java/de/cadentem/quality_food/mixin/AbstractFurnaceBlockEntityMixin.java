@@ -3,6 +3,7 @@ package de.cadentem.quality_food.mixin;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -33,7 +34,7 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
 
     /** Increment quality after cooking an item */
     @Inject(method = "burn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private void quality_food$incrementQuality(final Recipe<?> recipe, final NonNullList<ItemStack> stacks, int stackSize, final CallbackInfoReturnable<Boolean> callback) {
+    private void quality_food$incrementQuality(final RegistryAccess access, final Recipe<?> recipe, final NonNullList<ItemStack> stacks, int stackSize, final CallbackInfoReturnable<Boolean> callback) {
         Utils.incrementQuality(this, stacks.get(0));
     }
 }
