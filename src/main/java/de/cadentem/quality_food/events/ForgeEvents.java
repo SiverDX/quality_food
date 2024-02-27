@@ -50,7 +50,7 @@ public class ForgeEvents {
     public static void handleLoot(final LivingDropsEvent event) {
         Entity attacker = event.getSource().getEntity();
 
-        if (attacker == null) {
+        if (attacker == null || /* Player death should not grant quality */ event.getEntity() instanceof Player) {
             return;
         }
 
