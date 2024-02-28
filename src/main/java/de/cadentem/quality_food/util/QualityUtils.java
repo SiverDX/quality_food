@@ -153,9 +153,7 @@ public class QualityUtils {
             return;
         }
 
-        if (checkAndRoll(stack, random.nextFloat(), bonus, Quality.IRON)) {
-            return;
-        }
+        checkAndRoll(stack, random.nextFloat(), bonus, Quality.IRON);
     }
 
     private static boolean checkAndRoll(final ItemStack stack, float roll, float bonus, final Quality quality) {

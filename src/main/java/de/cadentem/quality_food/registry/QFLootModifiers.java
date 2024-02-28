@@ -11,5 +11,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class QFLootModifiers {
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, QualityFood.MODID);
 
+    @SuppressWarnings("unused")
     public static final RegistryObject<Codec<QualityLootModifier>> QUALITY_LOOT_MODIFIER = LOOT_MODIFIERS.register(QualityLootModifier.ID, () -> QualityLootModifier.CODEC);
 }
