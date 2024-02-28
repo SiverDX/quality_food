@@ -103,6 +103,19 @@ public class QualityUtils {
     /**
      * @param stack The item to apply quality to
      * @param level To check for client side and usage of random
+     * @param bonus Bonus to quality chance
+     */
+    public static void applyQuality(final ItemStack stack, final Level level, float bonus) {
+        if (level.isClientSide()) {
+            return;
+        }
+
+        applyQuality(stack, level.getRandom(), bonus);
+    }
+
+    /**
+     * @param stack The item to apply quality to
+     * @param level To check for client side and usage of random
      */
     public static void applyQuality(final ItemStack stack, final Level level) {
         if (level.isClientSide()) {
