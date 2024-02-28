@@ -2,13 +2,11 @@ package de.cadentem.quality_food.core.loot_modifiers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -16,36 +14,33 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockLootModifier extends LootModifier {
-    public static final String ID = "block_loot_modifier";
-    public static final Codec<BlockLootModifier> CODEC = RecordCodecBuilder.create(instance -> LootModifier.codecStart(instance).apply(instance, BlockLootModifier::new));
+public class QualityLootModifier extends LootModifier {
+    public static final String ID = "quality_loot_modifier";
+    public static final Codec<QualityLootModifier> CODEC = RecordCodecBuilder.create(instance -> LootModifier.codecStart(instance).apply(instance, QualityLootModifier::new));
 
-    public BlockLootModifier(final LootItemCondition[] conditionsIn) {
+    public QualityLootModifier(final LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(final ObjectArrayList<ItemStack> generatedLoot, final LootContext context) {
-        if (generatedLoot.isEmpty() || !context.hasParam(LootContextParams.BLOCK_STATE)) {
+        if (generatedLoot.isEmpty() || !isValidLootTable(context)) {
             return generatedLoot;
         }
 
-        BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
-        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
-
         generatedLoot.stream().filter(Utils::isValidItem).forEach(stack -> {
-            if (quality != Quality.NONE) {
-                QualityUtils.applyQuality(stack, quality);
+            if (context.hasParam(LootContextParams.THIS_ENTITY) && context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player) {
+                QualityUtils.applyQuality(stack, player);
             } else {
-                if (context.hasParam(LootContextParams.THIS_ENTITY) && context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player) {
-                    QualityUtils.applyQuality(stack, player);
-                } else {
-                    QualityUtils.applyQuality(stack, context.getRandom());
-                }
+                QualityUtils.applyQuality(stack, context.getRandom());
             }
         });
 
         return generatedLoot;
+    }
+
+    private boolean isValidLootTable(final LootContext context) {
+        return context.getQueriedLootTableId().getPath().startsWith("chest");
     }
 
     @Override
