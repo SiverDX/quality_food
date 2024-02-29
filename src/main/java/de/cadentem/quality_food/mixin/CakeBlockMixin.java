@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.FoodUtils;
 import de.cadentem.quality_food.util.Utils;
@@ -19,12 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CakeBlockMixin {
     @ModifyArg(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private static int quality_food$modifyNutrition(int nutrition, @Local(argsOnly = true) final BlockState state) {
-        return (int) (nutrition * FoodUtils.getNutritionMultiplier(Quality.get(state.getValue(Utils.QUALITY_STATE))));
+        return (int) (nutrition * QualityConfig.getNutritionMultiplier(Quality.get(state.getValue(Utils.QUALITY_STATE))));
     }
 
     @ModifyArg(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private static float quality_food$modifySaturation(float saturation, @Local(argsOnly = true) final BlockState state) {
-        return saturation * FoodUtils.getSaturationMultiplier(Quality.get(state.getValue(Utils.QUALITY_STATE)));
+        return saturation * QualityConfig.getSaturationMultiplier(Quality.get(state.getValue(Utils.QUALITY_STATE)));
     }
 
     @Inject(method = "createBlockStateDefinition", at = @At(value = "TAIL"))

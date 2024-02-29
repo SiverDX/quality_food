@@ -5,12 +5,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class QualityConfig {
     public ForgeConfigSpec.DoubleValue chance;
+    public ForgeConfigSpec.DoubleValue chanceCropAddition;
 
     public ForgeConfigSpec.DoubleValue durationMultiplier;
     public ForgeConfigSpec.DoubleValue probabilityAddition;
@@ -48,7 +50,28 @@ public class QualityConfig {
         }
     }
 
-    public static float getDefaultChance(final Quality quality) {
+    public static float getChanceCropAddition(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.chanceCropAddition.get().floatValue();
+        }
+
+        return switch (quality) {
+            case IRON -> 0.20f;
+            case GOLD -> 0.40f;
+            case DIAMOND -> 0.60f;
+            default -> 0;
+        };
+    }
+
+    public static float getChance(final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.chance.get().floatValue();
+        }
+
         return switch (quality) {
             case IRON -> 0.15f;
             case GOLD -> 0.07f;
@@ -57,7 +80,13 @@ public class QualityConfig {
         };
     }
 
-    public static double getDefaultDurationMultiplier(final Quality quality) {
+    public static double getDurationMultiplier(final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.durationMultiplier.get();
+        }
+
         if (quality == Quality.NONE) {
             return 1;
         }
@@ -65,7 +94,13 @@ public class QualityConfig {
         return 1 + quality.ordinal() * 0.5;
     }
 
-    public static float getDefaultProbabilityAddition(final Quality quality) {
+    public static float getProbabilityAddition(final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.probabilityAddition.get().floatValue();
+        }
+
         if (quality == Quality.NONE) {
             return 0;
         }
@@ -73,7 +108,13 @@ public class QualityConfig {
         return quality.ordinal() / 10f;
     }
 
-    public static int getDefaultAmplifierAddition(final Quality quality) {
+    public static int getAmplifierAddition(final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.amplifierAddition.get();
+        }
+
         if (quality == Quality.NONE) {
             return 0;
         }
@@ -81,7 +122,13 @@ public class QualityConfig {
         return quality.ordinal();
     }
 
-    public static double getDefaultNutritionMultiplier(final Quality quality) {
+    public static double getNutritionMultiplier(final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.nutritionMultiplier.get();
+        }
+
         if (quality == Quality.NONE) {
             return 1;
         }
@@ -89,11 +136,17 @@ public class QualityConfig {
         return 1 + quality.ordinal() * 0.5;
     }
 
-    public static double getDefaultSaturationMultiplier(final Quality quality) {
+    public static float getSaturationMultiplier(final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+
+        if (config != null) {
+            return config.saturationMultiplier.get().floatValue();
+        }
+
         if (quality == Quality.NONE) {
             return 1;
         }
 
-        return 1 + quality.ordinal() * 0.25;
+        return 1 + quality.ordinal() * 0.25f;
     }
 }

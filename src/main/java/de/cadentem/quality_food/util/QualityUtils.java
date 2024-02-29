@@ -157,10 +157,7 @@ public class QualityUtils {
     }
 
     private static boolean checkAndRoll(final ItemStack stack, float roll, float bonus, final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
-        float chance = config != null ? config.chance.get().floatValue() : QualityConfig.getDefaultChance(quality);
-
-        if (roll <= chance + bonus) {
+        if (roll <= QualityConfig.getChance(quality) + bonus) {
             applyQuality(stack, quality);
             return true;
         }

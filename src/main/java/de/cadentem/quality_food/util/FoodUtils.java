@@ -2,7 +2,6 @@ package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.QualityConfig;
-import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFEffectTags;
 import net.minecraft.nbt.CompoundTag;
@@ -29,8 +28,8 @@ public class FoodUtils {
         }
 
         Quality quality = QualityUtils.getQuality(stack);
-        int nutrition = (int) (original.getNutrition() * getNutritionMultiplier(quality));
-        float saturationModifier = original.getSaturationModifier() * getSaturationMultiplier(quality);
+        int nutrition = (int) (original.getNutrition() * QualityConfig.getNutritionMultiplier(quality));
+        float saturationModifier = original.getSaturationModifier() * QualityConfig.getSaturationMultiplier(quality);
 
         FoodProperties.Builder builder = new FoodProperties.Builder();
         builder.nutrition(nutrition);
@@ -54,13 +53,13 @@ public class FoodUtils {
 
             if (!blacklist.contains(originalEffect)) {
                 if (originalEffect.isBeneficial()) {
-                    duration = (int) (duration * getDurationMultiplier(quality));
-                    amplifier = amplifier + getAmplifierAddition(quality);
-                    probability = probability + getProbabilityMultiplier(quality);
+                    duration = (int) (duration * QualityConfig.getDurationMultiplier(quality));
+                    amplifier = amplifier + QualityConfig.getAmplifierAddition(quality);
+                    probability = probability + QualityConfig.getProbabilityAddition(quality);
                 } else if (originalEffect.getCategory() == MobEffectCategory.HARMFUL) {
-                    duration = (int) (duration / getDurationMultiplier(quality));
-                    amplifier = amplifier - getAmplifierAddition(quality);
-                    probability = probability - getProbabilityMultiplier(quality);
+                    duration = (int) (duration / QualityConfig.getDurationMultiplier(quality));
+                    amplifier = amplifier - QualityConfig.getAmplifierAddition(quality);
+                    probability = probability - QualityConfig.getProbabilityAddition(quality);
                 }
             }
 
@@ -98,55 +97,5 @@ public class FoodUtils {
         }
 
         return effects;
-    }
-
-    public static double getDurationMultiplier(final Quality quality) {
-        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
-
-        if (qualityConfig != null) {
-            return qualityConfig.durationMultiplier.get();
-        }
-
-        return QualityConfig.getDefaultDurationMultiplier(quality);
-    }
-
-    public static float getProbabilityMultiplier(final Quality quality) {
-        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
-
-        if (qualityConfig != null) {
-            return qualityConfig.probabilityAddition.get().floatValue();
-        }
-
-        return QualityConfig.getDefaultProbabilityAddition(quality);
-    }
-
-    public static int getAmplifierAddition(final Quality quality) {
-        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
-
-        if (qualityConfig != null) {
-            return qualityConfig.amplifierAddition.get();
-        }
-
-        return QualityConfig.getDefaultAmplifierAddition(quality);
-    }
-
-    public static double getNutritionMultiplier(final Quality quality) {
-        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
-
-        if (qualityConfig != null) {
-            return qualityConfig.nutritionMultiplier.get();
-        }
-
-        return QualityConfig.getDefaultNutritionMultiplier(quality);
-    }
-
-    public static float getSaturationMultiplier(final Quality quality) {
-        QualityConfig qualityConfig = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
-
-        if (qualityConfig != null) {
-            return qualityConfig.saturationMultiplier.get().floatValue();
-        }
-
-        return (float) QualityConfig.getDefaultSaturationMultiplier(quality);
     }
 }
