@@ -32,12 +32,13 @@ public class ServerConfig {
             BUILDER.push(quality.name());
 
             QualityConfig config = new QualityConfig();
-            config.chance = BUILDER.comment("The chance for a quality to occur (with no luck or other bonus)").defineInRange("chance", QualityConfig.getDefaultChance(quality), 0, 1);
-            config.durationMultiplier = BUILDER.comment("By how much the duration of the effect will get multiplied (beneficial) or divided (harmful) for").defineInRange("duration_multiplier", QualityConfig.getDefaultDurationMultiplier(quality), 1, 100);
-            config.probabilityAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the probability (chance for the effect to apply)").defineInRange("probability_addition", QualityConfig.getDefaultProbabilityAddition(quality), 0, 1);
-            config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getDefaultAmplifierAddition(quality), 0, 255);
-            config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getDefaultNutritionMultiplier(quality), 1, 100);
-            config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getDefaultSaturationMultiplier(quality), 1, 100);
+            config.chance = BUILDER.comment("The chance for a quality to occur (with no luck or other bonus)").defineInRange("chance", QualityConfig.getChance(quality), 0, 1);
+            config.chanceCropAddition = BUILDER.comment("The bonus to the quality chance (additive) when harvesting a crop block with quality (i.e. a carrot with quality was planted and then harvested)").defineInRange("chance_crop_addition", QualityConfig.getChanceCropAddition(quality), 0, 1);
+            config.durationMultiplier = BUILDER.comment("By how much the duration of the effect will get multiplied (beneficial) or divided (harmful) for").defineInRange("duration_multiplier", QualityConfig.getDurationMultiplier(quality), 1, 100);
+            config.probabilityAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the probability (chance for the effect to apply)").defineInRange("probability_addition", QualityConfig.getProbabilityAddition(quality), 0, 1);
+            config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
+            config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
+            config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
             config.effectList = BUILDER.comment("List of effects this rarity can grant (<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
             QUALITY_CONFIG.put(quality.ordinal(), config);
             BUILDER.pop();
@@ -48,7 +49,7 @@ public class ServerConfig {
 
     @SubscribeEvent
     public static void reloadConfig(final ModConfigEvent event) {
-        if (event.getConfig().getSpec() == SPEC) {
+        if (event.getConfig().getSpec() == SPEC && /* Can not be the case when stopping the server? */ SPEC.isLoaded()) {
             QUALITY_CONFIG.values().forEach(QualityConfig::initializeEffects);
             QualityFood.LOG.info("Reloaded configuration");
         }

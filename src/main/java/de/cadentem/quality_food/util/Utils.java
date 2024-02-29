@@ -10,10 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CakeBlock;
-import net.minecraft.world.level.block.CandleCakeBlock;
-import net.minecraft.world.level.block.StemGrownBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -49,7 +46,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        boolean isValid = block instanceof StemGrownBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock;
+        boolean isValid = block instanceof CropBlock || block instanceof StemGrownBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock;
 
         if (isValid) {
             return true;

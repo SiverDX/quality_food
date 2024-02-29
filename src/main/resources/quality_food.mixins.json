@@ -12,6 +12,7 @@
     "CakeBlockMixin",
     "CandleCakeBlockMixin",
     "CraftingMenuMixin",
+    "CropBlockMixin",
     "EntityMixin",
     "FurnaceResultSlotMixin",
     "ItemMixin",
@@ -22,7 +23,8 @@
     "farmersdelight.CuttingBoardBlockEntityMixin",
     "farmersdelight.FeastBlockMixin",
     "farmersdelight.RiceRollMedleyBlockMixin",
-    "farmersdelight.TextUtilsMixin"
+    "farmersdelight.TextUtilsMixin",
+    "fastentitytransfer.CommonUtilsMixin"
   ],
   "client": [
     "client.GuiGraphicsMixin"
