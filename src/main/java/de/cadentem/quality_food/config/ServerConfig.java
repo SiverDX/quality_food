@@ -17,7 +17,7 @@ public class ServerConfig {
     public static ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static ForgeConfigSpec SPEC;
 
-    public static Map<Integer, QualityConfig> QUALITY_CONFIG = new HashMap<>();
+    public static Map<Quality, QualityConfig> QUALITY_CONFIG = new HashMap<>();
 
     public static ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
 
@@ -25,7 +25,7 @@ public class ServerConfig {
         LUCK_MULTIPLIER = BUILDER.comment("Determines by how much a single point of luck impacts the chance of quality (additive) (luck * <luck_multiplier>) (e.g. 5 * 0.03 = 15%)").defineInRange("luck_multiplier", 0.03d, 0f, 1f);
 
         for (Quality quality : Quality.values()) {
-            if (quality == Quality.NONE) {
+            if (quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED) {
                 continue;
             }
 
@@ -40,7 +40,7 @@ public class ServerConfig {
             config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
             config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
             config.effectList = BUILDER.comment("List of effects this rarity can grant (<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
-            QUALITY_CONFIG.put(quality.ordinal(), config);
+            QUALITY_CONFIG.put(quality, config);
             BUILDER.pop();
         }
 
@@ -84,11 +84,7 @@ public class ServerConfig {
                     return false;
                 }
 
-                if (isInvalidChance(/* Probability */ data[4])) {
-                    return false;
-                }
-
-                return true;
+                return !isInvalidChance(/* Probability */ data[4]);
             }
         }
 

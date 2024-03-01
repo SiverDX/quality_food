@@ -16,12 +16,12 @@ import vectorwing.farmersdelight.common.block.FeastBlock;
 public class FeastBlockMixin {
     @ModifyReturnValue(method = "getServingItem", at = @At("RETURN"), remap = false)
     private ItemStack quality_food$applyQualityToItem(final ItemStack stack, /* Method parameters: */ final BlockState state) {
-        QualityUtils.applyQuality(stack, Quality.get(state.getValue(Utils.QUALITY_STATE)));
+        QualityUtils.applyQuality(stack, Quality.getRaw(state.getValue(Utils.QUALITY_STATE)));
         return stack;
     }
 
     @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
     private BlockState quality_food$setQualityState(final BlockState original, /* Method parameters: */ final BlockPlaceContext context) {
-        return original.setValue(Utils.QUALITY_STATE, QualityUtils.getQuality(context.getItemInHand()).ordinal());
+        return original.setValue(Utils.QUALITY_STATE, QualityUtils.getPlacementQuality(context.getItemInHand()));
     }
 }

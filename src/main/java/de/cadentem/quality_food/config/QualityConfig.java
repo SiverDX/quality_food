@@ -51,7 +51,7 @@ public class QualityConfig {
     }
 
     public static float getChanceCropAddition(@NotNull final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.chanceCropAddition.get().floatValue();
@@ -65,8 +65,8 @@ public class QualityConfig {
         };
     }
 
-    public static float getChance(final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+    public static float getChance(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.chance.get().floatValue();
@@ -80,73 +80,57 @@ public class QualityConfig {
         };
     }
 
-    public static double getDurationMultiplier(final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+    public static double getDurationMultiplier(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.durationMultiplier.get();
         }
 
-        if (quality == Quality.NONE) {
-            return 1;
-        }
-
-        return 1 + quality.ordinal() * 0.5;
+        return 1 + quality.value() * 0.5;
     }
 
-    public static float getProbabilityAddition(final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+    public static float getProbabilityAddition(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.probabilityAddition.get().floatValue();
         }
 
-        if (quality == Quality.NONE) {
+        if (quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED) {
             return 0;
         }
 
-        return quality.ordinal() / 10f;
+        return quality.value() / 10f;
     }
 
-    public static int getAmplifierAddition(final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+    public static int getAmplifierAddition(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.amplifierAddition.get();
         }
 
-        if (quality == Quality.NONE) {
-            return 0;
-        }
-
-        return quality.ordinal();
+        return quality.value();
     }
 
-    public static double getNutritionMultiplier(final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+    public static double getNutritionMultiplier(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.nutritionMultiplier.get();
         }
 
-        if (quality == Quality.NONE) {
-            return 1;
-        }
-
-        return 1 + quality.ordinal() * 0.5;
+        return 1 + quality.value() * 0.5;
     }
 
-    public static float getSaturationMultiplier(final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+    public static float getSaturationMultiplier(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
         if (config != null) {
             return config.saturationMultiplier.get().floatValue();
         }
 
-        if (quality == Quality.NONE) {
-            return 1;
-        }
-
-        return 1 + quality.ordinal() * 0.25f;
+        return 1 + quality.value() * 0.25f;
     }
 }

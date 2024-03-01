@@ -170,15 +170,15 @@ public class QualityUtils {
      * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
      */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
-        if (quality == Quality.NONE || hasQuality(stack) || !Utils.isValidItem(stack)) {
+        if (!isValidQuality(quality) || hasQuality(stack) || !Utils.isValidItem(stack)) {
             return;
         }
 
         CompoundTag qualityTag = new CompoundTag();
-        qualityTag.putInt(QUALITY_KEY, quality.ordinal());
+        qualityTag.putInt(QUALITY_KEY, quality.value());
 
         if (stack.getFoodProperties(null) != null) {
-            QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality.ordinal());
+            QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
             ListTag effects = new ListTag();
 
             config.getEffects().forEach(effect -> {
@@ -198,10 +198,10 @@ public class QualityUtils {
 
     public static float getBonus(final Quality quality) {
         return switch (quality) {
-            case NONE -> 0;
             case IRON -> 0.05f;
             case GOLD -> 0.1f;
             case DIAMOND -> 0.15f;
+            default -> 0;
         };
     }
 
@@ -209,10 +209,10 @@ public class QualityUtils {
         Quality quality = getQuality(stack);
 
         return switch (quality) {
-            case NONE -> 0;
             case IRON -> 1 / 128f;
             case GOLD -> 1 / 64f;
             case DIAMOND -> 1 / 32f;
+            default -> 0;
         };
     }
 
@@ -231,4 +231,12 @@ public class QualityUtils {
         return Quality.NONE;
     }
 
+    public static int getPlacementQuality(@Nullable final ItemStack stack) {
+        Quality quality = getQuality(stack);
+        return quality != Quality.NONE ? quality.ordinal() : Quality.NONE_PLAYER_PLACED.ordinal();
+    }
+
+    public static boolean isValidQuality(final Quality quality) {
+        return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
+    }
 }
