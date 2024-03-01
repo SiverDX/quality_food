@@ -22,6 +22,7 @@ There is a configuration per quality - aside from some normal things you can als
 Non-food items can be made applicable to quality by adding them to the `quality_food:material_whitelist` item tag, by default it contains: 
 - `#forge:eggs`
 - `#forge:crops`
+- `#forge:mushrooms`
 - `#forge:dough`
 - `#farmersdelight:wild_crops`
 - `minecraft:sugar`
