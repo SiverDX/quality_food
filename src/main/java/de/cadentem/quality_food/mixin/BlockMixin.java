@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -78,14 +77,6 @@ public class BlockMixin {
         }
 
         return stack;
-    }
-
-    /** Support for quality block state */
-    @Inject(method = "createBlockStateDefinition", at = @At(value = "TAIL"))
-    private void quality_food$addQualityProperty(final StateDefinition.Builder<Block, BlockState> builder, final CallbackInfo callback) {
-        if (Utils.isValidBlock((Block) (Object) this)) {
-            builder.add(Utils.QUALITY_STATE);
-        }
     }
 
     /** Support for quality block state */
