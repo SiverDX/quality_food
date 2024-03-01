@@ -63,16 +63,20 @@ public class BlockMixin {
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Ljava/util/function/Supplier;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
     private static ItemStack quality_food$applyQuality(final ItemStack stack, /* Method arguments: */ final Level level) {
         DropData dropData = quality_food$storedData.get();
-        Quality quality = dropData != null && dropData.state().hasProperty(Utils.QUALITY_STATE) ? Quality.get(dropData.state().getValue(Utils.QUALITY_STATE)) : Quality.NONE;
-        float bonus = dropData != null ? dropData.bonus() : 0;
 
-        if (quality != Quality.NONE) {
-            if (dropData.state().getBlock() instanceof CropBlock) {
-                QualityUtils.applyQuality(stack, level, QualityConfig.getChanceCropAddition(quality));
-            } else {
-                QualityUtils.applyQuality(stack, quality);
-            }
-        } else {
+        if (dropData == null) {
+            QualityUtils.applyQuality(stack, level);
+            return stack;
+        }
+
+        Quality quality = dropData.state().hasProperty(Utils.QUALITY_STATE) ? Quality.getRaw(dropData.state().getValue(Utils.QUALITY_STATE)) : Quality.NONE;
+        float bonus = dropData.bonus();
+
+        if (dropData.state().getBlock() instanceof CropBlock crop && crop.isMaxAge(dropData.state())) {
+            QualityUtils.applyQuality(stack, level, bonus + QualityConfig.getChanceCropAddition(quality));
+        } else if (QualityUtils.isValidQuality(quality)) {
+            QualityUtils.applyQuality(stack, quality);
+        } else if (quality != Quality.NONE_PLAYER_PLACED) {
             QualityUtils.applyQuality(stack, level, bonus);
         }
 
@@ -85,7 +89,7 @@ public class BlockMixin {
         ItemStack itemInHand = context.getItemInHand();
 
         if (Utils.isValidBlock(original) && original.hasProperty(Utils.QUALITY_STATE)) {
-            return original.setValue(Utils.QUALITY_STATE, QualityUtils.getQuality(itemInHand).ordinal());
+            return original.setValue(Utils.QUALITY_STATE, QualityUtils.getPlacementQuality(itemInHand));
         }
 
         return original;

@@ -4,10 +4,10 @@ import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.Entity;
@@ -23,11 +23,13 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Mod.EventBusSubscriber
 public class ForgeEvents {
+    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
+
     @SubscribeEvent
     public static void handleRightClick(final PlayerInteractEvent.RightClickBlock event) {
         BlockPos position = event.getHitVec().getBlockPos();
@@ -87,7 +89,6 @@ public class ForgeEvents {
 
         if (foodProperties != null) {
             List<Pair<MobEffectInstance, Float>> effectData = foodProperties.getEffects();
-            List<Component> tooltipsToAdd = new ArrayList<>();
 
             for (Pair<MobEffectInstance, Float> data : effectData) {
                 MobEffectInstance effect = data.getFirst();
@@ -101,17 +102,13 @@ public class ForgeEvents {
                     effectTooltip = Component.translatable("potion.withDuration", effectTooltip, MobEffectUtil.formatDuration(effect, 1));
                 }
 
-                tooltipsToAdd.add(effectTooltip.withStyle(effect.getEffect().getCategory().getTooltipFormatting()));
-            }
+                ChatFormatting formatting = effect.getEffect().getCategory().getTooltipFormatting();
+                event.getToolTip().remove(effectTooltip.withStyle(formatting));
+                effectTooltip = Component.translatable("potion.withProbability", effectTooltip, FORMAT.format(data.getSecond() * 100) + "%").withStyle(formatting);
 
-            for (Component component : event.getToolTip()) {
-                if (component instanceof MutableComponent mutable && mutable.getContents() instanceof TranslatableContents translatable && (translatable.getKey().equals("potion.withDuration") || translatable.getKey().equals("potion.withAmplifier"))) {
-                    tooltipsToAdd.remove(mutable);
+                if (!event.getToolTip().contains(effectTooltip)) {
+                    event.getToolTip().add(effectTooltip);
                 }
-            }
-
-            for (Component effectTooltip : tooltipsToAdd) {
-                event.getToolTip().add(effectTooltip);
             }
         }
     }
