@@ -32,7 +32,7 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
-- Items should be generally fine
+- Items should generally be fine
 
 # Misc
 

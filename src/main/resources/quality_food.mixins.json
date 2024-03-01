@@ -16,6 +16,7 @@
     "EntityMixin",
     "FurnaceResultSlotMixin",
     "ItemMixin",
+    "StateDefinitionMixin",
     "SweetBerryBushBlockMixin",
     "farmersdelight.CookingPotBlockEntityMixin",
     "farmersdelight.CookingPotMenuMixin",
