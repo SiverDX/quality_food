@@ -46,10 +46,6 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        if (/* Default registry value */ block == Blocks.AIR) {
-            return false;
-        }
-
         boolean isValid = block instanceof CropBlock || block instanceof StemGrownBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock;
 
         if (isValid) {
