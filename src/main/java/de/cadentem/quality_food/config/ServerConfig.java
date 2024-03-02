@@ -2,6 +2,7 @@ package de.cadentem.quality_food.config;
 
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +28,7 @@ public class ServerConfig {
         CROP_TARGET_CHANCE = BUILDER.comment("The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>").defineInRange("crop_target_chance", 0.6d, 0, 1);
 
         for (Quality quality : Quality.values()) {
-            if (quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED) {
+            if (!QualityUtils.isValidQuality(quality) || quality == Quality.UNDEFINED) {
                 continue;
             }
 
