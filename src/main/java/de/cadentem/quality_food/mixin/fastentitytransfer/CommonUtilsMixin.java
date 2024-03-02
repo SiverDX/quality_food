@@ -4,6 +4,7 @@ import com.christofmeg.fastentitytransfer.CommonUtils;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.capability.BlockDataProvider;
+import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
@@ -21,7 +22,7 @@ public class CommonUtilsMixin {
 
         AtomicDouble bonus = new AtomicDouble(0);
         BlockDataProvider.getCapability(furnace).ifPresent(data -> bonus.set(data.useQuality()));
-        QualityUtils.applyQuality(output, furnace.getLevel(), bonus.floatValue());
+        QualityUtils.applyQuality(output, Bonus.additive(bonus.floatValue()));
         return output;
     }
 }

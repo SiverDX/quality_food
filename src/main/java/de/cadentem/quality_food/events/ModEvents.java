@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 public class ModEvents {
     public static void handleHarvestEvent(final HarvestWithEaseEvent.HarvestDrops event) {
         for (ItemStack stack : event.drops) {
-            QualityUtils.applyQuality(stack, event.getLevel(), event.getTargetBlock(), QualityUtils.getLuckBonus(event.getEntity()));
+            QualityUtils.applyQuality(stack, event.getTargetBlock(), event.getEntity());
         }
     }
 }

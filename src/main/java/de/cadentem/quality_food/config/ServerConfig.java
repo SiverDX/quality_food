@@ -20,9 +20,11 @@ public class ServerConfig {
     public static Map<Quality, QualityConfig> QUALITY_CONFIG = new HashMap<>();
 
     public static ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
+    public static ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
 
     static {
-        LUCK_MULTIPLIER = BUILDER.comment("Determines by how much a single point of luck impacts the chance of quality (additive) (luck * <luck_multiplier>) (e.g. 5 * 0.03 = 15%)").defineInRange("luck_multiplier", 0.03d, 0f, 1f);
+        LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
+        CROP_TARGET_CHANCE = BUILDER.comment("The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>").defineInRange("crop_target_chance", 0.6d, 0, 1);
 
         for (Quality quality : Quality.values()) {
             if (quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED) {
@@ -33,7 +35,6 @@ public class ServerConfig {
 
             QualityConfig config = new QualityConfig();
             config.chance = BUILDER.comment("The chance for a quality to occur (with no luck or other bonus)").defineInRange("chance", QualityConfig.getChance(quality), 0, 1);
-            config.chanceCropAddition = BUILDER.comment("The bonus to the quality chance (additive) when harvesting a crop block with quality (i.e. a carrot with quality was planted and then harvested)").defineInRange("chance_crop_addition", QualityConfig.getChanceCropAddition(quality), 0, 1);
             config.durationMultiplier = BUILDER.comment("By how much the duration of the effect will get multiplied (beneficial) or divided (harmful) for").defineInRange("duration_multiplier", QualityConfig.getDurationMultiplier(quality), 1, 100);
             config.probabilityAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the probability (chance for the effect to apply)").defineInRange("probability_addition", QualityConfig.getProbabilityAddition(quality), 0, 1);
             config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);

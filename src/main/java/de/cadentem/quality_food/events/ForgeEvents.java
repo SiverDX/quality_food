@@ -2,6 +2,7 @@ package de.cadentem.quality_food.events;
 
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.ClientConfig;
+import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -56,10 +57,8 @@ public class ForgeEvents {
             return;
         }
 
-        if (attacker instanceof Player player) {
-            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), player));
-        } else {
-            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), attacker instanceof LivingEntity livingAttacker ? livingAttacker.getRandom() : attacker.level().getRandom()));
+        if (attacker instanceof LivingEntity livingAttacker) {
+            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker));
         }
     }
 
@@ -70,13 +69,13 @@ public class ForgeEvents {
         }
 
         int size = event.getInventory().getContainerSize();
-        float qualityBonus = 0;
+        float bonus = 0;
 
         for (int slot = 0; slot < size; slot++) {
-            qualityBonus += QualityUtils.getBonus(QualityUtils.getQuality(event.getInventory().getItem(slot)));
+            bonus += QualityUtils.getBonus(QualityUtils.getQuality(event.getInventory().getItem(slot)));
         }
 
-        QualityUtils.applyQuality(event.getCrafting(), event.getEntity(), qualityBonus);
+        QualityUtils.applyQuality(event.getCrafting(), event.getEntity(), Bonus.additive(bonus));
     }
 
     @SubscribeEvent

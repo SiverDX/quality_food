@@ -2,17 +2,18 @@ package de.cadentem.quality_food.util;
 
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
+import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -58,113 +59,55 @@ public class QualityUtils {
         return bonus;
     }
 
-    /**
-     * @param stack  The item to apply quality to
-     * @param player The player whose random variable and luck stat is relevant
-     * @param bonus  Additional bonus to luck (i.e. higher chance for quality)
-     */
-    public static void applyQuality(final ItemStack stack, final Player player, float bonus) {
-        if (player.level().isClientSide()) {
-            return;
-        }
-
-        applyQuality(stack, player.getRandom(), getLuckBonus(player) + bonus);
+    public static void applyQuality(final ItemStack stack) {
+        applyQuality(stack, null, Bonus.DEFAULT);
     }
 
-    /**
-     * @param stack  The item to apply quality to
-     * @param player The player whose random variable and luck stat is relevant
-     */
-    public static void applyQuality(final ItemStack stack, final Player player) {
-        if (player.level().isClientSide()) {
-            return;
-        }
-
-        applyQuality(stack, player.getRandom(), getLuckBonus(player));
+    public static void applyQuality(final ItemStack stack, @NotNull final Bonus bonus) {
+        applyQuality(stack, null, bonus);
     }
 
-    /**
-     * @param stack        The item to apply quality to
-     * @param livingEntity The entity whose random variable will be used
-     */
-    public static void applyQuality(final ItemStack stack, final LivingEntity livingEntity, float bonus) {
-        if (livingEntity.level().isClientSide()) {
-            return;
-        }
-
-        applyQuality(stack, livingEntity.getRandom(), bonus);
+    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity) {
+        applyQuality(stack, entity, Bonus.DEFAULT);
     }
 
-    /**
-     * @param stack        The item to apply quality to
-     * @param livingEntity The entity whose random variable will be used
-     */
-    public static void applyQuality(final ItemStack stack, final LivingEntity livingEntity) {
-        if (livingEntity.level().isClientSide()) {
-            return;
-        }
-
-        applyQuality(stack, livingEntity.getRandom(), 0);
-    }
-
-    /**
-     * @param stack The item to apply quality to
-     * @param level To check for client side and usage of random
-     * @param bonus Bonus to quality chance
-     */
-    public static void applyQuality(final ItemStack stack, final Level level, float bonus) {
-        if (level.isClientSide()) {
-            return;
-        }
-
-        applyQuality(stack, level.getRandom(), bonus);
-    }
-
-    /**
-     * @param stack The item to apply quality to
-     * @param level To check for client side and usage of random
-     */
-    public static void applyQuality(final ItemStack stack, final Level level) {
-        if (level.isClientSide()) {
-            return;
-        }
-
-        applyQuality(stack, level.getRandom(), 0);
-    }
-
-    /**
-     * @param stack  The item to apply quality to
-     * @param random To calculate the chance
-     */
-    public static void applyQuality(final ItemStack stack, final RandomSource random) {
-        applyQuality(stack, random, 0);
-    }
-
-    /**
-     * @param stack  The item to apply quality to
-     * @param random To calculate the chance
-     * @param bonus  Increases the chance to roll quality
-     */
-    public static void applyQuality(final ItemStack stack, final RandomSource random, float bonus) {
+    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final Bonus bonus) {
         if (Utils.LAST_STACK.get() == stack) {
             return;
         }
 
         Utils.LAST_STACK.set(stack);
 
-        if (checkAndRoll(stack, random.nextFloat(), bonus, Quality.DIAMOND)) {
+        RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
+        double rolls = Math.max(1, entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 1);
+
+        if (checkAndRoll(stack, random, bonus, Quality.DIAMOND, rolls)) {
             return;
         }
 
-        if (checkAndRoll(stack, random.nextFloat(), bonus, Quality.GOLD)) {
+        if (checkAndRoll(stack, random, bonus, Quality.GOLD, rolls)) {
             return;
         }
 
-        checkAndRoll(stack, random.nextFloat(), bonus, Quality.IRON);
+        checkAndRoll(stack, random, bonus, Quality.IRON, rolls);
     }
 
-    private static boolean checkAndRoll(final ItemStack stack, float roll, float bonus, final Quality quality) {
-        if (roll <= QualityConfig.getChance(quality) + bonus) {
+    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final Bonus bonus, final Quality quality, double rolls) {
+        float chance = switch (bonus.type()) {
+            case ADDITIVE -> QualityConfig.getChance(quality) + bonus.amount();
+            case MULTIPLICATIVE -> QualityConfig.getChance(quality) * bonus.amount();
+        };
+
+        int fullRolls = (int) rolls;
+
+        for (int i = 0; i < fullRolls; i++) {
+            if (random.nextFloat() <= chance) {
+                applyQuality(stack, quality);
+                return true;
+            }
+        }
+
+        if (random.nextDouble() <= (rolls - fullRolls) && random.nextFloat() <= chance) {
             applyQuality(stack, quality);
             return true;
         }
@@ -203,15 +146,22 @@ public class QualityUtils {
         tag.put(QUALITY_TAG, qualityTag);
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final Level level, @NotNull final BlockState state, float bonus) {
+    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player) {
         Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
 
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
-            QualityUtils.applyQuality(stack, level, bonus + QualityConfig.getChanceCropAddition(quality));
+            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
+
+            if (targetChance > 0) {
+                float multiplier = targetChance / QualityConfig.getChance(quality);
+                QualityUtils.applyQuality(stack, player, Bonus.multiplicative(multiplier));
+            } else {
+                QualityUtils.applyQuality(stack, player);
+            }
         } else if (QualityUtils.isValidQuality(quality)) {
             QualityUtils.applyQuality(stack, quality);
         } else if (quality != Quality.NONE_PLAYER_PLACED) {
-            QualityUtils.applyQuality(stack, level, bonus);
+            QualityUtils.applyQuality(stack, player);
         }
     }
 
@@ -257,13 +207,5 @@ public class QualityUtils {
 
     public static boolean isValidQuality(final Quality quality) {
         return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
-    }
-
-    public static float getLuckBonus(final Player player) {
-        if (player == null) {
-            return 0;
-        }
-
-        return player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue();
     }
 }
