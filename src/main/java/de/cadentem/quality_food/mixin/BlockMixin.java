@@ -69,15 +69,15 @@ public class BlockMixin {
 
     /** Apply quality to block drops (not a loot modifier, so it also works for right-click harvesting) */
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Ljava/util/function/Supplier;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
-    private static ItemStack quality_food$applyQuality(final ItemStack stack, /* Method arguments: */ final Level level) {
+    private static ItemStack quality_food$applyQuality(final ItemStack stack /* Method arguments: */) {
         DropData dropData = quality_food$storedData.get();
 
         if (dropData == null) {
-            QualityUtils.applyQuality(stack, level);
+            QualityUtils.applyQuality(stack);
             return stack;
         }
 
-        QualityUtils.applyQuality(stack, level, dropData.state(), dropData.bonus());
+        QualityUtils.applyQuality(stack, dropData.state(), dropData.player());
         return stack;
     }
 

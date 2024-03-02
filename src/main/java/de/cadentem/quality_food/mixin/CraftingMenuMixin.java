@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -22,6 +23,6 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/CraftingMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        QualityUtils.applyQuality(stack, player, QualityUtils.getQualityBonus(slots, slot -> slot.container instanceof CraftingContainer));
+        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(slots, slot -> slot.container instanceof CraftingContainer)));
     }
 }

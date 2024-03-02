@@ -3,6 +3,7 @@ package de.cadentem.quality_food.mixin;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.capability.BlockDataProvider;
+import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -40,7 +41,7 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container>
             BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality()));
         }
 
-        QualityUtils.applyQuality(stack, player, bonus.floatValue());
+        QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/inventory/MenuType;Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/inventory/RecipeBookType;ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/Container;Lnet/minecraft/world/inventory/ContainerData;)V", at = @At("RETURN"))

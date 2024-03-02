@@ -12,7 +12,6 @@ import java.util.List;
 
 public class QualityConfig {
     public ForgeConfigSpec.DoubleValue chance;
-    public ForgeConfigSpec.DoubleValue chanceCropAddition;
 
     public ForgeConfigSpec.DoubleValue durationMultiplier;
     public ForgeConfigSpec.DoubleValue probabilityAddition;
@@ -50,21 +49,6 @@ public class QualityConfig {
         }
     }
 
-    public static float getChanceCropAddition(@NotNull final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
-
-        if (config != null) {
-            return config.chanceCropAddition.get().floatValue();
-        }
-
-        return switch (quality) {
-            case IRON -> 0.20f;
-            case GOLD -> 0.40f;
-            case DIAMOND -> 0.60f;
-            default -> 0;
-        };
-    }
-
     public static float getChance(@NotNull final Quality quality) {
         QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
 
@@ -73,9 +57,9 @@ public class QualityConfig {
         }
 
         return switch (quality) {
-            case IRON -> 0.15f;
-            case GOLD -> 0.07f;
-            case DIAMOND -> 0.03f;
+            case IRON -> 0.10f;
+            case GOLD -> 0.03f;
+            case DIAMOND -> 0.005f;
             default -> 0;
         };
     }
