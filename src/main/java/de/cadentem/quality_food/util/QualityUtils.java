@@ -152,7 +152,7 @@ public class QualityUtils {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
 
-            if (targetChance > 0) {
+            if (targetChance > 0 && quality.level() > 0) {
                 float multiplier = targetChance / QualityConfig.getChance(quality);
                 QualityUtils.applyQuality(stack, player, Bonus.multiplicative(multiplier));
             } else {
