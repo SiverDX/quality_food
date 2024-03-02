@@ -4,9 +4,12 @@ import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.capability.BlockData;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
+import de.cadentem.quality_food.events.ForgeEvents;
+import de.cadentem.quality_food.events.ModEvents;
 import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.registry.QFItems;
 import de.cadentem.quality_food.registry.QFLootModifiers;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,6 +38,10 @@ public class QualityFood {
         QFItems.ITEMS.register(modEventBus);
         QFLootModifiers.LOOT_MODIFIERS.register(modEventBus);
 
+        if (isModLoaded(HARVEST_WITH_EASE)) {
+            MinecraftForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);
+        }
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
     }
@@ -62,4 +69,5 @@ public class QualityFood {
     }
 
     public static final String FARMERSDELIGHT = "farmersdelight";
+    public static final String HARVEST_WITH_EASE = "harvestwithease";
 }

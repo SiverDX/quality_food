@@ -15,7 +15,7 @@ import vectorwing.farmersdelight.common.block.entity.CuttingBoardBlockEntity;
 public abstract class CuttingBoardBlockEntityMixin {
     @ModifyArg(method = "lambda$processStoredItemUsingTool$2", at = @At(value = "INVOKE", target = "Lvectorwing/farmersdelight/common/utility/ItemUtils;spawnItemEntity(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;DDDDDD)V"), index = 1)
     private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final Player player) {
-        QualityUtils.applyQuality(stack, player, QualityUtils.getQuality(getStoredItem()).value() * 0.25f);
+        QualityUtils.applyQuality(stack, player, QualityUtils.getQuality(getStoredItem()).level() * 0.25f);
         return stack;
     }
 

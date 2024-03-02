@@ -73,6 +73,8 @@ dependencies {
     /* --- Compatibility --- */
     implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.20.1 - 1.2.4
     implementation fg.deobf("curse.maven:fastentitytransfer-828407:5071614") // 1.20.1 - 1.2.2
+    implementation fg.deobf("curse.maven:harvest-with-ease-602171:5030334") // 1.20.1 - 8.0.1.0
+    implementation fg.deobf("curse.maven:jade-324717:5072729") // 1.19.2 - 11.8.0
 
     /* --- Test --- */
 //    implementation fg.deobf("curse.maven:appleskin-248787:3872808")

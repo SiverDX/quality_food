@@ -87,7 +87,7 @@ public class QualityConfig {
             return config.durationMultiplier.get();
         }
 
-        return 1 + quality.value() * 0.5;
+        return 1 + quality.level() * 0.5;
     }
 
     public static float getProbabilityAddition(@NotNull final Quality quality) {
@@ -101,7 +101,7 @@ public class QualityConfig {
             return 0;
         }
 
-        return quality.value() / 10f;
+        return quality.level() / 10f;
     }
 
     public static int getAmplifierAddition(@NotNull final Quality quality) {
@@ -111,7 +111,7 @@ public class QualityConfig {
             return config.amplifierAddition.get();
         }
 
-        return quality.value();
+        return quality.level();
     }
 
     public static double getNutritionMultiplier(@NotNull final Quality quality) {
@@ -121,7 +121,7 @@ public class QualityConfig {
             return config.nutritionMultiplier.get();
         }
 
-        return 1 + quality.value() * 0.5;
+        return 1 + quality.level() * 0.5;
     }
 
     public static float getSaturationMultiplier(@NotNull final Quality quality) {
@@ -131,6 +131,6 @@ public class QualityConfig {
             return config.saturationMultiplier.get().floatValue();
         }
 
-        return 1 + quality.value() * 0.25f;
+        return 1 + quality.level() * 0.25f;
     }
 }
