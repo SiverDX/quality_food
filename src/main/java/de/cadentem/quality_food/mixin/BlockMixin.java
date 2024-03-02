@@ -1,8 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import de.cadentem.quality_food.config.QualityConfig;
-import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
@@ -13,7 +11,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -80,17 +77,7 @@ public class BlockMixin {
             return stack;
         }
 
-        Quality quality = dropData.state().hasProperty(Utils.QUALITY_STATE) ? Quality.getRaw(dropData.state().getValue(Utils.QUALITY_STATE)) : Quality.NONE;
-        float bonus = dropData.bonus();
-
-        if (dropData.state().getBlock() instanceof CropBlock crop && crop.isMaxAge(dropData.state())) {
-            QualityUtils.applyQuality(stack, level, bonus + QualityConfig.getChanceCropAddition(quality));
-        } else if (QualityUtils.isValidQuality(quality)) {
-            QualityUtils.applyQuality(stack, quality);
-        } else if (quality != Quality.NONE_PLAYER_PLACED) {
-            QualityUtils.applyQuality(stack, level, bonus);
-        }
-
+        QualityUtils.applyQuality(stack, level, dropData.state(), dropData.bonus());
         return stack;
     }
 

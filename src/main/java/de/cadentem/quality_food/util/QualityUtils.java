@@ -13,6 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -26,6 +29,10 @@ public class QualityUtils {
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static boolean hasQuality(final ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
+
         boolean hasTag = stack.getTag() != null && stack.getTag().get(QUALITY_TAG) != null;
 
         if (!hasTag) {
@@ -61,7 +68,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue() + bonus);
+        applyQuality(stack, player.getRandom(), getLuckBonus(player) + bonus);
     }
 
     /**
@@ -73,7 +80,7 @@ public class QualityUtils {
             return;
         }
 
-        applyQuality(stack, player.getRandom(), player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue());
+        applyQuality(stack, player.getRandom(), getLuckBonus(player));
     }
 
     /**
@@ -175,7 +182,7 @@ public class QualityUtils {
         }
 
         CompoundTag qualityTag = new CompoundTag();
-        qualityTag.putInt(QUALITY_KEY, quality.value());
+        qualityTag.putInt(QUALITY_KEY, quality.level());
 
         if (stack.getFoodProperties(null) != null) {
             QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
@@ -194,6 +201,18 @@ public class QualityUtils {
 
         CompoundTag tag = stack.getOrCreateTag();
         tag.put(QUALITY_TAG, qualityTag);
+    }
+
+    public static void applyQuality(final ItemStack stack, @NotNull final Level level, @NotNull final BlockState state, float bonus) {
+        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
+
+        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
+            QualityUtils.applyQuality(stack, level, bonus + QualityConfig.getChanceCropAddition(quality));
+        } else if (QualityUtils.isValidQuality(quality)) {
+            QualityUtils.applyQuality(stack, quality);
+        } else if (quality != Quality.NONE_PLAYER_PLACED) {
+            QualityUtils.applyQuality(stack, level, bonus);
+        }
     }
 
     public static float getBonus(final Quality quality) {
@@ -238,5 +257,13 @@ public class QualityUtils {
 
     public static boolean isValidQuality(final Quality quality) {
         return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
+    }
+
+    public static float getLuckBonus(final Player player) {
+        if (player == null) {
+            return 0;
+        }
+
+        return player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get().floatValue();
     }
 }

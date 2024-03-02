@@ -1,3 +1,7 @@
 {
-  "potion.withProbability": "%s (%s)"
+  "potion.withProbability": "%s (%s)",
+
+  "quality_food.quality": "Quality: ",
+
+  "config.jade.plugin_quality_food.quality": "Quality"
 }

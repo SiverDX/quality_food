@@ -15,7 +15,7 @@ import vectorwing.farmersdelight.common.block.RiceRollMedleyBlock;
 public class RiceRollMedleyBlockMixin {
     @ModifyReturnValue(method = "getServingItem", at = @At("RETURN"), remap = false)
     private ItemStack quality_food$applyQualityToItem(final ItemStack stack, /* Method parameters: */ final BlockState state) {
-        QualityUtils.applyQuality(stack, Quality.getRaw(state.getValue(Utils.QUALITY_STATE)));
+        QualityUtils.applyQuality(stack, Quality.get(state.getValue(Utils.QUALITY_STATE)));
         return stack;
     }
 }
