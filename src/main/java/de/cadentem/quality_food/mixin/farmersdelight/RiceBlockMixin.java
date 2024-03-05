@@ -12,6 +12,11 @@ import vectorwing.farmersdelight.common.block.RiceBlock;
 @Mixin(RiceBlock.class)
 public abstract class RiceBlockMixin {
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
+    private BlockState quality_food$keepQualityWhenGrowingUpward(final BlockState original, @Local(argsOnly = true) final BlockState instance) {
+        return original.setValue(Utils.QUALITY_STATE, instance.getValue(Utils.QUALITY_STATE));
+    }
+
+    @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     private BlockState quality_food$keepQualityWhenGrowing(final BlockState original, @Local(argsOnly = true) final BlockState instance) {
         return original.setValue(Utils.QUALITY_STATE, instance.getValue(Utils.QUALITY_STATE));
     }
