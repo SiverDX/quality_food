@@ -6,6 +6,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -15,6 +16,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
     public static final TagKey<Item> RECIPE_CONVERSION = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "recipe_conversion"));
+    public static final TagKey<Item> BLACKLIST = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "blacklist"));
 
     public QFItemTags(final DataGenerator generator, final BlockTagsProvider provider, final ExistingFileHelper fileHelper) {
         super(generator, provider, QualityFood.MODID, fileHelper);
@@ -35,5 +37,8 @@ public class QFItemTags extends ItemTagsProvider {
         tag(RECIPE_CONVERSION)
                 .addTag(Tags.Items.SEEDS)
                 .addOptional(new ResourceLocation("farmersdelight", "rice"));
+
+        tag(BLACKLIST)
+                .addTag(ItemTags.FLOWERS);
     }
 }
