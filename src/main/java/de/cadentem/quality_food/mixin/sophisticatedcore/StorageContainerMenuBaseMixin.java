@@ -21,8 +21,6 @@ import java.util.Optional;
 
 @Mixin(StorageContainerMenuBase.class)
 public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMenu {
-    @Shadow public abstract Optional<UpgradeContainerBase<?, ?>> getOpenContainer();
-
     protected StorageContainerMenuBaseMixin(@Nullable final MenuType<?> type, int containerId) {
         super(type, containerId);
     }
@@ -38,5 +36,6 @@ public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMen
         return stack;
     }
 
-    @Shadow @Final protected Player player;
+    @Shadow(remap = false) @Final protected Player player;
+    @Shadow(remap = false) public abstract Optional<UpgradeContainerBase<?, ?>> getOpenContainer();
 }
