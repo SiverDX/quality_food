@@ -30,6 +30,9 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 # Compatibility
 - [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight)
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
+- [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
+- [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
+  - No Furnace Upgrade support
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
