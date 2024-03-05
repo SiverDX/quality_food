@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CraftingTerminalMenu.class)
 public abstract class CraftingTerminalMenuMixin {
     @Inject(method = "shiftClickItems", at = @At(value = "INVOKE", target = "Lcom/tom/storagemod/gui/CraftingTerminalMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", shift = At.Shift.BEFORE))
-    private void applyQuality(final Player player, int index, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
+    private void quality_food$applyQuality(final Player player, int index, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
         float bonus = 0;
 
         for (int slot = 0; slot < craftMatrix.getContainerSize(); slot++) {
