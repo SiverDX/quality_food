@@ -26,6 +26,14 @@ public class Utils {
     public static final IntegerProperty QUALITY_STATE = IntegerProperty.create(QualityUtils.QUALITY_TAG, 0, Quality.values().length - 1);
 
     public static boolean isValidItem(final ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+
+        if (stack.is(QFItemTags.BLACKLIST)) {
+            return false;
+        }
+
         if (stack.getFoodProperties(null) != null) {
             return true;
         }
