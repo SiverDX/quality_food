@@ -26,7 +26,9 @@
     "farmersdelight.FeastBlockMixin",
     "farmersdelight.RiceRollMedleyBlockMixin",
     "farmersdelight.TextUtilsMixin",
-    "fastentitytransfer.CommonUtilsMixin"
+    "fastentitytransfer.CommonUtilsMixin",
+    "sophisticatedcore.CraftingUpgradeContainerMixin",
+    "sophisticatedcore.StorageContainerMenuBaseMixin"
   ],
   "client": [
     "client.ItemRendererMixin"
