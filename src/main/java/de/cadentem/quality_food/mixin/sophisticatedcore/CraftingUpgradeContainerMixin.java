@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(CraftingUpgradeContainer.class)
 public class CraftingUpgradeContainerMixin {
     @ModifyVariable(method = "updateCraftingResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultSlot;set(Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
-    private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final CraftingContainer container) {
+    private ItemStack quality_food$handleConversion(final ItemStack stack, @Local(argsOnly = true) final CraftingContainer container) {
         QualityUtils.handleConversion(stack, container);
         return stack;
     }
