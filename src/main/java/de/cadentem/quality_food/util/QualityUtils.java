@@ -5,7 +5,6 @@ import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFItemTags;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
@@ -21,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class QualityUtils {
@@ -49,7 +49,7 @@ public class QualityUtils {
      * @param slots       Slots which may contain crafting materials with quality (will apply a bonus)
      * @param isSlotValid To test whether the slot is relevant or not (since the list usually contains the inventory as well)
      */
-    public static float getQualityBonus(final NonNullList<Slot> slots, final Predicate<Slot> isSlotValid) {
+    public static float getQualityBonus(final List<Slot> slots, final Predicate<Slot> isSlotValid) {
         float bonus = 0;
 
         for (Slot slot : slots) {
