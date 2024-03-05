@@ -30,7 +30,7 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
     }
 
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
-    private static ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final CraftingContainer container) {
+    private static ItemStack quality_food$handleConversion(final ItemStack stack, @Local(argsOnly = true) final CraftingContainer container) {
         QualityUtils.handleConversion(stack, container);
         return stack;
     }

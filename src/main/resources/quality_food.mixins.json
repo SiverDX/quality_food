@@ -28,7 +28,9 @@
     "farmersdelight.TextUtilsMixin",
     "fastentitytransfer.CommonUtilsMixin",
     "sophisticatedcore.CraftingUpgradeContainerMixin",
-    "sophisticatedcore.StorageContainerMenuBaseMixin"
+    "sophisticatedcore.StorageContainerMenuBaseMixin",
+    "toms_storage.CraftingTerminalBlockEntityMixin",
+    "toms_storage.CraftingTerminalMenuMixin"
   ],
   "client": [
     "client.GuiGraphicsMixin"
