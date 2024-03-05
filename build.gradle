@@ -88,6 +88,10 @@ dependencies {
     implementation fg.deobf("curse.maven:fastentitytransfer-828407:5069424") // 1.19.2 - 1.2.2
     implementation fg.deobf("curse.maven:harvest-with-ease-602171:5030321") // 1.19.2 - 8.0.1.0
     implementation fg.deobf("curse.maven:jade-324717:4914105") // 1.19.2 - 8.9.2
+    implementation fg.deobf("curse.maven:sophisticated-core-618298:5102974") // 1.19.2 - 0.6.2.552
+    implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:5158340") // 1.19.2 - 3.20.2.1025
+    implementation fg.deobf("curse.maven:sophisticated-storage-619320:5158352") // 1.19.2 - 0.9.7.743
+    implementation fg.deobf("curse.maven:toms-storage-378609:4649846") // 1.19.2 - 1.5.9
 
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:3872808")

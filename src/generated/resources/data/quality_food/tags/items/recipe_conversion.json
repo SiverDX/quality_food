@@ -1,0 +1,9 @@
+{
+  "values": [
+    "#forge:seeds",
+    {
+      "id": "farmersdelight:rice",
+      "required": false
+    }
+  ]
+}

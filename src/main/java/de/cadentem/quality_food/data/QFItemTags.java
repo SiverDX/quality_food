@@ -14,7 +14,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
-    // public static final TagKey<Item> HARVESTABLE = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "harvestable"));
+    public static final TagKey<Item> RECIPE_CONVERSION = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "recipe_conversion"));
 
     public QFItemTags(final DataGenerator generator, final BlockTagsProvider provider, final ExistingFileHelper fileHelper) {
         super(generator, provider, QualityFood.MODID, fileHelper);
@@ -24,27 +24,16 @@ public class QFItemTags extends ItemTagsProvider {
     protected void addTags() {
         tag(MATERIAL_WHITELIST)
                 .addTag(Tags.Items.EGGS)
+                .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
                 .addOptionalTag(new ResourceLocation("forge", "dough"))
                 .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
+                .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"))
                 .add(Items.SUGAR);
 
-        /*
-        tag(HARVESTABLE)
-                .add(Items.GLOW_BERRIES)
-                .addOptional(new ResourceLocation("vinery", "red_grape"))
-                .addOptional(new ResourceLocation("vinery", "white_grape"))
-                .addOptional(new ResourceLocation("vinery", "savanna_grapes_red"))
-                .addOptional(new ResourceLocation("vinery", "savanna_grapes_white"))
-                .addOptional(new ResourceLocation("vinery", "taiga_grapes_red"))
-                .addOptional(new ResourceLocation("vinery", "taiga_grapes_white"))
-                .addOptional(new ResourceLocation("vinery", "jungle_grapes_red"))
-                .addOptional(new ResourceLocation("vinery", "jungle_grapes_white"))
-                .addOptional(new ResourceLocation("vinery", "cherry"))
-                .addOptional(new ResourceLocation("vinery", "rotten_cherry"))
-                .addOptional(new ResourceLocation("vinery", "rotten_cherry"))
-        ;
-        */
+        tag(RECIPE_CONVERSION)
+                .addTag(Tags.Items.SEEDS)
+                .addOptional(new ResourceLocation("farmersdelight", "rice"));
     }
 }
