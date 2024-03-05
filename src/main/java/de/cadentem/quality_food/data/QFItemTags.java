@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
+    public static final TagKey<Item> RECIPE_CONVERSION = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "recipe_conversion"));
 
     public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper fileHelper) {
         super(output, provider, CompletableFuture.completedFuture(null), QualityFood.MODID, fileHelper);
@@ -28,9 +29,15 @@ public class QFItemTags extends ItemTagsProvider {
         tag(MATERIAL_WHITELIST)
                 .add(Items.SUGAR)
                 .addTag(Tags.Items.EGGS)
+                .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
                 .addOptionalTag(new ResourceLocation("forge", "dough"))
-                .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"));
+                .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
+                .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"));
+
+        tag(RECIPE_CONVERSION)
+                .addTag(Tags.Items.SEEDS)
+                .addOptional(new ResourceLocation("farmersdelight", "rice"));
     }
 }

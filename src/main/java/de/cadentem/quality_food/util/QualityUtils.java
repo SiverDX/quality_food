@@ -4,10 +4,12 @@ import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.data.QFItemTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -162,6 +164,44 @@ public class QualityUtils {
             QualityUtils.applyQuality(stack, quality);
         } else if (quality != Quality.NONE_PLAYER_PLACED) {
             QualityUtils.applyQuality(stack, player);
+        }
+    }
+
+    public static void handleConversion(@NotNull final ItemStack stack, @NotNull final Container container) {
+        if (stack == ItemStack.EMPTY) {
+            return;
+        }
+
+        if (stack.is(QFItemTags.RECIPE_CONVERSION)) {
+            int[] qualities = new int[Quality.values().length];
+
+            for (int i = 0; i < container.getContainerSize(); i++) {
+                ItemStack containerStack = container.getItem(i);
+
+                if (containerStack.isEmpty()) {
+                    continue;
+                }
+
+                qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
+            }
+
+            int ordinalToUse = Quality.NONE.ordinal();
+            int amount = 0;
+
+            for (int ordinal = 0; ordinal < qualities.length; ordinal++) {
+                int storedAmount = qualities[ordinal];
+
+                if (storedAmount != 0 && storedAmount >= amount) {
+                    ordinalToUse = ordinal;
+                    amount = storedAmount;
+                }
+            }
+
+            Quality quality = Quality.get(ordinalToUse);
+
+            if (quality.level() > 0) {
+                QualityUtils.applyQuality(stack, quality);
+            }
         }
     }
 

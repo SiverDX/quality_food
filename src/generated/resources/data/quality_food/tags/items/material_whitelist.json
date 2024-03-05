@@ -2,14 +2,19 @@
   "values": [
     "minecraft:sugar",
     "#forge:eggs",
+    "#forge:seeds",
     "#forge:crops",
     "#forge:mushrooms",
+    {
+      "id": "#forge:dough",
+      "required": false
+    },
     {
       "id": "#farmersdelight:wild_crops",
       "required": false
     },
     {
-      "id": "#forge:dough",
+      "id": "farmersdelight:rice_panicle",
       "required": false
     }
   ]
