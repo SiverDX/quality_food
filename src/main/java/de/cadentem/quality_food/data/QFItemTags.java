@@ -42,6 +42,10 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(new ResourceLocation("farmersdelight", "rice"));
 
         tag(BLACKLIST)
-                .addTag(ItemTags.FLOWERS);
+                .addTag(ItemTags.FLOWERS)
+                .addTag(ItemTags.SAPLINGS)
+                .add(Items.GRASS)
+                .add(Items.TALL_GRASS)
+                .add(Items.DEAD_BUSH);
     }
 }

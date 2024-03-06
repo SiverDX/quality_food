@@ -1,5 +1,9 @@
 {
   "values": [
-    "#minecraft:flowers"
+    "#minecraft:flowers",
+    "#minecraft:saplings",
+    "minecraft:grass",
+    "minecraft:tall_grass",
+    "minecraft:dead_bush"
   ]
 }
