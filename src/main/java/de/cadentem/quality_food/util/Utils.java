@@ -8,6 +8,7 @@ import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.network.SyncCookingParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.*;
@@ -34,8 +35,10 @@ public class Utils {
             return false;
         }
 
-        if (stack.getFoodProperties(null) != null) {
-            return true;
+        FoodProperties properties = stack.getFoodProperties(null);
+
+        if (properties != null) {
+            return properties.getNutrition() > 0 || properties.getSaturationModifier() > 0;
         }
 
         if (isValidBlock(stack)) {
