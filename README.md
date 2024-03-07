@@ -24,6 +24,7 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 - `#forge:crops`
 - `#forge:mushrooms`
 - `#forge:dough`
+- `#forge:flour`
 - `#farmersdelight:wild_crops`
 - `minecraft:sugar`
 - `farmersdelight:rice_panicle`
@@ -45,6 +46,8 @@ For compatibility’s sake certain blocks (and their item variant) are supported
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
 - [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
   - No Furnace Upgrade support
+- [Create](https://www.curseforge.com/minecraft/mc-mods/create)
+  - Milling and Mechanical Mixer should apply the quality of the ingredients
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
