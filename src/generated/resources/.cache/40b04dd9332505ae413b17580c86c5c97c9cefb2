@@ -1,2 +1,4 @@
-// 1.20.1	2024-02-28T11:11:43.2023342	Tags for minecraft:item mod id quality_food
-37ad258762136c7ccec63be040fbaf50b8bec579 data/quality_food/tags/items/material_whitelist.json
+// 1.20.1	2024-03-07T20:50:31.3799521	Tags for minecraft:item mod id quality_food
+a24a7079b565a3474c92b8d102a56cb1e010edd9 data/quality_food/tags/items/blacklist.json
+ac1adecc3a1c1c6be884d8b753e843ea8d71cd45 data/quality_food/tags/items/material_whitelist.json
+b84b0f53cdad095bb98cb567108755b5028df501 data/quality_food/tags/items/recipe_conversion.json
