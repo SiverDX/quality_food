@@ -19,6 +19,8 @@
     "ItemMixin",
     "StateDefinitionMixin",
     "SweetBerryBushBlockMixin",
+    "create.BasinRecipeMixin",
+    "create.MillstoneBlockEntityMixin",
     "farmersdelight.BuddingBushBlockMixin",
     "farmersdelight.BuddingTomatoBlockMixin",
     "farmersdelight.CookingPotBlockEntityMixin",

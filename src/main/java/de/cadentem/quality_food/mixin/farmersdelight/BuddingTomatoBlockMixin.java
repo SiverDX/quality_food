@@ -3,14 +3,12 @@ package de.cadentem.quality_food.mixin.farmersdelight;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import vectorwing.farmersdelight.common.block.BuddingTomatoBlock;
 
 /** Support for quality block state */
-@Debug(export = true)
 @Mixin(BuddingTomatoBlock.class)
 public abstract class BuddingTomatoBlockMixin {
     @ModifyArg(method = "growPastMaxAge", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))

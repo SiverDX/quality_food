@@ -79,6 +79,7 @@ dependencies {
     implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:5158338") // 1.20.1 - 3.20.2.1022
     implementation fg.deobf("curse.maven:sophisticated-storage-619320:5162159") // 1.20.1 - 0.10.7.750
     implementation fg.deobf("curse.maven:toms-storage-378609:4792109") // 1.20.1 - 1.6.5
+    implementation fg.deobf("curse.maven:create-328085:4835191") // 1.20.1 - 0.5.1f
 
     /* --- Test --- */
 //    implementation fg.deobf("curse.maven:appleskin-248787:3872808")
