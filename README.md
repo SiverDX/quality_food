@@ -26,6 +26,18 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 - `#forge:dough`
 - `#farmersdelight:wild_crops`
 - `minecraft:sugar`
+- `farmersdelight:rice_panicle`
+
+There is support for a guaranteed quality application when crafting (e.g. turning a quality `minecraft:melon_slice` into `minecraft:melon_seed`) - this is handled by the item tag `quality_food:recipe_conversion` where you specify the output item, it contains these entries by default:
+- `#forge:seeds`
+- `farmersdelight:rice`
+
+For compatibility’s sake certain blocks (and their item variant) are supported in a broader way than needed - if you find some items having quality where it doesn't make much sense you can blacklist them using the item tag `quality_food:blacklist`, which contains these entries by default:
+- `#minecraft:flowers`
+- `#minecraft:saplings`
+- `minecraft:grass`
+- `minecraft:tall_grass`
+- `minecraft:dead_bush`
 
 # Compatibility
 - [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight)
