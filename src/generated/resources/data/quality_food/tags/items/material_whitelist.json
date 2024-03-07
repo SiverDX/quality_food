@@ -12,10 +12,10 @@
       "id": "#farmersdelight:wild_crops",
       "required": false
     },
+    "minecraft:sugar",
     {
       "id": "farmersdelight:rice_panicle",
       "required": false
-    },
-    "minecraft:sugar"
+    }
   ]
 }
