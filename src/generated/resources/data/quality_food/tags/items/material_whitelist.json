@@ -1,6 +1,7 @@
 {
   "values": [
     "minecraft:sugar",
+    "minecraft:hay_block",
     "#forge:eggs",
     "#forge:seeds",
     "#forge:crops",
@@ -19,10 +20,6 @@
     },
     {
       "id": "farmersdelight:rice_panicle",
-      "required": false
-    },
-    {
-      "id": "minecraft:hay_block",
       "required": false
     },
     {
