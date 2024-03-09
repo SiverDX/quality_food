@@ -45,9 +45,10 @@ For compatibility’s sake certain blocks (and their item variant) are supported
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
 - [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
-  - No Furnace Upgrade support
+  - No Furnace / Smoker upgrade support
 - [Create](https://www.curseforge.com/minecraft/mc-mods/create)
   - Milling and Mechanical Mixer should apply the quality of the ingredients
+- [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
