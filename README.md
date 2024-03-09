@@ -19,26 +19,21 @@ There is a configuration per quality - aside from some normal things you can als
   - `3` is the amplifier (`0` results in an effect level of 1 (i.e. no level shown))
   - `0.45` is the probability to gain this effect when eating the item (`1` means 100%)
 
-Non-food items can be made applicable to quality by adding them to the `quality_food:material_whitelist` item tag, by default it contains: 
-- `#forge:eggs`
-- `#forge:crops`
-- `#forge:mushrooms`
-- `#forge:dough`
-- `#forge:flour`
-- `#farmersdelight:wild_crops`
-- `minecraft:sugar`
-- `farmersdelight:rice_panicle`
+---
 
-There is support for a guaranteed quality application when crafting (e.g. turning a quality `minecraft:melon_slice` into `minecraft:melon_seed`) - this is handled by the item tag `quality_food:recipe_conversion` where you specify the output item, it contains these entries by default:
-- `#forge:seeds`
-- `farmersdelight:rice`
+Non-food items can be made applicable to quality by adding them to the `quality_food:material_whitelist` item tag
 
-For compatibility’s sake certain blocks (and their item variant) are supported in a broader way than needed - if you find some items having quality where it doesn't make much sense you can blacklist them using the item tag `quality_food:blacklist`, which contains these entries by default:
-- `#minecraft:flowers`
-- `#minecraft:saplings`
-- `minecraft:grass`
-- `minecraft:tall_grass`
-- `minecraft:dead_bush`
+---
+
+There is support for a guaranteed quality application when crafting (e.g. turning a quality `minecraft:melon_slice` into `minecraft:melon_seed`) through the item tag `quality_food:recipe_conversion`
+
+(De)compacting recipes are handled separately from this tag
+
+---
+
+For compatibility’s sake certain blocks (and their item variant) are supported in a broader way than needed 
+
+If you find some items having quality where it doesn't make much sense you can blacklist them using the item tag `quality_food:blacklist`
 
 # Compatibility
 - [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight)

@@ -13,8 +13,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-import java.util.List;
-
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
     public static final TagKey<Item> RECIPE_CONVERSION = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "recipe_conversion"));
@@ -35,7 +33,28 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptionalTag(new ResourceLocation("forge", "flour"))
                 .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
                 .add(Items.SUGAR)
-                .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"));
+                .add(Items.HAY_BLOCK)
+                .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"))
+                /* Storage blocks */
+                .addOptional(new ResourceLocation("farmersdelight", "carrot_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "potato_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "beetroot_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "cabbage_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "tomato_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "onion_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "chorus_crate"))
+                .addOptional(new ResourceLocation("farmersdelight", "rice_bale"))
+                .addOptional(new ResourceLocation("farmersdelight", "rice_bag"))
+                .addOptional(new ResourceLocation("quark", "golden_apple_crate"))
+                .addOptional(new ResourceLocation("quark", "apple_crate"))
+                .addOptional(new ResourceLocation("quark", "potato_crate"))
+                .addOptional(new ResourceLocation("quark", "carrot_crate"))
+                .addOptional(new ResourceLocation("quark", "golden_carrot_crate"))
+                .addOptional(new ResourceLocation("quark", "beetroot_crate"))
+                .addOptional(new ResourceLocation("vinery", "white_grape_crate"))
+                .addOptional(new ResourceLocation("vinery", "red_grape_crate"))
+                .addOptional(new ResourceLocation("vinery", "cherry_crate"))
+                .addOptional(new ResourceLocation("vinery", "apple_crate"));
 
         tag(RECIPE_CONVERSION)
                 .addTag(Tags.Items.SEEDS)
@@ -49,33 +68,5 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.DEAD_BUSH)
                 .addOptional(new ResourceLocation("supplementaries", "flax"))
                 .addOptional(new ResourceLocation("supplementaries", "flax_seeds"));
-
-        List<String> compactItems = List.of(
-                "minecraft:hay_block",
-                "farmersdelight:carrot_crate",
-                "farmersdelight:potato_crate",
-                "farmersdelight:beetroot_crate",
-                "farmersdelight:cabbage_crate",
-                "farmersdelight:tomato_crate",
-                "farmersdelight:onion_crate",
-                "farmersdelight:chorus_crate",
-                "farmersdelight:rice_bale",
-                "farmersdelight:rice_bag",
-                "quark:golden_apple_crate",
-                "quark:apple_crate",
-                "quark:potato_crate",
-                "quark:carrot_crate",
-                "quark:golden_carrot_crate",
-                "quark:beetroot_crate",
-                "vinery:white_grape_crate",
-                "vinery:red_grape_crate",
-                "vinery:cherry_crate",
-                "vinery:apple_crate"
-        );
-
-        for (String compactItem : compactItems) {
-            tag(MATERIAL_WHITELIST).addOptional(new ResourceLocation(compactItem));
-            tag(RECIPE_CONVERSION).addOptional(new ResourceLocation(compactItem));
-        }
     }
 }

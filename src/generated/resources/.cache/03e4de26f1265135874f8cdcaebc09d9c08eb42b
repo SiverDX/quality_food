@@ -1,4 +1,4 @@
-// 1.19.2	2024-03-09T21:05:39.5660912	Tags for minecraft:item
+// 1.19.2	2024-03-10T00:39:33.8145115	Tags for minecraft:item
 7fd6649aa0649095c0e8fd7e23e228af4bfe5481 data/quality_food/tags/items/blacklist.json
-994eca952685c34a904cb332d0b8449c7dd68b57 data/quality_food/tags/items/material_whitelist.json
-a7cde9ad4b53ae41b0c2904dac11e781f21f0498 data/quality_food/tags/items/recipe_conversion.json
+eb758a4bf0d41b742aa2f35135c949ec04b4ffd4 data/quality_food/tags/items/material_whitelist.json
+b84b0f53cdad095bb98cb567108755b5028df501 data/quality_food/tags/items/recipe_conversion.json

@@ -14,13 +14,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class QualityUtils {
@@ -167,42 +171,85 @@ public class QualityUtils {
         }
     }
 
-    public static void handleConversion(@NotNull final ItemStack stack, @NotNull final Container container) {
-        if (stack == ItemStack.EMPTY) {
+    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container) {
+        if (result == ItemStack.EMPTY) {
             return;
         }
 
-        if (stack.is(QFItemTags.RECIPE_CONVERSION)) {
-            int[] qualities = new int[Quality.values().length];
+        int[] qualities = new int[Quality.values().length];
+        HashMap<Item, Integer> items = new HashMap<>();
 
-            for (int i = 0; i < container.getContainerSize(); i++) {
-                ItemStack containerStack = container.getItem(i);
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            ItemStack containerStack = container.getItem(i);
+            Item item = containerStack.getItem();
+            items.put(item, items.getOrDefault(item, 0) + 1);
 
-                if (containerStack.isEmpty()) {
-                    continue;
-                }
-
-                qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
+            if (containerStack.isEmpty()) {
+                continue;
             }
 
-            int ordinalToUse = Quality.NONE.ordinal();
-            int amount = 0;
+            qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
+        }
 
-            for (int ordinal = 0; ordinal < qualities.length; ordinal++) {
-                int storedAmount = qualities[ordinal];
+        int ordinalToUse = Quality.NONE.ordinal();
+        int amount = 0;
 
-                if (storedAmount != 0 && storedAmount >= amount) {
-                    ordinalToUse = ordinal;
-                    amount = storedAmount;
-                }
-            }
+        for (int ordinal = 0; ordinal < qualities.length; ordinal++) {
+            int storedAmount = qualities[ordinal];
 
-            Quality quality = Quality.get(ordinalToUse);
-
-            if (quality.level() > 0) {
-                QualityUtils.applyQuality(stack, quality);
+            if (storedAmount != 0 && storedAmount >= amount) {
+                ordinalToUse = ordinal;
+                amount = storedAmount;
             }
         }
+
+        Quality quality = Quality.get(ordinalToUse);
+
+        if (quality.level() == 0) {
+            return;
+        }
+
+        boolean shouldConvert = false;
+
+        if (isCompacting(items)) {
+            if (/* To avoid duplicating quality items */ amount != 9) {
+                return;
+            } else {
+                shouldConvert = true;
+            }
+        }
+
+        if (shouldConvert || result.is(QFItemTags.RECIPE_CONVERSION) || isDecompacting(items, result, container)) {
+            QualityUtils.applyQuality(result, quality);
+        }
+    }
+
+    private static boolean isCompacting(final HashMap<Item, Integer> items) {
+        return items.size() == 1 && items.get(items.keySet().iterator().next()) == /* Are there non 3x3 compacting recipes? */ 9;
+    }
+
+    private static boolean isDecompacting(final HashMap<Item, Integer> items, final ItemStack result, final Container container) {
+        if (result.getCount() != 9) {
+            return false;
+        }
+
+        if (items.size() == 2) {
+            Set<Item> keys = items.keySet();
+
+            boolean isValid = true;
+
+            for (Item key : keys) {
+                if (key != Items.AIR && items.get(key) != 1) {
+                    isValid = false;
+                } else if (key == Items.AIR && items.get(key) != container.getContainerSize() - 1) {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        return false;
     }
 
     public static float getBonus(final Quality quality) {

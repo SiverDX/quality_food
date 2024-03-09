@@ -17,12 +17,9 @@
       "required": false
     },
     "minecraft:sugar",
+    "minecraft:hay_block",
     {
       "id": "farmersdelight:rice_panicle",
-      "required": false
-    },
-    {
-      "id": "minecraft:hay_block",
       "required": false
     },
     {
