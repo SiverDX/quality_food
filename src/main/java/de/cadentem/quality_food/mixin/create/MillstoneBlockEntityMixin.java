@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(value = MillstoneBlockEntity.class, remap = false)
-public class MillstoneBlockEntityMixin {
+@Mixin(MillstoneBlockEntity.class)
+public abstract class MillstoneBlockEntityMixin {
     @Unique
     private static final ThreadLocal<Quality> quality_food$INPUT = new ThreadLocal<>();
 
@@ -21,7 +21,7 @@ public class MillstoneBlockEntityMixin {
         return stack;
     }
 
-    @ModifyArg(method = "lambda$process$1", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemHandlerHelper;insertItemStacked(Lnet/minecraftforge/items/IItemHandler;Lnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;"))
+    @ModifyArg(method = "lambda$process$1", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemHandlerHelper;insertItemStacked(Lnet/minecraftforge/items/IItemHandler;Lnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;"), remap = false)
     private ItemStack quality_food$applyQuality(final ItemStack stack) {
         QualityUtils.applyQuality(stack, quality_food$INPUT.get());
         return stack;
