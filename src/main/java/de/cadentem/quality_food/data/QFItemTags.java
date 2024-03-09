@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
+import java.util.List;
+
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
     public static final TagKey<Item> RECIPE_CONVERSION = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "recipe_conversion"));
@@ -48,6 +50,36 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(ItemTags.SAPLINGS)
                 .add(Items.GRASS)
                 .add(Items.TALL_GRASS)
-                .add(Items.DEAD_BUSH);
+                .add(Items.DEAD_BUSH)
+                .addOptional(new ResourceLocation("supplementaries", "flax"))
+                .addOptional(new ResourceLocation("supplementaries", "flax_seeds"));
+
+        List<String> compactItems = List.of(
+                "minecraft:hay_block",
+                "farmersdelight:carrot_crate",
+                "farmersdelight:potato_crate",
+                "farmersdelight:beetroot_crate",
+                "farmersdelight:cabbage_crate",
+                "farmersdelight:tomato_crate",
+                "farmersdelight:onion_crate",
+                "farmersdelight:chorus_crate",
+                "farmersdelight:rice_bale",
+                "farmersdelight:rice_bag",
+                "quark:golden_apple_crate",
+                "quark:apple_crate",
+                "quark:potato_crate",
+                "quark:carrot_crate",
+                "quark:golden_carrot_crate",
+                "quark:beetroot_crate",
+                "vinery:white_grape_crate",
+                "vinery:red_grape_crate",
+                "vinery:cherry_crate",
+                "vinery:apple_crate"
+        );
+
+        for (String compactItem : compactItems) {
+            tag(MATERIAL_WHITELIST).addOptional(new ResourceLocation(compactItem));
+            tag(RECIPE_CONVERSION).addOptional(new ResourceLocation(compactItem));
+        }
     }
 }
