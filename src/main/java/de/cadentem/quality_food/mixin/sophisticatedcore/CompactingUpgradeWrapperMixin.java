@@ -6,16 +6,14 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeWrapper;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Debug(export = true)
-@Mixin(value = CompactingUpgradeWrapper.class)
+@Mixin(CompactingUpgradeWrapper.class)
 public abstract class CompactingUpgradeWrapperMixin {
     @SuppressWarnings("ConstantConditions")
-    @ModifyExpressionValue(method = "compactSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hasTag()Z"), remap = false)
+    @ModifyExpressionValue(method = "compactSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hasTag()Z"))
     private boolean quality_food$allowQualityTag(boolean hasTag, @Local final ItemStack stack) {
         if (hasTag) {
             CompoundTag tag = stack.getTag();
