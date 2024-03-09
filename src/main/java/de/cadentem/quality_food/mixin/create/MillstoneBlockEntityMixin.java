@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(MillstoneBlockEntity.class)
-public class MillstoneBlockEntityMixin {
+public abstract class MillstoneBlockEntityMixin {
     @Unique
     private static final ThreadLocal<Quality> quality_food$INPUT = new ThreadLocal<>();
 
