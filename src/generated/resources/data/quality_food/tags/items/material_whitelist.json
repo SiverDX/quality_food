@@ -20,6 +20,86 @@
     {
       "id": "farmersdelight:rice_panicle",
       "required": false
+    },
+    {
+      "id": "minecraft:hay_block",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:potato_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:beetroot_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:cabbage_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:tomato_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:onion_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:chorus_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:rice_bale",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:rice_bag",
+      "required": false
+    },
+    {
+      "id": "quark:golden_apple_crate",
+      "required": false
+    },
+    {
+      "id": "quark:apple_crate",
+      "required": false
+    },
+    {
+      "id": "quark:potato_crate",
+      "required": false
+    },
+    {
+      "id": "quark:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:golden_carrot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:beetroot_crate",
+      "required": false
+    },
+    {
+      "id": "vinery:white_grape_crate",
+      "required": false
+    },
+    {
+      "id": "vinery:red_grape_crate",
+      "required": false
+    },
+    {
+      "id": "vinery:cherry_crate",
+      "required": false
+    },
+    {
+      "id": "vinery:apple_crate",
+      "required": false
     }
   ]
 }

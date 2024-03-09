@@ -4,6 +4,14 @@
     "#minecraft:saplings",
     "minecraft:grass",
     "minecraft:tall_grass",
-    "minecraft:dead_bush"
+    "minecraft:dead_bush",
+    {
+      "id": "supplementaries:flax",
+      "required": false
+    },
+    {
+      "id": "supplementaries:flax_seeds",
+      "required": false
+    }
   ]
 }
