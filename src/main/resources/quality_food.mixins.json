@@ -33,6 +33,7 @@
     "farmersdelight.TextUtilsMixin",
     "farmersdelight.TomatoVineBlockMixin",
     "fastentitytransfer.CommonUtilsMixin",
+    "sophisticatedcore.CompactingUpgradeWrapperMixin",
     "sophisticatedcore.CraftingUpgradeContainerMixin",
     "sophisticatedcore.StorageContainerMenuBaseMixin",
     "toms_storage.CraftingTerminalBlockEntityMixin",
