@@ -1,6 +1,7 @@
 {
   "values": [
     "#forge:seeds",
+    "minecraft:sugar",
     {
       "id": "farmersdelight:rice",
       "required": false
