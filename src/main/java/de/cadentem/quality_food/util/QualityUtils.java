@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -158,6 +159,10 @@ public class QualityUtils {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
 
+            if (stack.is(Tags.Items.SEEDS)) {
+                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
+            }
+
             if (targetChance > 0 && quality.level() > 0) {
                 float multiplier = targetChance / QualityConfig.getChance(quality);
                 QualityUtils.applyQuality(stack, player, Bonus.multiplicative(multiplier));
@@ -265,9 +270,9 @@ public class QualityUtils {
         Quality quality = getQuality(stack);
 
         return switch (quality) {
-            case IRON -> 1 / 128f;
-            case GOLD -> 1 / 64f;
-            case DIAMOND -> 1 / 32f;
+            case IRON -> 1 / 256f;
+            case GOLD -> 1 / 128f;
+            case DIAMOND -> 1 / 64f;
             default -> 0;
         };
     }

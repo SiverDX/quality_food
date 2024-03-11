@@ -31,6 +31,7 @@ public class QFItemTags extends ItemTagsProvider {
         tag(MATERIAL_WHITELIST)
                 .add(Items.SUGAR)
                 .add(Items.HAY_BLOCK)
+                .add(Items.SUGAR_CANE)
                 .addTag(Tags.Items.EGGS)
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
@@ -55,6 +56,8 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(new ResourceLocation("quark", "carrot_crate"))
                 .addOptional(new ResourceLocation("quark", "golden_carrot_crate"))
                 .addOptional(new ResourceLocation("quark", "beetroot_crate"))
+                .addOptional(new ResourceLocation("quark", "sugar_cane_block"))
+                .addOptional(new ResourceLocation("supplementaries", "sugar_cube"))
                 .addOptional(new ResourceLocation("vinery", "white_grape_crate"))
                 .addOptional(new ResourceLocation("vinery", "red_grape_crate"))
                 .addOptional(new ResourceLocation("vinery", "cherry_crate"))
@@ -62,6 +65,7 @@ public class QFItemTags extends ItemTagsProvider {
 
         tag(RECIPE_CONVERSION)
                 .addTag(Tags.Items.SEEDS)
+                .add(Items.SUGAR)
                 .addOptional(new ResourceLocation("farmersdelight", "rice"));
 
         tag(BLACKLIST)

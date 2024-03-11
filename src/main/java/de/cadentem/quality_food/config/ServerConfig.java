@@ -22,10 +22,12 @@ public class ServerConfig {
 
     public static ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
     public static ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
+    public static ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
 
     static {
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
         CROP_TARGET_CHANCE = BUILDER.comment("The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>").defineInRange("crop_target_chance", 0.6d, 0, 1);
+        SEED_CHANCE_MULTIPLIER = BUILDER.comment("Multiplier on top of the crop chance").defineInRange("seed_chance_multiplier", 0.25, 0, 100);
 
         for (Quality quality : Quality.values()) {
             if (!QualityUtils.isValidQuality(quality) || quality == Quality.UNDEFINED) {
