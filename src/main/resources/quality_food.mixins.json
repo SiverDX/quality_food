@@ -33,6 +33,7 @@
     "farmersdelight.TextUtilsMixin",
     "farmersdelight.TomatoVineBlockMixin",
     "fastentitytransfer.CommonUtilsMixin",
+    "majruszsenchantments.TelekinesisEnchantmentMixin",
     "sophisticatedcore.CompactingUpgradeWrapperMixin",
     "sophisticatedcore.CraftingUpgradeContainerMixin",
     "sophisticatedcore.StorageContainerMenuBaseMixin",
