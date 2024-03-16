@@ -194,23 +194,23 @@ public class ForgeEvents {
                         entity.makeFakeItem();
                     }
 
-                    player.getLevel().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f, (player.getRandom().nextFloat() - player.getRandom().nextFloat() * 0.7f + 1) * 2);
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2f, (player.getRandom().nextFloat() - player.getRandom().nextFloat() * 0.7f + 1) * 2);
                     player.containerMenu.broadcastChanges();
                 } else {
                     ItemEntity entity = player.drop(stack, false);
 
                     if (entity != null) {
                         entity.setNoPickUpDelay();
-                        entity.setOwner(player.getUUID());
+                        entity.setTarget(player.getUUID());
                     }
                 }
             }
         }
 
         if (players.size() == 1) {
-            source.sendSuccess(Component.translatable("commands.give.success.single", count, tempStack.getDisplayName(), players.iterator().next().getDisplayName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.give.success.single", count, tempStack.getDisplayName(), players.iterator().next().getDisplayName()), true);
         } else {
-            source.sendSuccess(Component.translatable("commands.give.success.single", count, tempStack.getDisplayName(), players.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.give.success.single", count, tempStack.getDisplayName(), players.size()), true);
         }
 
         return players.size();

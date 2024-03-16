@@ -43,8 +43,6 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
                 .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"))
                 /* Storage blocks */
-                .add(Items.HAY_BLOCK)
-                .add(Items.HONEY_BLOCK)
                 .addOptional(new ResourceLocation("farmersdelight", "carrot_crate"))
                 .addOptional(new ResourceLocation("farmersdelight", "potato_crate"))
                 .addOptional(new ResourceLocation("farmersdelight", "beetroot_crate"))

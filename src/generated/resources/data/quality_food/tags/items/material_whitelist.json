@@ -2,6 +2,9 @@
   "values": [
     "minecraft:sugar",
     "minecraft:hay_block",
+    "minecraft:sugar_cane",
+    "minecraft:hay_block",
+    "minecraft:honey_block",
     "#forge:eggs",
     "#forge:seeds",
     "#forge:crops",
@@ -80,6 +83,14 @@
     },
     {
       "id": "quark:beetroot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:sugar_cane_block",
+      "required": false
+    },
+    {
+      "id": "supplementaries:sugar_cube",
       "required": false
     },
     {
