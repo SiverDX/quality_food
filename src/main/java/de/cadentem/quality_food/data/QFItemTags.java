@@ -32,6 +32,8 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.SUGAR)
                 .add(Items.HAY_BLOCK)
                 .add(Items.SUGAR_CANE)
+                .add(Items.HAY_BLOCK)
+                .add(Items.HONEY_BLOCK)
                 .addTag(Tags.Items.EGGS)
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
@@ -41,6 +43,8 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
                 .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"))
                 /* Storage blocks */
+                .add(Items.HAY_BLOCK)
+                .add(Items.HONEY_BLOCK)
                 .addOptional(new ResourceLocation("farmersdelight", "carrot_crate"))
                 .addOptional(new ResourceLocation("farmersdelight", "potato_crate"))
                 .addOptional(new ResourceLocation("farmersdelight", "beetroot_crate"))
@@ -66,6 +70,7 @@ public class QFItemTags extends ItemTagsProvider {
         tag(RECIPE_CONVERSION)
                 .addTag(Tags.Items.SEEDS)
                 .add(Items.SUGAR)
+                .add(Items.HONEY_BOTTLE)
                 .addOptional(new ResourceLocation("farmersdelight", "rice"));
 
         tag(BLACKLIST)

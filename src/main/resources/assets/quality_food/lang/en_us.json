@@ -3,5 +3,7 @@
 
   "quality_food.quality": "Quality: ",
 
-  "config.jade.plugin_quality_food.quality": "Quality"
+  "config.jade.plugin_quality_food.quality": "Quality",
+
+  "commands.quality_food.quality.failed.no_quality": "Item %s is not applicable to quality"
 }
