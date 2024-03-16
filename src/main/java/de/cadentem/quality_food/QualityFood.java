@@ -4,9 +4,9 @@ import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.capability.BlockData;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.events.ForgeEvents;
 import de.cadentem.quality_food.events.ModEvents;
 import de.cadentem.quality_food.network.NetworkHandler;
+import de.cadentem.quality_food.registry.QFCommands;
 import de.cadentem.quality_food.registry.QFItems;
 import de.cadentem.quality_food.registry.QFLootModifiers;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,6 +37,7 @@ public class QualityFood {
 
         QFItems.ITEMS.register(modEventBus);
         QFLootModifiers.LOOT_MODIFIERS.register(modEventBus);
+        QFCommands.COMMAND_ARGUMENTS.register(modEventBus);
 
         if (isModLoaded(HARVEST_WITH_EASE)) {
             MinecraftForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);

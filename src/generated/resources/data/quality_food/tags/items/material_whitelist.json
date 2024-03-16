@@ -17,12 +17,13 @@
       "required": false
     },
     "minecraft:sugar",
-    "minecraft:hay_block",
     "minecraft:sugar_cane",
     {
       "id": "farmersdelight:rice_panicle",
       "required": false
     },
+    "minecraft:hay_block",
+    "minecraft:honey_block",
     {
       "id": "farmersdelight:carrot_crate",
       "required": false

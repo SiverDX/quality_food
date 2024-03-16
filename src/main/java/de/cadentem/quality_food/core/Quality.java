@@ -24,6 +24,15 @@ public enum Quality {
         };
     }
 
+    public static @NotNull Quality byName(final String name) {
+        return switch (name) {
+            case "Iron" -> IRON;
+            case "Gold" -> GOLD;
+            case "Diamond" -> DIAMOND;
+            default -> NONE;
+        };
+    }
+
     public int level() {
         return switch (this) {
             case IRON -> 1;

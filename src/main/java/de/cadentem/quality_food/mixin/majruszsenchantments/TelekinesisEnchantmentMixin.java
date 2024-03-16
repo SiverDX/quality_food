@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = TelekinesisEnchantment.class, remap = false)
 public abstract class TelekinesisEnchantmentMixin {
+    // TODO :: Check first if quality would apply and if it does then apply the quality, otherwise drop the item early? or do nothing (if the inventory is full)?
     @Inject(method = "addToInventory", at = @At(value = "HEAD"))
     private void applyQuality(final OnLootGenerated data, final Player player, final CallbackInfo callback, @Share("removed") final LocalRef<Boolean> wasRemoved) {
         data.generatedLoot.removeIf(stack -> {

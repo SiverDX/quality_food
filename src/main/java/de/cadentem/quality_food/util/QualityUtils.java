@@ -127,7 +127,7 @@ public class QualityUtils {
      * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
      */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
-        if (!isValidQuality(quality) || hasQuality(stack) || !Utils.isValidItem(stack)) {
+        if (!isValidQuality(quality) || !canHaveQuality(stack)) {
             return;
         }
 
@@ -189,7 +189,7 @@ public class QualityUtils {
             Item item = containerStack.getItem();
             items.put(item, items.getOrDefault(item, 0) + 1);
 
-            if (containerStack.isEmpty()) {
+            if (containerStack.isEmpty() || /* Honey Block -> Honey Bottle */ containerStack.getItem() == Items.GLASS_BOTTLE) {
                 continue;
             }
 
@@ -214,39 +214,58 @@ public class QualityUtils {
             return;
         }
 
-        boolean shouldConvert = false;
-
-        if (isCompacting(items)) {
-            if (/* To avoid duplicating quality items */ amount != 9) {
-                return;
-            } else {
-                shouldConvert = true;
-            }
-        }
+        boolean shouldConvert = getCompactingSize(items, container) == amount;
 
         if (shouldConvert || result.is(QFItemTags.RECIPE_CONVERSION) || isDecompacting(items, result, container)) {
             QualityUtils.applyQuality(result, quality);
         }
     }
 
-    private static boolean isCompacting(final HashMap<Item, Integer> items) {
-        return items.size() == 1 && items.get(items.keySet().iterator().next()) == /* Are there non 3x3 compacting recipes? */ 9;
+    public static boolean canHaveQuality(final ItemStack stack) {
+        return !hasQuality(stack) && Utils.isValidItem(stack);
+    }
+
+    private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {
+        Set<Item> keys = items.keySet();
+
+        if (keys.size() != 1 && !(keys.size() == 2 && keys.contains(Items.AIR))) {
+            // Either the crafting container only contains 1 item or it contains 2 and the other item is air (i.e. no item)
+            return -1;
+        }
+
+        int containerSize = container.getContainerSize();
+        int result = -1;
+
+        for (Item key : keys) {
+            int itemCount = items.get(key);
+
+            if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
+                return -1;
+            } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
+                result = itemCount;
+            }
+        }
+
+        return result;
     }
 
     private static boolean isDecompacting(final HashMap<Item, Integer> items, final ItemStack result, final Container container) {
-        if (result.getCount() != 9) {
+        if (result.getCount() != 9 && result.getCount() != 4) {
             return false;
+        }
+
+        if (items.size() == 1 && container.getContainerSize() == 1 && items.keySet().iterator().next() != Items.AIR) {
+            return true;
         }
 
         if (items.size() == 2) {
             Set<Item> keys = items.keySet();
-
             boolean isValid = true;
 
             for (Item key : keys) {
-                if (key != Items.AIR && items.get(key) != 1) {
+                if (key == Items.AIR && items.get(key) != container.getContainerSize() - 1) {
                     isValid = false;
-                } else if (key == Items.AIR && items.get(key) != container.getContainerSize() - 1) {
+                } else if (key != Items.AIR && items.get(key) != 1) {
                     isValid = false;
                 }
             }
