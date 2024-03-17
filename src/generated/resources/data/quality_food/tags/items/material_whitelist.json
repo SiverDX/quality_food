@@ -90,6 +90,22 @@
       "required": false
     },
     {
+      "id": "quark:cocoa_beans_sack",
+      "required": false
+    },
+    {
+      "id": "quark:nether_wart_stack",
+      "required": false
+    },
+    {
+      "id": "quark:berry_sack",
+      "required": false
+    },
+    {
+      "id": "quark:glowberry_sack",
+      "required": false
+    },
+    {
       "id": "supplementaries:sugar_cube",
       "required": false
     },
