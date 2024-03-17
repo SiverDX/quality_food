@@ -29,42 +29,46 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(new ResourceLocation("forge", "dough"))
-                .addOptionalTag(new ResourceLocation("forge", "flour"))
-                .addOptionalTag(new ResourceLocation("farmersdelight", "wild_crops"))
+                .addOptionalTag(forge("dough"))
+                .addOptionalTag(forge("flour"))
+                .addOptionalTag(farmersdelight("wild_crops"))
                 .add(Items.SUGAR)
                 .add(Items.SUGAR_CANE)
-                .addOptional(new ResourceLocation("farmersdelight", "rice_panicle"))
+                .addOptional(farmersdelight("rice_panicle"))
                 /* Storage blocks */
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
-                .addOptional(new ResourceLocation("farmersdelight", "carrot_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "potato_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "beetroot_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "cabbage_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "tomato_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "onion_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "chorus_crate"))
-                .addOptional(new ResourceLocation("farmersdelight", "rice_bale"))
-                .addOptional(new ResourceLocation("farmersdelight", "rice_bag"))
-                .addOptional(new ResourceLocation("quark", "golden_apple_crate"))
-                .addOptional(new ResourceLocation("quark", "apple_crate"))
-                .addOptional(new ResourceLocation("quark", "potato_crate"))
-                .addOptional(new ResourceLocation("quark", "carrot_crate"))
-                .addOptional(new ResourceLocation("quark", "golden_carrot_crate"))
-                .addOptional(new ResourceLocation("quark", "beetroot_crate"))
-                .addOptional(new ResourceLocation("quark", "sugar_cane_block"))
-                .addOptional(new ResourceLocation("supplementaries", "sugar_cube"))
-                .addOptional(new ResourceLocation("vinery", "white_grape_crate"))
-                .addOptional(new ResourceLocation("vinery", "red_grape_crate"))
-                .addOptional(new ResourceLocation("vinery", "cherry_crate"))
-                .addOptional(new ResourceLocation("vinery", "apple_crate"));
+                .addOptional(farmersdelight("carrot_crate"))
+                .addOptional(farmersdelight("potato_crate"))
+                .addOptional(farmersdelight("beetroot_crate"))
+                .addOptional(farmersdelight("cabbage_crate"))
+                .addOptional(farmersdelight("tomato_crate"))
+                .addOptional(farmersdelight("onion_crate"))
+                .addOptional(farmersdelight("chorus_crate"))
+                .addOptional(farmersdelight("rice_bale"))
+                .addOptional(farmersdelight("rice_bag"))
+                .addOptional(quark("golden_apple_crate"))
+                .addOptional(quark("apple_crate"))
+                .addOptional(quark("potato_crate"))
+                .addOptional(quark("carrot_crate"))
+                .addOptional(quark("golden_carrot_crate"))
+                .addOptional(quark("beetroot_crate"))
+                .addOptional(quark("sugar_cane_block"))
+                .addOptional(quark("cocoa_beans_sack"))
+                .addOptional(quark("nether_wart_stack"))
+                .addOptional(quark("berry_sack"))
+                .addOptional(quark("glowberry_sack"))
+                .addOptional(supplementaries("sugar_cube"))
+                .addOptional(vinery("white_grape_crate"))
+                .addOptional(vinery("red_grape_crate"))
+                .addOptional(vinery("cherry_crate"))
+                .addOptional(vinery("apple_crate"));
 
         tag(RECIPE_CONVERSION)
                 .addTag(Tags.Items.SEEDS)
                 .add(Items.SUGAR)
                 .add(Items.HONEY_BOTTLE)
-                .addOptional(new ResourceLocation("farmersdelight", "rice"));
+                .addOptional(farmersdelight("rice"));
 
         tag(BLACKLIST)
                 .addTag(ItemTags.FLOWERS)
@@ -72,7 +76,31 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.GRASS)
                 .add(Items.TALL_GRASS)
                 .add(Items.DEAD_BUSH)
-                .addOptional(new ResourceLocation("supplementaries", "flax"))
-                .addOptional(new ResourceLocation("supplementaries", "flax_seeds"));
+                .addOptional(supplementaries("flax"))
+                .addOptional(supplementaries("flax_seeds"));
+    }
+
+    private ResourceLocation quark(final String path) {
+        return location("quark", path);
+    }
+
+    private ResourceLocation farmersdelight(final String path) {
+        return location("farmersdelight", path);
+    }
+
+    private ResourceLocation supplementaries(final String path) {
+        return location("supplementaries", path);
+    }
+
+    private ResourceLocation vinery(final String path) {
+        return location("vinery", path);
+    }
+
+    private ResourceLocation forge(final String path) {
+        return location("forge", path);
+    }
+
+    private ResourceLocation location(final String namespace, final String path) {
+        return new ResourceLocation(namespace, path);
     }
 }
