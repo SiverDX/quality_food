@@ -8,6 +8,7 @@
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
     "AbstractFurnaceMenuMixin",
+    "AttachedStemBlockMixin",
     "BlockMixin",
     "CakeBlockMixin",
     "CandleCakeBlockMixin",
@@ -18,6 +19,7 @@
     "InventoryMenuMixin",
     "ItemMixin",
     "StateDefinitionMixin",
+    "StemBlockMixin",
     "SweetBerryBushBlockMixin",
     "create.BasinRecipeMixin",
     "create.MillstoneBlockEntityMixin",

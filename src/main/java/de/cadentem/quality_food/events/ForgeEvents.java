@@ -160,6 +160,11 @@ public class ForgeEvents {
 
     /** Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#giveItem(CommandSourceStack, ItemInput, Collection, int)} */
     private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final Quality quality) throws CommandSyntaxException {
+        if (quality.level() == 0) {
+            source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
+            return 0;
+        }
+
         int maxStackSize = input.getItem().getMaxStackSize();
         int maxCount = maxStackSize * /* MAX_ALLOWED_ITEMSTACKS */ 100;
         ItemStack tempStack = input.createItemStack(1, false);
