@@ -38,6 +38,7 @@ public class QualityFood {
         QFItems.ITEMS.register(modEventBus);
         QFLootModifiers.LOOT_MODIFIERS.register(modEventBus);
         QFCommands.COMMAND_ARGUMENTS.register(modEventBus);
+        MinecraftForge.EVENT_BUS.addListener(QFCommands::registerCommands);
 
         if (isModLoaded(HARVEST_WITH_EASE)) {
             MinecraftForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);

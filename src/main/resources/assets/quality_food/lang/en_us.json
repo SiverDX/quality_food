@@ -6,5 +6,6 @@
   "config.jade.plugin_quality_food.quality": "Quality",
 
   "commands.quality_food.quality.failed.no_quality": "%s is not applicable to quality",
-  "commands.quality_food.quality.failed.invalid_quality": "Tried to apply invalid quality"
+  "commands.quality_food.quality.failed.invalid_quality": "Tried to apply invalid quality",
+  "commands.quality_food.quality.failed.missing_quality": "%s does not have any quality to remove"
 }
