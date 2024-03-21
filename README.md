@@ -10,7 +10,10 @@ You can give yourself a quality item like this: `/give @s farmersdelight:roast_c
 - `quality` is a value between `0` (`NONE`) and `3` (`DIAMOND`)
 - Setting `NONE` does not make sense since it will not affect anything and just makes the item unstackable with non-quality items
 
-Or by using the quality command `/quality_food give`
+You can also use the following commands 
+- `/quality_food give`
+- `/quality_food apply`
+- `/quality_food remove`
 
 # Configuration
 There is a configuration per quality - aside from some normal things you can also specify which effects a quality should grant

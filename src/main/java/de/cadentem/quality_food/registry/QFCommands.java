@@ -85,6 +85,11 @@ public class QFCommands {
         if (source.getEntity() instanceof LivingEntity livingSource) {
             ItemStack stack = livingSource.getMainHandItem();
 
+            if (!QualityUtils.canHaveQuality(stack)) {
+                source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", stack.getDisplayName()));
+                return 0;
+            }
+
             if (canOverride && stack.getTag() != null) {
                 stack.getTag().remove(QualityUtils.QUALITY_TAG);
             }
@@ -125,6 +130,11 @@ public class QFCommands {
         int maxCount = maxStackSize * /* MAX_ALLOWED_ITEMSTACKS */ 100;
         ItemStack tempStack = input.createItemStack(1, false);
 
+        if (!QualityUtils.canHaveQuality(tempStack)) {
+            source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", tempStack.getDisplayName()));
+            return 0;
+        }
+
         if (count > maxCount) {
             source.sendFailure(Component.translatable("commands.give.failed.toomanyitems", maxCount, tempStack.getDisplayName()));
             return 0;
@@ -139,12 +149,6 @@ public class QFCommands {
 
                 ItemStack stack = input.createItemStack(min, false);
                 QualityUtils.applyQuality(stack, quality);
-
-                if (!QualityUtils.hasQuality(stack)) {
-                    source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", stack.getDisplayName()));
-                    return 0;
-                }
-
                 boolean wasAdded = player.getInventory().add(stack);
 
                 if (wasAdded && stack.isEmpty()) {
