@@ -42,7 +42,7 @@ public class ForgeEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleFishing(final ItemFishedEvent event) {
-        if (event.getEntity().getLevel().isClientSide()) {
+        if (event.getHookEntity() != null && event.getHookEntity().getLevel().isClientSide()) {
             return;
         }
 
