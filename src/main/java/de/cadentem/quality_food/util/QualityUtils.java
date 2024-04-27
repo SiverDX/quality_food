@@ -86,7 +86,11 @@ public class QualityUtils {
         Utils.LAST_STACK.set(stack);
 
         RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
-        double rolls = Math.max(1, entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 1);
+        double rolls = 1 + (entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 0);
+
+        if (rolls < 0) {
+            rolls = 0.1;
+        }
 
         if (checkAndRoll(stack, random, bonus, Quality.DIAMOND, rolls)) {
             return;
