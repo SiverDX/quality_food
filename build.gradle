@@ -86,17 +86,17 @@ dependencies {
     /* --- Compatibility --- */
     implementation fg.deobf("curse.maven:farmers-delight-398521:5051241") // 1.19.2 - 1.2.4
 
-    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5069424") // 1.19.2 - 1.2.2
+    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202135") // 1.19.2 - 1.3.1
 
-    compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5030321") // 1.19.2 - 8.0.1.0
+    compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5384545") // 1.19.2 - 9.0.0.3
 
     implementation fg.deobf("curse.maven:jade-324717:4914105") // 1.19.2 - 8.9.2
 
-    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5102974") // 1.19.2 - 0.6.2.552
-    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5158340") // 1.19.2 - 3.20.2.1025
-    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5158352") // 1.19.2 - 0.9.7.743
+    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5296313") // 1.19.2 - 0.6.4.605
+    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5194759") // 1.19.2 - 3.20.2.1035
+    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5194750") // 1.19.2 - 0.9.7.765
 
-    compileOnly fg.deobf("curse.maven:toms-storage-378609:4649846") // 1.19.2 - 1.5.9
+    compileOnly fg.deobf("curse.maven:toms-storage-378609:5211204") // 1.19.2 - 1.5.10
 
     compileOnly fg.deobf("curse.maven:create-328085:4835190") // 1.19.2 - 0.5.1f
 
