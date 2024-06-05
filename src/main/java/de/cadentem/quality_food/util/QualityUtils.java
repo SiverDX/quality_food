@@ -37,7 +37,7 @@ public class QualityUtils {
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static boolean hasQuality(final ItemStack stack) {
-        if (stack == null) {
+        if (stack == null || stack.isEmpty()) {
             return false;
         }
 
