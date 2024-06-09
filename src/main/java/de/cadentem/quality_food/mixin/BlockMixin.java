@@ -67,9 +67,9 @@ public class BlockMixin {
         quality_food$storedData.remove();
     }
 
-    /** Apply quality to block drops (not a loot modifier, so it also works for right-click harvesting) */
+    /** Apply quality to block drops (not a loot modifier to make it also work with right-click harvesting) */
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Ljava/util/function/Supplier;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
-    private static ItemStack quality_food$applyQuality(final ItemStack stack /* Method arguments: */) {
+    private static ItemStack quality_food$applyQuality(final ItemStack stack) {
         DropData dropData = quality_food$storedData.get();
 
         if (dropData == null) {

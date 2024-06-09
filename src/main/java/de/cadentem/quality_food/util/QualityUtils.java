@@ -158,7 +158,7 @@ public class QualityUtils {
     }
 
     public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player) {
-        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE)) : Quality.NONE;
+        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE), true) : Quality.NONE;
 
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
