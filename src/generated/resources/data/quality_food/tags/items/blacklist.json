@@ -6,6 +6,7 @@
     "minecraft:tall_grass",
     "minecraft:dead_bush",
     "minecraft:nether_wart",
+    "minecraft:vine",
     {
       "id": "supplementaries:flax",
       "required": false

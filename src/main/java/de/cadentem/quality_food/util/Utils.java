@@ -57,9 +57,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        boolean isValid = block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock;
-
-        if (isValid) {
+        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
             return true;
         }
 

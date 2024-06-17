@@ -21,6 +21,7 @@
     "StateDefinitionMixin",
     "StemBlockMixin",
     "SweetBerryBushBlockMixin",
+    "VineBlockMixin",
     "create.BasinRecipeMixin",
     "create.MillstoneBlockEntityMixin",
     "farmersdelight.BuddingBushBlockMixin",
@@ -40,7 +41,9 @@
     "sophisticatedcore.CraftingUpgradeContainerMixin",
     "sophisticatedcore.StorageContainerMenuBaseMixin",
     "toms_storage.CraftingTerminalBlockEntityMixin",
-    "toms_storage.CraftingTerminalMenuMixin"
+    "toms_storage.CraftingTerminalMenuMixin",
+    "vinery.GrapeBushMixin",
+    "vinery.GrapeVineBlockMixin"
   ],
   "client": [
     "client.ItemRendererMixin"
