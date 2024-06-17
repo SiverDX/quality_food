@@ -81,6 +81,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.TALL_GRASS)
                 .add(Items.DEAD_BUSH)
                 .add(Items.NETHER_WART)
+                .add(Items.VINE)
                 .addOptional(supplementaries("flax"))
                 .addOptional(supplementaries("flax_seeds"));
     }
