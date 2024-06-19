@@ -57,7 +57,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
+        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CaveVinesBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
             return true;
         }
 
@@ -69,7 +69,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final BlockState state) {
-        return isValidBlock(state.getBlock());
+        return state != null && isValidBlock(state.getBlock());
     }
 
     public static @Nullable BlockPos getBlockEntityPosition() {

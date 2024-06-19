@@ -4,9 +4,17 @@
     "#minecraft:saplings",
     "minecraft:grass",
     "minecraft:tall_grass",
+    "minecraft:fern",
+    "minecraft:large_fern",
+    "minecraft:small_dripleaf",
+    "minecraft:big_dripleaf",
     "minecraft:dead_bush",
-    "minecraft:nether_wart",
     "minecraft:vine",
+    "minecraft:nether_wart",
+    "minecraft:seagrass",
+    "minecraft:warped_roots",
+    "minecraft:crimson_roots",
+    "minecraft:nether_sprouts",
     {
       "id": "supplementaries:flax",
       "required": false

@@ -1,0 +1,2 @@
+- replace individual mixins with a mixin into `level#setBlock` and copy the quality from the old to the new state
+- use event to get right-clicked block (i.e. pop resource mixin)
