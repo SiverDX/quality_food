@@ -34,6 +34,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptionalTag(farmersdelight("wild_crops"))
                 .add(Items.SUGAR)
                 .add(Items.SUGAR_CANE)
+                .add(Items.COCOA_BEANS)
                 .addOptional(farmersdelight("rice_panicle"))
                 /* Storage blocks */
                 .add(Items.HAY_BLOCK)

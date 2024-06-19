@@ -1,13 +1,10 @@
 package de.cadentem.quality_food.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
-import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -87,17 +84,5 @@ public class BlockMixin {
 
         QualityUtils.applyQuality(stack, dropData.state(), dropData.player());
         return stack;
-    }
-
-    /** Support for quality block state */
-    @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
-    private BlockState quality_food$setQualityState(final BlockState original, /* Method parameters: */ final BlockPlaceContext context) {
-        ItemStack itemInHand = context.getItemInHand();
-
-        if (Utils.isValidBlock(original) && original.hasProperty(Utils.QUALITY_STATE)) {
-            return original.setValue(Utils.QUALITY_STATE, QualityUtils.getPlacementQuality(itemInHand));
-        }
-
-        return original;
     }
 }

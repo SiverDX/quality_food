@@ -18,6 +18,7 @@
     },
     "minecraft:sugar",
     "minecraft:sugar_cane",
+    "minecraft:cocoa_beans",
     {
       "id": "farmersdelight:rice_panicle",
       "required": false
