@@ -31,7 +31,7 @@ public abstract class CookingPotResultSlotMixin extends SlotItemHandler {
         }
 
         AtomicDouble bonus = new AtomicDouble(0);
-        BlockDataProvider.getCapability(tileEntity).ifPresent(data -> bonus.set(data.useQuality()));
+        BlockDataProvider.getCapability(tileEntity).ifPresent(data -> bonus.set(data.useQuality())); // TODO :: take into consideration the amount of slots / inputs, i.e. if it's 3 ingredients divide the bonus by 3
         QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
     }
 

@@ -16,6 +16,7 @@
     "CropBlockMixin",
     "EntityMixin",
     "FurnaceResultSlotMixin",
+    "GrowingPlantBlockMixin",
     "InventoryMenuMixin",
     "ItemMixin",
     "StateDefinitionMixin",

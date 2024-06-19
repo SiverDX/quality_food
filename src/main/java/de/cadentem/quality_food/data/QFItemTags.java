@@ -75,9 +75,17 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(ItemTags.SAPLINGS)
                 .add(Items.GRASS)
                 .add(Items.TALL_GRASS)
+                .add(Items.FERN)
+                .add(Items.LARGE_FERN)
+                .add(Items.SMALL_DRIPLEAF)
+                .add(Items.BIG_DRIPLEAF)
                 .add(Items.DEAD_BUSH)
-                .add(Items.NETHER_WART)
                 .add(Items.VINE)
+                .add(Items.NETHER_WART) // Forbidden & Arcanus
+                .add(Items.SEAGRASS) // Ocean's Delight | Aquaculture 2
+                .add(Items.WARPED_ROOTS) // Nether's Delight
+                .add(Items.CRIMSON_ROOTS) // Nether's Delight
+                .add(Items.NETHER_SPROUTS)
                 .addOptional(supplementaries("flax"))
                 .addOptional(supplementaries("flax_seeds"));
     }

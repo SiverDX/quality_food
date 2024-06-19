@@ -67,6 +67,14 @@ public class BlockMixin {
         quality_food$storedData.remove();
     }
 
+    // Used for Cave Vines (i.e. Glow Berries)
+    @Inject(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
+    private static void quality_food$applyQuality(final Level level, final BlockPos position, final ItemStack stack, final CallbackInfo callback) {
+        if (quality_food$storedData.get() == null) {
+            QualityUtils.applyQuality(stack, level.getBlockState(position), null);
+        }
+    }
+
     /** Apply quality to block drops (not a loot modifier to make it also work with right-click harvesting) */
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Ljava/util/function/Supplier;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
     private static ItemStack quality_food$applyQuality(final ItemStack stack) {
