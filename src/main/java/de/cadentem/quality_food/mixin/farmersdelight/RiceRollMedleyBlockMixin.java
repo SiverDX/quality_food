@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import vectorwing.farmersdelight.common.block.RiceRollMedleyBlock;
 
-/** Add support for the quality block state (and apply quality to served item) */
+/** Apply quality to served item */
 @Mixin(RiceRollMedleyBlock.class)
 public class RiceRollMedleyBlockMixin {
     @ModifyReturnValue(method = "getServingItem", at = @At("RETURN"), remap = false)

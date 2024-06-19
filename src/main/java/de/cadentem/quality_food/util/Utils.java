@@ -37,8 +37,8 @@ public class Utils {
 
         FoodProperties properties = stack.getFoodProperties(null);
 
-        if (properties != null) {
-            return properties.getNutrition() > 0 || properties.getSaturationModifier() > 0;
+        if (properties != null && (properties.getNutrition() > 0 || properties.getSaturationModifier() > 0)) {
+            return true;
         }
 
         if (isValidBlock(stack)) {
@@ -57,7 +57,8 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CaveVinesBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
+        // TODO :: Other way of handling blocks? Cannot check 'asItem()' due to 'StateDefinitionMixin' running into "Attemped to override already set default value. This is not allowed: The object air (name minecraft:air)"
+        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CaveVinesBlock || block instanceof CocoaBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
             return true;
         }
 
@@ -69,7 +70,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final BlockState state) {
-        return state != null && isValidBlock(state.getBlock());
+        return state != null && !state.isAir() && isValidBlock(state.getBlock());
     }
 
     public static @Nullable BlockPos getBlockEntityPosition() {

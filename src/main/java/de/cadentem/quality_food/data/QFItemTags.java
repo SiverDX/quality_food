@@ -31,6 +31,7 @@ public class QFItemTags extends ItemTagsProvider {
         tag(MATERIAL_WHITELIST)
                 .add(Items.SUGAR)
                 .add(Items.SUGAR_CANE)
+                .add(Items.COCOA_BEANS)
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
                 .addTag(Tags.Items.EGGS)
