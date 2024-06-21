@@ -80,6 +80,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.LARGE_FERN)
                 .add(Items.SMALL_DRIPLEAF)
                 .add(Items.BIG_DRIPLEAF)
+                .add(Items.LILY_PAD)
                 .add(Items.DEAD_BUSH)
                 .add(Items.VINE)
                 .add(Items.NETHER_WART) // Forbidden & Arcanus
