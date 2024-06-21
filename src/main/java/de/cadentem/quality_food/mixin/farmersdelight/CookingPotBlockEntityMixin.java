@@ -28,6 +28,6 @@ public abstract class CookingPotBlockEntityMixin {
     /** Increment quality after cooking an item */
     @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
     private void quality_food$incrementQuality(final CookingPotRecipe recipe, final CookingPotBlockEntity blockEntity, final CallbackInfoReturnable<Boolean> callback, @Local(ordinal = 2) final ItemStack stack) {
-        Utils.incrementQuality(blockEntity, stack);
+        Utils.incrementQuality(blockEntity, stack, recipe.getIngredients().size()); // TODO :: Consider max. stack size when taking out? Since it can keep cooking while you are only able to take out 16 e.g.
     }
 }

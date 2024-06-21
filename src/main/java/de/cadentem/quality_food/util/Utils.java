@@ -99,10 +99,14 @@ public class Utils {
     }
 
     public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack) {
-        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide()) {
+        incrementQuality(blockEntity, stack, 1);
+    }
+
+    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack, int ingredientCount) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredientCount < 1) {
             return;
         }
 
-        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> data.incrementQuality(QualityUtils.getCookingBonus(stack)));
+        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> data.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount));
     }
 }

@@ -33,7 +33,7 @@ public abstract class CookingPotMenuMixin extends RecipeBookMenu<Container> {
         }
 
         AtomicDouble bonus = new AtomicDouble(0);
-        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality())); // TODO :: take into consideration the amount of slots / inputs, i.e. if it's 3 ingredients divide the bonus by 3
+        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality()));
         QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
     }
 
