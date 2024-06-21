@@ -23,6 +23,7 @@
     "StateDefinitionMixin",
     "StemBlockMixin",
     "SweetBerryBushBlockMixin",
+    "ThrownEggMixin",
     "create.BasinRecipeMixin",
     "create.MillstoneBlockEntityMixin",
     "farmersdelight.BuddingBushBlockMixin",
