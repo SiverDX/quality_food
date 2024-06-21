@@ -32,6 +32,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.SUGAR)
                 .add(Items.SUGAR_CANE)
                 .add(Items.COCOA_BEANS)
+                .add(Items.INK_SAC) // Farmer's Delight
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
                 .addTag(Tags.Items.EGGS)
