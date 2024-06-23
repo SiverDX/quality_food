@@ -23,6 +23,7 @@ public class ServerConfig {
     public static ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
     public static ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
     public static ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
+    public static ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
 
     static {
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
@@ -47,6 +48,10 @@ public class ServerConfig {
             QUALITY_CONFIG.put(quality, config);
             BUILDER.pop();
         }
+
+        BUILDER.push("Compatibility");
+        QUARK_HANDLE_CONFIG = BUILDER.comment("Handle Quark harvest & replant automatically (if you have custom behaviour configured regarding the quality block state turn this off)").define("quark_handle_config", true);
+        BUILDER.pop();
 
         SPEC = BUILDER.build();
     }

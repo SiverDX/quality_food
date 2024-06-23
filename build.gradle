@@ -107,6 +107,9 @@ dependencies {
     compileOnly fg.deobf("curse.maven:do-api-864599:4676882") // 1.1.0b
     compileOnly fg.deobf("curse.maven:architectury-api-419699:5137942") // 6.6.92
 
+    implementation fg.deobf("curse.maven:quark-243121:4812006") // 3.4-418
+    implementation fg.deobf("curse.maven:autoreglib-250363:4100299") // 1.8.2-55
+
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:3872808")
 

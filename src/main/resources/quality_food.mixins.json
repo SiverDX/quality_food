@@ -39,6 +39,7 @@
     "farmersdelight.TomatoVineBlockMixin",
     "fastentitytransfer.CommonUtilsMixin",
     "majruszsenchantments.TelekinesisEnchantmentMixin",
+    "quark.SimpleHarvestModuleMixin",
     "sophisticatedcore.CompactingUpgradeWrapperMixin",
     "sophisticatedcore.CraftingUpgradeContainerMixin",
     "sophisticatedcore.StorageContainerMenuBaseMixin",
