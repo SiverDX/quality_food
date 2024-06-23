@@ -38,10 +38,10 @@ public enum Quality {
     }
 
     public static @NotNull Quality byName(final String name) {
-        return switch (name) {
-            case "Iron" -> IRON;
-            case "Gold" -> GOLD;
-            case "Diamond" -> DIAMOND;
+        return switch (name.toLowerCase()) {
+            case "iron" -> IRON;
+            case "gold" -> GOLD;
+            case "diamond" -> DIAMOND;
             default -> NONE;
         };
     }

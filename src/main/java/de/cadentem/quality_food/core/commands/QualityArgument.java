@@ -25,6 +25,6 @@ public class QualityArgument implements ArgumentType<Quality> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(List.of(Quality.IRON.getName(), Quality.GOLD.getName(), Quality.DIAMOND.getName()), builder);
+        return SharedSuggestionProvider.suggest(List.of(Quality.IRON.getName().toLowerCase(), Quality.GOLD.getName().toLowerCase(), Quality.DIAMOND.getName().toLowerCase()), builder);
     }
 }
