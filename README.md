@@ -28,6 +28,15 @@ There is a configuration per quality - aside from some normal things you can als
 
 ---
 
+There is a farmland configuration which allows you to define a bonus (can also be negative, i.e. 0.5) based on the farm block the crop is planted on
+- Example: `farmland_config = ["3;#minecraft:crops;farmersdelight:rich_soil_farmland;1.25"]`
+  - `3` is the index (configurations are tested with the lowest one first - the first matching one will be applied) (needs to be positive)
+  - `#minecraft:crops` is the crop block (can be a tag or a single block)
+  - `farmersdelight:rich_soil_farmland` is the farmland block (can be a tag or a single block)
+  - `1.25` is the multiplier to be applied (needs to be positive - values below `1` will reduce the chance)
+
+---
+
 Non-food items can be made applicable to quality by adding them to the `quality_food:material_whitelist` item tag
 
 ---
@@ -51,6 +60,9 @@ If you find some items having quality where it doesn't make much sense you can b
 - [Create](https://www.curseforge.com/minecraft/mc-mods/create)
   - Milling and Mechanical Mixer should apply the quality of the ingredients
 - [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
+- [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
+  - Auto harvesting & replanting
+  - The `Luck` attribute bonus to quality chance may not work properly
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
