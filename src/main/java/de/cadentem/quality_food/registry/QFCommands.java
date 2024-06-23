@@ -9,6 +9,7 @@ import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.core.commands.QualityArgument;
 import de.cadentem.quality_food.core.commands.QualityItemArgument;
 import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -85,8 +86,13 @@ public class QFCommands {
         if (source.getEntity() instanceof LivingEntity livingSource) {
             ItemStack stack = livingSource.getMainHandItem();
 
-            if (!QualityUtils.canHaveQuality(stack)) {
+            if (!Utils.isValidItem(stack)) {
                 source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", stack.getDisplayName()));
+                return 0;
+            }
+
+            if (QualityUtils.hasQuality(stack) && !canOverride) {
+                source.sendFailure(Component.translatable("commands.quality_food.quality.failed.already_has_quality", stack.getDisplayName()));
                 return 0;
             }
 
