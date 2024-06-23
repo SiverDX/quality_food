@@ -93,6 +93,9 @@ dependencies {
     implementation fg.deobf("curse.maven:quark-243121:5418252") // 4.0-458
     implementation fg.deobf("curse.maven:zeta-968868:5418213") // 1.0-19
 
+    implementation fg.deobf("curse.maven:quark-243121:4812006") // 3.4-418
+    implementation fg.deobf("curse.maven:autoreglib-250363:4100299") // 1.8.2-55
+
     /* --- Test --- */
 //    implementation fg.deobf("curse.maven:appleskin-248787:3872808")
 
