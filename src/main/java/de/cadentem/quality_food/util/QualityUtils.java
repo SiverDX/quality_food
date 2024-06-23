@@ -23,6 +23,7 @@ import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +80,12 @@ public class QualityUtils {
     }
 
     public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final Bonus bonus) {
+        List<Bonus> bonusList = new ArrayList<>();
+        bonusList.add(bonus);
+        applyQuality(stack, entity, bonusList);
+    }
+
+    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList) {
         if (Utils.LAST_STACK.get() == stack) {
             return;
         }
@@ -92,22 +99,26 @@ public class QualityUtils {
             rolls = 0.1;
         }
 
-        if (checkAndRoll(stack, random, bonus, Quality.DIAMOND, rolls)) {
+        if (checkAndRoll(stack, random, bonusList, Quality.DIAMOND, rolls)) {
             return;
         }
 
-        if (checkAndRoll(stack, random, bonus, Quality.GOLD, rolls)) {
+        if (checkAndRoll(stack, random, bonusList, Quality.GOLD, rolls)) {
             return;
         }
 
-        checkAndRoll(stack, random, bonus, Quality.IRON, rolls);
+        checkAndRoll(stack, random, bonusList, Quality.IRON, rolls);
     }
 
-    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final Bonus bonus, final Quality quality, double rolls) {
-        float chance = switch (bonus.type()) {
-            case ADDITIVE -> QualityConfig.getChance(quality) + bonus.amount();
-            case MULTIPLICATIVE -> QualityConfig.getChance(quality) * bonus.amount();
-        };
+    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls) {
+        float chance = QualityConfig.getChance(quality);
+
+        for (Bonus bonus : bonusList) {
+            chance = switch (bonus.type()) {
+                case ADDITIVE -> chance + bonus.amount();
+                case MULTIPLICATIVE -> chance * bonus.amount();
+            };
+        }
 
         int fullRolls = (int) rolls;
 
@@ -157,7 +168,29 @@ public class QualityUtils {
         tag.put(QUALITY_TAG, qualityTag);
     }
 
+    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
+        if (farmland == null) {
+            applyQuality(stack, state, player);
+            return;
+        }
+
+        double farmlandMultiplier = ServerConfig.getFarmlandMultiplier(state, farmland);
+
+        if (farmlandMultiplier == -1) {
+            applyQuality(stack, state, player);
+        } else {
+            Bonus farmlandBonus = Bonus.multiplicative((float) farmlandMultiplier);
+            List<Bonus> bonusList = new ArrayList<>();
+            bonusList.add(farmlandBonus);
+            applyQuality(stack, state, player, bonusList);
+        }
+    }
+
     public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player) {
+        applyQuality(stack, state, player, new ArrayList<>());
+    }
+
+    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
         Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE), true) : Quality.NONE;
 
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
@@ -169,9 +202,10 @@ public class QualityUtils {
 
             if (targetChance > 0 && quality.level() > 0) {
                 float multiplier = targetChance / QualityConfig.getChance(quality);
-                QualityUtils.applyQuality(stack, player, Bonus.multiplicative(multiplier));
+                bonusList.add(Bonus.multiplicative(multiplier));
+                QualityUtils.applyQuality(stack, player, bonusList);
             } else {
-                QualityUtils.applyQuality(stack, player);
+                QualityUtils.applyQuality(stack, player, bonusList);
             }
         } else if (QualityUtils.isValidQuality(quality)) {
             QualityUtils.applyQuality(stack, quality);

@@ -6,6 +6,8 @@ Quality can:
 - Improve positive effects and diminish (or outright remove) negative effects gained from eating food
 - Impact the result of crafted (quality applicable) items (the `minecraft:generic.luck` attribute increases the chance as well)
 
+---
+
 You can give yourself a quality item like this: `/give @s farmersdelight:roast_chicken_block{quality_food:{quality:2}}`
 - `quality` is a value between `0` (`NONE`) and `3` (`DIAMOND`)
 - Setting `NONE` does not make sense since it will not affect anything and just makes the item unstackable with non-quality items
@@ -23,6 +25,15 @@ There is a configuration per quality - aside from some normal things you can als
   - `120` is the duration in ticks (`20` ticks means 1 second)
   - `3` is the amplifier (`0` results in an effect level of 1 (i.e. no level shown))
   - `0.45` is the probability to gain this effect when eating the item (`1` means 100%)
+
+---
+
+There is a farmland configuration which allows you to define a bonus (can also be negative, i.e. 0.5) based on the farm block the crop is planted on
+- Example: `farmland_config = ["3;#minecraft:crops;farmersdelight:rich_soil_farmland;1.25"]`
+  - `3` is the index (configurations are tested with the lowest one first - the first matching one will be applied) (needs to be positive)
+  - `#minecraft:crops` is the crop block (can be a tag or a single block)
+  - `farmersdelight:rich_soil_farmland` is the farmland block (can be a tag or a single block)
+  - `1.25` is the multiplier to be applied (needs to be positive - values below `1` will reduce the chance)
 
 ---
 
@@ -45,9 +56,13 @@ If you find some items having quality where it doesn't make much sense you can b
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
 - [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
-  - No Furnace Upgrade support
+  - No Furnace / Smoker upgrade support
 - [Create](https://www.curseforge.com/minecraft/mc-mods/create)
   - Milling and Mechanical Mixer should apply the quality of the ingredients
+- [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
+- [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
+  - Auto harvesting & replanting
+  - The `Luck` attribute bonus to quality chance may not work properly
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly

@@ -25,7 +25,7 @@ public class BlockMixin {
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", at = @At("HEAD"))
     private static void quality_food$storeBlockState(final BlockState state, final Level level, final BlockPos position, final CallbackInfo callback) {
-        quality_food$storedData.set(DropData.create(state, null));
+        quality_food$storedData.set(DropData.create(state, null, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", at = @At("TAIL"))
@@ -35,7 +35,7 @@ public class BlockMixin {
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("HEAD"))
     private static void quality_food$storeBlockState(final BlockState state, final LevelAccessor level, final BlockPos position, final @Nullable BlockEntity blockEntity, final CallbackInfo callback) {
-        quality_food$storedData.set(DropData.create(state, null));
+        quality_food$storedData.set(DropData.create(state, null, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("TAIL"))
@@ -44,12 +44,12 @@ public class BlockMixin {
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Z)V", at = @At("HEAD"), remap = false)
-    private static void quality_food$clearBlockState(final BlockState state, final Level level, final BlockPos position, final @Nullable BlockEntity blockEntity, final Entity entity, final ItemStack tool, boolean dropExperience, final CallbackInfo callback) {
-        quality_food$storedData.set(DropData.create(state, entity));
+    private static void quality_food$storeBlockState(final BlockState state, final Level level, final BlockPos position, final @Nullable BlockEntity blockEntity, final Entity entity, final ItemStack tool, boolean dropExperience, final CallbackInfo callback) {
+        quality_food$storedData.set(DropData.create(state, entity, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Z)V", at = @At("TAIL"), remap = false)
-    private static void quality_food$storeBlockState(final BlockState state, final Level level, final BlockPos position, final @Nullable BlockEntity blockEntity, final @Nullable Entity entity, final ItemStack tool, boolean dropExperience, final CallbackInfo callback) {
+    private static void quality_food$clearBlockState(final BlockState state, final Level level, final BlockPos position, final @Nullable BlockEntity blockEntity, final @Nullable Entity entity, final ItemStack tool, boolean dropExperience, final CallbackInfo callback) {
         quality_food$storedData.remove();
     }
 
@@ -57,7 +57,7 @@ public class BlockMixin {
     @Inject(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
     private static void quality_food$applyQuality(final Level level, final BlockPos position, final ItemStack stack, final CallbackInfo callback) {
         if (quality_food$storedData.get() == null) {
-            QualityUtils.applyQuality(stack, level.getBlockState(position), null);
+            QualityUtils.applyQuality(stack, level.getBlockState(position), null, level.getBlockState(position.below()));
         }
     }
 
@@ -68,10 +68,10 @@ public class BlockMixin {
 
         if (dropData == null) {
             QualityUtils.applyQuality(stack);
-            return stack;
+        } else {
+            QualityUtils.applyQuality(stack, dropData.state(), dropData.player(), dropData.farmland());
         }
 
-        QualityUtils.applyQuality(stack, dropData.state(), dropData.player());
         return stack;
     }
 }
