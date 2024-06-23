@@ -2,6 +2,8 @@
   "values": [
     "minecraft:sugar",
     "minecraft:sugar_cane",
+    "minecraft:cocoa_beans",
+    "minecraft:ink_sac",
     "minecraft:hay_block",
     "minecraft:honey_block",
     "#forge:eggs",
@@ -109,19 +111,19 @@
       "required": false
     },
     {
-      "id": "vinery:white_grape_crate",
+      "id": "vinery:white_grape_bag",
       "required": false
     },
     {
-      "id": "vinery:red_grape_crate",
+      "id": "vinery:red_grape_bag",
       "required": false
     },
     {
-      "id": "vinery:cherry_crate",
+      "id": "vinery:cherry_bag",
       "required": false
     },
     {
-      "id": "vinery:apple_crate",
+      "id": "vinery:apple_bag",
       "required": false
     }
   ]

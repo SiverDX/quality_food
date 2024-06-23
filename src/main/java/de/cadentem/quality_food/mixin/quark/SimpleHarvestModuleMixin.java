@@ -5,16 +5,18 @@ import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
+import org.violetmoon.quark.content.tweaks.module.SimpleHarvestModule;
 
 // TODO :: shrink item stack (seed) with the proper quality and if not present place block with proper quality of shrunk item stack
 /** Call the methods with the default quality state instead of the actual one */
 @Mixin(value = SimpleHarvestModule.class, remap = false)
+@Debug(export = true)
 public abstract class SimpleHarvestModuleMixin {
-    @ModifyArg(method = "getAction", at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
+    @ModifyArg(method = "getActionForBlock", at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
     private static Object quality_food$allowReplant(final Object object) {
         if (!ServerConfig.QUARK_HANDLE_CONFIG.get()) {
             return object;

@@ -15,7 +15,7 @@ import satisfyu.vinery.block.grape.GrapeBush;
 public abstract class GrapeBushMixin {
     @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lsatisfyu/vinery/block/grape/GrapeBush;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"))
     private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final BlockState state, @Local(argsOnly = true) final Player player, @Local(argsOnly = true) final BlockPos position) {
-        QualityUtils.applyQuality(stack, state, player, player.getLevel().getBlockState(position.below()));
+        QualityUtils.applyQuality(stack, state, player, player.level().getBlockState(position.below()));
         return stack;
     }
 }

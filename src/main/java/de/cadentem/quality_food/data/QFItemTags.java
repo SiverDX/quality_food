@@ -65,10 +65,10 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(quark("berry_sack"))
                 .addOptional(quark("glowberry_sack"))
                 .addOptional(supplementaries("sugar_cube"))
-                .addOptional(vinery("white_grape_crate"))
-                .addOptional(vinery("red_grape_crate"))
-                .addOptional(vinery("cherry_crate"))
-                .addOptional(vinery("apple_crate"));
+                .addOptional(vinery("white_grape_bag"))
+                .addOptional(vinery("red_grape_bag"))
+                .addOptional(vinery("cherry_bag"))
+                .addOptional(vinery("apple_bag"));
 
         tag(RECIPE_CONVERSION)
                 .addTag(Tags.Items.SEEDS)

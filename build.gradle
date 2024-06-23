@@ -73,31 +73,32 @@ dependencies {
     /* --- Compatibility --- */
     implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
 
-    implementation fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
+    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
 
-    implementation fg.deobf("curse.maven:harvest-with-ease-602171:5030334") // 8.0.1.0
+    compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5030334") // 8.0.1.0
 
     implementation fg.deobf("curse.maven:jade-324717:5390389") // 11.9.3
 
-    implementation fg.deobf("curse.maven:sophisticated-core-618298:5326245") // 0.6.22.611
-    implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:5296475") // 3.20.5.1044
-    implementation fg.deobf("curse.maven:sophisticated-storage-619320:5327377") // 0.10.25.804
+    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5326245") // 0.6.22.611
+    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5296475") // 3.20.5.1044
+    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5327377") // 0.10.25.804
 
-    implementation fg.deobf("curse.maven:toms-storage-378609:5211208") // 1.6.6
+    compileOnly fg.deobf("curse.maven:toms-storage-378609:5211208") // 1.6.6
 
-    implementation fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
+    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
 
+    compileOnly fg.deobf("curse.maven:lets-do-vinery-704465:5437512") // 1.4.24
+    compileOnly fg.deobf("curse.maven:do-api-864599:5402862") // 1.2.13
+    compileOnly fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
+
     implementation fg.deobf("curse.maven:quark-243121:5418252") // 4.0-458
     implementation fg.deobf("curse.maven:zeta-968868:5418213") // 1.0-19
 
-    implementation fg.deobf("curse.maven:quark-243121:4812006") // 3.4-418
-    implementation fg.deobf("curse.maven:autoreglib-250363:4100299") // 1.8.2-55
-
     /* --- Test --- */
-//    implementation fg.deobf("curse.maven:appleskin-248787:3872808")
+    implementation fg.deobf("curse.maven:appleskin-248787:4770828")
 
     /* --- Mixin Configuration --- */
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))

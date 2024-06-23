@@ -24,7 +24,7 @@ public abstract class TelekinesisEnchantmentMixin {
             }
 
             if (data.blockState != null) {
-                QualityUtils.applyQuality(stack, data.blockState, player, data.origin != null ? data.level.getBlockState(new BlockPos(data.origin).below()) : null);
+                QualityUtils.applyQuality(stack, data.blockState, player, data.origin != null ? data.level.getBlockState(BlockPos.containing(data.origin).below()) : null);
             } else {
                 QualityUtils.applyQuality(stack, player);
             }
