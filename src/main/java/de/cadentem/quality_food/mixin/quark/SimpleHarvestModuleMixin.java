@@ -40,7 +40,7 @@ public abstract class SimpleHarvestModuleMixin {
         return object;
     }
 
-    @ModifyArg(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
+    @ModifyArg(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", remap = true))
     private static BlockState quality_food$retainQuality(final BlockState state, @Local(argsOnly = true) BlockState currentState) {
         if (!ServerConfig.QUARK_HANDLE_CONFIG.get()) {
             return state;
@@ -52,26 +52,4 @@ public abstract class SimpleHarvestModuleMixin {
 
         return state;
     }
-
-    /* Loads too early for the server config
-    @Redirect(method = "lambda$configChanged$3", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private <K, V> V quality_food$handleConfigRegistry(final Map<K, V> instance, final K key, final V value) {
-        return quality_food$fillMap(instance, key, value);
-    }
-
-    @Redirect(method = "configChanged", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private <K, V> V quality_food$handleConfigFile(final Map<K, V> instance, final K key, final V value) {
-        return quality_food$fillMap(instance, key, value);
-    }
-
-    @Unique
-    @SuppressWarnings("unchecked")
-    private <K, V> @Nullable V quality_food$fillMap(final Map<K, V> instance, final K key, final V value) {
-        for (Quality quality : Quality.values()) {
-            instance.put((K) ((BlockState) key).setValue(Utils.QUALITY_STATE, quality.ordinal()), (V) ((BlockState) value).setValue(Utils.QUALITY_STATE, quality.ordinal()));
-        }
-
-        return null;
-    }
-    */
 }
