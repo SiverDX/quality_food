@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.capability.BlockData;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
+import de.cadentem.quality_food.core.create.QFItemAttributes;
 import de.cadentem.quality_food.events.ModEvents;
 import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.registry.QFCommands;
@@ -51,6 +52,10 @@ public class QualityFood {
     @SubscribeEvent
     public void commonSetup(final FMLCommonSetupEvent event) {
         NetworkHandler.register();
+
+        if (isModLoaded(CREATE)) {
+            event.enqueueWork(QFItemAttributes::register);
+        }
     }
 
     @SubscribeEvent
@@ -72,4 +77,5 @@ public class QualityFood {
 
     public static final String FARMERSDELIGHT = "farmersdelight";
     public static final String HARVEST_WITH_EASE = "harvestwithease";
+    public static final String CREATE = "create";
 }
