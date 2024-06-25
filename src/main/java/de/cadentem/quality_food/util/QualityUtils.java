@@ -142,7 +142,7 @@ public class QualityUtils {
      * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
      */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
-        if (!isValidQuality(quality) || !canHaveQuality(stack)) {
+        if (!isValidQuality(quality) || isInvalidItem(stack)) {
             return;
         }
 
@@ -259,8 +259,8 @@ public class QualityUtils {
         }
     }
 
-    public static boolean canHaveQuality(final ItemStack stack) {
-        return !hasQuality(stack) && Utils.isValidItem(stack);
+    public static boolean isInvalidItem(final ItemStack stack) {
+        return hasQuality(stack) || !Utils.isValidItem(stack);
     }
 
     private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {

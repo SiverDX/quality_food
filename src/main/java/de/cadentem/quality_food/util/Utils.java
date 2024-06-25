@@ -13,7 +13,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -67,10 +66,6 @@ public class Utils {
         }
 
         return false;
-    }
-
-    public static boolean isValidBlock(final BlockState state) {
-        return state != null && !state.isAir() && isValidBlock(state.getBlock());
     }
 
     public static @Nullable BlockPos getBlockEntityPosition() {
