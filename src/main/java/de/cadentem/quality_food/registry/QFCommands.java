@@ -19,6 +19,7 @@ import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -27,17 +28,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraft.core.registries.Registries;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Collection;
 
 public class QFCommands {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, QualityFood.MODID);
 
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> QUALITY = COMMAND_ARGUMENTS.register("quality", () -> ArgumentTypeInfos.registerByClass(QualityArgument.class, SingletonArgumentInfo.contextFree(QualityArgument::new)));
-    public static final RegistryObject<ArgumentTypeInfo<?, ?>> ITEM = COMMAND_ARGUMENTS.register("item", () -> ArgumentTypeInfos.registerByClass(QualityItemArgument.class, SingletonArgumentInfo.contextAware(QualityItemArgument::item)));
+    static {
+        COMMAND_ARGUMENTS.register("quality", () -> ArgumentTypeInfos.registerByClass(QualityArgument.class, SingletonArgumentInfo.contextFree(QualityArgument::new)));
+        COMMAND_ARGUMENTS.register("item", () -> ArgumentTypeInfos.registerByClass(QualityItemArgument.class, SingletonArgumentInfo.contextAware(QualityItemArgument::item)));
+    }
 
     /**
      * Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#register(CommandDispatcher, CommandBuildContext)}
@@ -124,7 +125,7 @@ public class QFCommands {
     }
 
     /**
-     * Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#giveItem(CommandSourceStack, ItemInput, Collection, int)}
+     * Mostly a copy from {@link net.minecraft.server.commands.GiveCommand}
      */
     private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final Quality quality) throws CommandSyntaxException {
         if (quality.level() == 0) {
@@ -136,7 +137,7 @@ public class QFCommands {
         int maxCount = maxStackSize * /* MAX_ALLOWED_ITEMSTACKS */ 100;
         ItemStack tempStack = input.createItemStack(1, false);
 
-        if (!QualityUtils.canHaveQuality(tempStack)) {
+        if (QualityUtils.isInvalidItem(tempStack)) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", tempStack.getDisplayName()));
             return 0;
         }

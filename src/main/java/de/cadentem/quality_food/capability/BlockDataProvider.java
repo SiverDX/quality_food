@@ -3,17 +3,14 @@ package de.cadentem.quality_food.capability;
 import de.cadentem.quality_food.QualityFood;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.registry.ModBlockEntityTypes;
-import vectorwing.farmersdelight.common.registry.ModBlocks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,18 +62,6 @@ public class BlockDataProvider implements ICapabilitySerializable<CompoundTag> {
 
         if (QualityFood.isModLoaded(QualityFood.FARMERSDELIGHT)) {
             return entity.getType() == ModBlockEntityTypes.COOKING_POT.get();
-        }
-
-        return false;
-    }
-
-    public static boolean isValid(final BlockState state) {
-        if (state.getBlock() instanceof AbstractFurnaceBlock) {
-            return true;
-        }
-
-        if (QualityFood.isModLoaded(QualityFood.FARMERSDELIGHT)) {
-            return state.is(ModBlocks.COOKING_POT.get());
         }
 
         return false;

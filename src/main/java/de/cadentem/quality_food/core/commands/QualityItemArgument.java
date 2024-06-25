@@ -22,9 +22,10 @@ public class QualityItemArgument extends ItemArgument {
     }
 
     @Override
+    @SuppressWarnings("DataFlowIssue") // Registry default value is 'Items.AIR'
     public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(@NotNull final CommandContext<S> context, @NotNull final SuggestionsBuilder builder) {
         return super.listSuggestions(context, builder).thenApply(suggestions -> {
-            suggestions.getList().removeIf(entry -> !QualityUtils.canHaveQuality(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.getText())).getDefaultInstance()));
+            suggestions.getList().removeIf(entry -> QualityUtils.isInvalidItem(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.getText())).getDefaultInstance()));
             return suggestions;
         });
     }
