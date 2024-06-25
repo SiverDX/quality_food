@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Support for quality block state */
+/** Add quality state to relevant blocks */
 @Mixin(StateDefinition.Builder.class)
 public abstract class StateDefinitionMixin<O, S extends StateHolder<O, S>> {
     @Inject(method = "<init>", at = @At("RETURN"))

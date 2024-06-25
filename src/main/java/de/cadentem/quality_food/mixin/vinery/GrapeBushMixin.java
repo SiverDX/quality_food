@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import satisfyu.vinery.block.grape.GrapeBush;
 
+/** Apply quality with player context */
 @Mixin(GrapeBush.class)
 public abstract class GrapeBushMixin {
     @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lsatisfyu/vinery/block/grape/GrapeBush;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"))
