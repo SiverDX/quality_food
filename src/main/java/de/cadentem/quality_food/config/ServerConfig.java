@@ -14,18 +14,18 @@ import java.util.*;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ServerConfig {
-    public static ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static ForgeConfigSpec SPEC;
+    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC;
 
-    public static Map<Quality, QualityConfig> QUALITY_CONFIG = new HashMap<>();
-    public static List<FarmlandConfig> FARMLAND_CONFIG = new ArrayList<>();
+    public static final Map<Quality, QualityConfig> QUALITY_CONFIG = new HashMap<>();
+    public static final List<FarmlandConfig> FARMLAND_CONFIG = new ArrayList<>();
 
-    public static ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
+    public static final ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
+    public static final ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
+    public static final ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
 
-    public static ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
-    public static ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
-    public static ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
-    public static ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
 
     static {
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
@@ -75,9 +75,11 @@ public class ServerConfig {
     }
 
     public static double getFarmlandMultiplier(final BlockState crop, final BlockState farmland) {
-        for (FarmlandConfig farmlandConfig : FARMLAND_CONFIG) {
-            if (farmlandConfig.predicate.test(crop, farmland)) {
-                return farmlandConfig.multiplier;
+        if (crop != null && farmland != null) {
+            for (FarmlandConfig farmlandConfig : FARMLAND_CONFIG) {
+                if (farmlandConfig.predicate.test(crop, farmland)) {
+                    return farmlandConfig.multiplier;
+                }
             }
         }
 
@@ -92,13 +94,7 @@ public class ServerConfig {
                 return false;
             }
 
-            try {
-                int index = Integer.parseInt(data[FarmlandConfig.INDEX]);
-
-                if (index < 0) {
-                    return false;
-                }
-            } catch (NumberFormatException ignored) {
+            if (isInvalidInteger(data[FarmlandConfig.INDEX])) {
                 return false;
             }
 
@@ -131,14 +127,6 @@ public class ServerConfig {
     }
 
     private static boolean isEffectListValid(final Object object) {
-        if (object instanceof String) {
-            return isEffectValid(object);
-        }
-
-        return false;
-    }
-
-    private static boolean isEffectValid(final Object object) {
         if (object instanceof String string) {
             String[] data = string.split(";");
 
