@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.Optional;
 
+/** Apply quality when crafting with shift-click */
 @Mixin(StorageContainerMenuBase.class)
 public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMenu {
     protected StorageContainerMenuBaseMixin(@Nullable final MenuType<?> type, int containerId) {

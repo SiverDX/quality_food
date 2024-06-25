@@ -3,7 +3,6 @@ package de.cadentem.quality_food.mixin.sophisticatedcore;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.util.QualityUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.p3pp3rf1y.sophisticatedcore.upgrades.compacting.CompactingUpgradeWrapper;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,9 +15,8 @@ public abstract class CompactingUpgradeWrapperMixin {
     @ModifyExpressionValue(method = "compactSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hasTag()Z"))
     private boolean quality_food$allowQualityTag(boolean hasTag, @Local final ItemStack stack) {
         if (hasTag) {
-            CompoundTag tag = stack.getTag();
-
-            if (QualityUtils.hasQuality(stack) && tag.getAllKeys().size() == 1) {
+            if (QualityUtils.hasQuality(stack) && stack.getTag().getAllKeys().size() == 1) {
+                // Ignore quality tag
                 return false;
             }
         }

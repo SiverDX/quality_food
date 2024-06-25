@@ -10,14 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 
-/** Support for quality block state */
+/** Set quality for the newly grown block (i.e. above the base block) */
 @Mixin(TomatoVineBlock.class)
 public abstract class TomatoVineBlockMixin {
-    @ModifyArg(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
-    private BlockState quality_food$keepQualityForTick(final BlockState original, @Local(argsOnly = true) final BlockState instance) {
-        return original.setValue(Utils.QUALITY_STATE, instance.getValue(Utils.QUALITY_STATE));
-    }
-
     @ModifyArg(method = "attemptRopeClimb", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private BlockState quality_food$keepQualityForTick(final BlockState original, @Local(argsOnly = true) final ServerLevel serverLevel, @Local(argsOnly = true) final BlockPos position) {
         BlockState state = serverLevel.getBlockState(position);
