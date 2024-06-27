@@ -4,11 +4,13 @@ import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -24,10 +26,51 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
     public static final ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
     public static final ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPE;
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
+    private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
 
     static {
+        NO_QUALITY_RECIPES_DEFAULT.add("minecraft:hay_block");
+        NO_QUALITY_RECIPES_DEFAULT.add("minecraft:wheat");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_apple_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_apple_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_carrot_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_carrot_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:carrot_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:carrot_from_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:potato_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:potato_from_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:beetroot_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:beetroot_from_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:cabbage_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:cabbage");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:tomato_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:tomato");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:onion_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:onion");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_bale");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_panicle");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_bag");
+        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_from_bag");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:white_grape_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:white_grape");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:red_grape_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:red_grape");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:cherry_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:cherries");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:apple_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("vinery:apples");
+
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
         String cropTargetChanceComment1 = "The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>";
         String cropTargetChanceComment2 = "Meaning for Gold it would result in a multiplier of 20 (0.6 / 0.03) -> The chances for all qualities would then be: 20 * 0.10 (iron) = 2 (100%) | 20 * 0.03 (gold) = 0.6 (60%) | 20 * 0.005 = 0.1 (10%)";
@@ -36,6 +79,7 @@ public class ServerConfig {
         String farmlandConfigComment1 = "Define multipliers to be applied per farmland on crops - Syntax: <index>;<crop>;<farmland>;<multiplier> (the index defines the sequence in which they will be checked - the first matching one is applied)";
         String farmlandConfigComment2 = "\nExample: [\"2;minecraft:wheat;#farmersdelight:terrain;0.75\", \"3;#minecraft:crops;farmersdelight:rich_soil;1.25\"]";
         FARMLAND_CONFIG_INTERNAL = BUILDER.comment(farmlandConfigComment1 + farmlandConfigComment2).defineList("farmland_config", Collections.emptyList(), ServerConfig::validateFarmlandConfig);
+        NO_QUALITY_RECIPE = BUILDER.comment("Define recipes (namespace:path) which should not result in quality being applied (e.g. when the items can be converted back and forth)").defineList("no_quality_recipe", NO_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
 
         for (Quality quality : Quality.values()) {
             if (!QualityUtils.isValidQuality(quality) || quality == Quality.UNDEFINED) {
@@ -70,8 +114,17 @@ public class ServerConfig {
             FARMLAND_CONFIG.clear();
             FARMLAND_CONFIG_INTERNAL.get().forEach(entry -> FARMLAND_CONFIG.add(new FarmlandConfig(entry)));
             FARMLAND_CONFIG.sort(Comparator.comparingInt(entry -> entry.index));
-            QualityFood.LOG.info("Reloaded configuration (Farmland config entries: [{}])", FARMLAND_CONFIG.size());
+            QualityFood.LOG.info("Reloaded configuration");
+            QualityFood.LOG.info("- Farmland config: {}", FARMLAND_CONFIG);
         }
+    }
+
+    public static boolean isNoQualityRecipe(@Nullable final Recipe<?> recipe) {
+        if (recipe == null) {
+            return false;
+        }
+
+        return NO_QUALITY_RECIPE.get().contains(recipe.getId().toString());
     }
 
     public static double getFarmlandMultiplier(final BlockState crop, final BlockState farmland) {
@@ -84,6 +137,14 @@ public class ServerConfig {
         }
 
         return -1;
+    }
+
+    private static boolean validateRecipe(final Object object) {
+        if (object instanceof String string) {
+            return ResourceLocation.tryParse(string) != null;
+        }
+
+        return false;
     }
 
     private static boolean validateFarmlandConfig(final Object object) {

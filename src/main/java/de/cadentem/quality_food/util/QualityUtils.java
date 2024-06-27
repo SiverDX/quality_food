@@ -219,6 +219,7 @@ public class QualityUtils {
             return;
         }
 
+        // Collect the amount of qualities present for all items in the container
         int[] qualities = new int[Quality.values().length];
         HashMap<Item, Integer> items = new HashMap<>();
 
@@ -234,6 +235,7 @@ public class QualityUtils {
             qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
         }
 
+        // Get the quality which comes up the most among the items
         int ordinalToUse = Quality.NONE.ordinal();
         int amount = 0;
 
@@ -252,6 +254,7 @@ public class QualityUtils {
             return;
         }
 
+        // Only allow compacting if all items related to the compacting are of the same quality
         boolean shouldConvert = getCompactingSize(items, container) == amount;
 
         if (shouldConvert || result.is(QFItemTags.RECIPE_CONVERSION) || isDecompacting(items, result, container)) {
