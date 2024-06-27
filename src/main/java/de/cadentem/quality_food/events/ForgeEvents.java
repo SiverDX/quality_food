@@ -2,7 +2,6 @@ package de.cadentem.quality_food.events;
 
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.ClientConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -18,7 +17,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -60,22 +58,6 @@ public class ForgeEvents {
         if (attacker instanceof LivingEntity livingAttacker) {
             event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker));
         }
-    }
-
-    @SubscribeEvent
-    public static void handleCrafting(final PlayerEvent.ItemCraftedEvent event) {
-        if (event.getEntity().level().isClientSide()) {
-            return;
-        }
-
-        int size = event.getInventory().getContainerSize();
-        float bonus = 0;
-
-        for (int slot = 0; slot < size; slot++) {
-            bonus += QualityUtils.getBonus(QualityUtils.getQuality(event.getInventory().getItem(slot)));
-        }
-
-        QualityUtils.applyQuality(event.getCrafting(), event.getEntity(), Bonus.additive(bonus));
     }
 
     @SubscribeEvent

@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.mixin.sophisticatedcore;
 
+import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +23,9 @@ import java.util.Optional;
 /** Apply quality when crafting with shift-click */
 @Mixin(StorageContainerMenuBase.class)
 public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMenu {
+    @Shadow(remap = false) public abstract Optional<UpgradeContainerBase<?, ?>> getOpenContainer();
+    @Shadow(remap = false) @Final protected Player player;
+
     protected StorageContainerMenuBaseMixin(@Nullable final MenuType<?> type, int containerId) {
         super(type, containerId);
     }
@@ -30,13 +34,14 @@ public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMen
     private ItemStack quality_food$applyQuality(final ItemStack stack) {
         getOpenContainer().ifPresent(container -> {
             if (container instanceof CraftingUpgradeContainer craftingContainer) {
+                if (ServerConfig.isNoQualityRecipe(((CraftingUpgradeContainerAccess) craftingContainer).getLastRecipe())) {
+                    return;
+                }
+
                 QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftingContainer.getSlots(), slot -> !(slot instanceof ResultSlot))));
             }
         });
 
         return stack;
     }
-
-    @Shadow(remap = false) @Final protected Player player;
-    @Shadow(remap = false) public abstract Optional<UpgradeContainerBase<?, ?>> getOpenContainer();
 }
