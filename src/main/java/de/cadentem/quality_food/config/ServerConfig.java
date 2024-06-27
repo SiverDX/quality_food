@@ -34,18 +34,28 @@ public class ServerConfig {
     static {
         NO_QUALITY_RECIPES_DEFAULT.add("minecraft:hay_block");
         NO_QUALITY_RECIPES_DEFAULT.add("minecraft:wheat");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/apple_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/apple_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/carrot_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/carrot_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/chorus_fruit_block");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/chorus_fruit_block_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack_uncompress");
         NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_apple_crate");
         NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_apple_crate_uncompress");
         NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_carrot_crate");
         NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_carrot_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/potato_crate");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/potato_crate_uncompress");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/sugar_cane_block");
+        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/sugar_cane_block_uncompress");
         NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:carrot_crate");
         NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:carrot_from_crate");
         NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:potato_crate");
@@ -70,6 +80,8 @@ public class ServerConfig {
         NO_QUALITY_RECIPES_DEFAULT.add("vinery:cherries");
         NO_QUALITY_RECIPES_DEFAULT.add("vinery:apple_crate");
         NO_QUALITY_RECIPES_DEFAULT.add("vinery:apples");
+        NO_QUALITY_RECIPES_DEFAULT.add("supplementaries:sugar_cube");
+        NO_QUALITY_RECIPES_DEFAULT.add("supplementaries:sugar_cube_uncrafting");
 
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
         String cropTargetChanceComment1 = "The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>";

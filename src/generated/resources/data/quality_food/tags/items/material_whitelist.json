@@ -63,23 +63,7 @@
       "required": false
     },
     {
-      "id": "quark:golden_apple_crate",
-      "required": false
-    },
-    {
       "id": "quark:apple_crate",
-      "required": false
-    },
-    {
-      "id": "quark:potato_crate",
-      "required": false
-    },
-    {
-      "id": "quark:carrot_crate",
-      "required": false
-    },
-    {
-      "id": "quark:golden_carrot_crate",
       "required": false
     },
     {
@@ -87,7 +71,15 @@
       "required": false
     },
     {
-      "id": "quark:sugar_cane_block",
+      "id": "quark:berry_sack",
+      "required": false
+    },
+    {
+      "id": "quark:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:chorus_fruit_block",
       "required": false
     },
     {
@@ -95,15 +87,23 @@
       "required": false
     },
     {
-      "id": "quark:nether_wart_stack",
-      "required": false
-    },
-    {
-      "id": "quark:berry_sack",
-      "required": false
-    },
-    {
       "id": "quark:glowberry_sack",
+      "required": false
+    },
+    {
+      "id": "quark:golden_apple_crate",
+      "required": false
+    },
+    {
+      "id": "quark:golden_carrot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:potato_crate",
+      "required": false
+    },
+    {
+      "id": "quark:sugar_cane_block",
       "required": false
     },
     {
