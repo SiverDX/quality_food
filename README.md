@@ -83,13 +83,21 @@ If you find some items having quality where it doesn't make much sense you can b
 
 # Compatibility
 - [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight)
+  - Apply quality when crafting
+  - Handle quality block state for growing plants (rice and tomato)
+  - Apply quality to served items (feast blocks)
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
+  - Use stored quality bonus of the furnace
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
+  - Apply quality when crafting
 - [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
-  - No Furnace / Smoker upgrade support
+  - Properly handle compacting
+  - Apply quality when crafting
 - [Create](https://www.curseforge.com/minecraft/mc-mods/create)
   - Milling and Mechanical Mixer should apply the quality of the ingredients
+  - Quality item attribute (for filters)
 - [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
+  - Properly roll quality when auto harvesting
 - [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
   - Auto harvesting & replanting
   - The `Luck` attribute bonus to quality chance may not work properly
