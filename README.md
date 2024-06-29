@@ -75,6 +75,9 @@ There is support for a guaranteed quality application when crafting (e.g. turnin
 
 (De)compacting recipes are handled separately from this tag
 
+There is a config for recipes (`no_quality_recipe`) with default values of some (de)compacting blocks
+- These entries will not roll for quality when crafting (since the results can be crafted back and forth)
+
 ---
 
 For compatibility’s sake certain blocks (and their item variant) are supported in a broader way than needed 
