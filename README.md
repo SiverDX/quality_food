@@ -18,13 +18,43 @@ You can also use the following commands
 - `/quality_food remove`
 
 # Configuration
-There is a configuration per quality - aside from some normal things you can also specify which effects a quality should grant
-- Example: `effect_list = ["minecraft:regeneration;0.5;120;3;0.45"]`
+There is a configuration per quality - aside from some normal things you can also specify which item should gain which effects
+- Example: `effect_list = ["minecraft:apple;minecraft:regeneration;0.5;120;3;0.45"]`
+  - `minecraft:apple` is the item this effect should apply to (can also be a tag, e.g. `#minecraft:cat_food`)
   - `minecraft:regeneration` is the effect
   - `0.5` is the chance for a food item to gain this effect (`1` means 100%)
   - `120` is the duration in ticks (`20` ticks means 1 second)
   - `3` is the amplifier (`0` results in an effect level of 1 (i.e. no level shown))
   - `0.45` is the probability to gain this effect when eating the item (`1` means 100%)
+
+The tag of an item with effects applied to it looks like this:
+```json
+{
+  quality_food: {
+    effects: [
+      {
+        "forge:id": "minecraft:regeneration", 
+        chance: 0.45d, 
+        Ambient: 0b, 
+        CurativeItems: [
+          {
+            id: "minecraft:milk_bucket", 
+            Count: 1b
+          }
+        ], 
+        ShowIcon: 1b, 
+        ShowParticles: 1b, 
+        Duration: 120, 
+        Id: 10, 
+        Amplifier: 3b
+      }
+    ], 
+    quality: 1
+  }
+}
+```
+
+I don't recommend manually creating such items - the `quality_food` commands will apply the configured effects
 
 ---
 
