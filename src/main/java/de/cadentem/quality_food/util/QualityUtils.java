@@ -153,11 +153,13 @@ public class QualityUtils {
             QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
             ListTag effects = new ListTag();
 
-            config.getEffects().forEach(effect -> {
-                if (RANDOM.nextDouble() <= effect.chance()) {
-                    CompoundTag effectTag = new CompoundTag();
-                    effectTag.putDouble(EFFECT_PROBABILITY_KEY, effect.probability());
-                    effects.add(new MobEffectInstance(effect.effect(), effect.duration(), effect.amplifier()).save(effectTag));
+            config.getEffects().forEach(effectConfig -> {
+                if (effectConfig.test(stack)) {
+                    if (RANDOM.nextDouble() <= effectConfig.getEffect().chance()) {
+                        CompoundTag effectTag = new CompoundTag();
+                        effectTag.putDouble(EFFECT_PROBABILITY_KEY, effectConfig.getEffect().probability());
+                        effects.add(new MobEffectInstance(effectConfig.getEffect().effect(), effectConfig.getEffect().duration(), effectConfig.getEffect().amplifier()).save(effectTag));
+                    }
                 }
             });
 

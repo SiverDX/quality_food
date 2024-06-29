@@ -107,7 +107,7 @@ public class ServerConfig {
             config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
             config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
             config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
-            config.effectList = BUILDER.comment("List of effects this rarity can grant (<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
+            config.effect_list_internal = BUILDER.comment("List of effects this rarity can grant (<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
             QUALITY_CONFIG.put(quality, config);
             BUILDER.pop();
         }
@@ -123,9 +123,11 @@ public class ServerConfig {
     public static void reloadConfig(final ModConfigEvent event) {
         if (event.getConfig().getSpec() == SPEC && /* Can not be the case when stopping the server? */ SPEC.isLoaded()) {
             QUALITY_CONFIG.values().forEach(QualityConfig::initializeEffects);
+
             FARMLAND_CONFIG.clear();
             FARMLAND_CONFIG_INTERNAL.get().forEach(entry -> FARMLAND_CONFIG.add(new FarmlandConfig(entry)));
             FARMLAND_CONFIG.sort(Comparator.comparingInt(entry -> entry.index));
+
             QualityFood.LOG.info("Reloaded configuration");
             QualityFood.LOG.info("- Farmland config: {}", FARMLAND_CONFIG);
         }
@@ -153,7 +155,7 @@ public class ServerConfig {
 
     private static boolean validateRecipe(final Object object) {
         if (object instanceof String string) {
-            return ResourceLocation.tryParse(string) != null;
+            return ResourceLocation.isValidResourceLocation(string);
         }
 
         return false;
@@ -173,13 +175,13 @@ public class ServerConfig {
 
             String crop = data[FarmlandConfig.CROP];
 
-            if (ResourceLocation.tryParse(crop.startsWith("#") ? crop.substring(1) : crop) == null) {
+            if (!ResourceLocation.isValidResourceLocation(crop.startsWith("#") ? crop.substring(1) : crop)) {
                 return false;
             }
 
             String farmland = data[FarmlandConfig.FARMLAND];
 
-            if (ResourceLocation.tryParse(farmland.startsWith("#") ? farmland.substring(1) : farmland) == null) {
+            if (!ResourceLocation.isValidResourceLocation(farmland.startsWith("#") ? farmland.substring(1) : farmland)) {
                 return false;
             }
 
@@ -203,25 +205,31 @@ public class ServerConfig {
         if (object instanceof String string) {
             String[] data = string.split(";");
 
-            if (data.length == 5) {
-                if (!ResourceLocation.isValidResourceLocation(data[0])) {
-                    return false;
-                }
-
-                if (isInvalidChance(/* Chance */ data[1])) {
-                    return false;
-                }
-
-                if (isInvalidInteger(/* Duration */ data[2])) {
-                    return false;
-                }
-
-                if (isInvalidInteger(/* Amplifier */ data[3])) {
-                    return false;
-                }
-
-                return !isInvalidChance(/* Probability */ data[4]);
+            if (data.length != 6) {
+                return false;
             }
+
+            if (!ResourceLocation.isValidResourceLocation(data[EffectConfig.ITEM])) {
+                return false;
+            }
+
+            if (!ResourceLocation.isValidResourceLocation(data[EffectConfig.EFFECT])) {
+                return false;
+            }
+
+            if (isInvalidChance(data[EffectConfig.CHANCE])) {
+                return false;
+            }
+
+            if (isInvalidInteger(data[EffectConfig.DURATION])) {
+                return false;
+            }
+
+            if (isInvalidInteger(data[EffectConfig.AMPLIFIER])) {
+                return false;
+            }
+
+            return !isInvalidChance(data[EffectConfig.PROBABILITY]);
         }
 
         return false;
