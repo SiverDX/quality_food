@@ -26,6 +26,12 @@ public abstract class SimpleHarvestModuleMixin {
         DropData.current.set(new DropData(state, livingEntity instanceof Player player ? player : null, level.getBlockState(position.below())));
     }
 
+    /** Clear context */
+    @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", shift = At.Shift.AFTER, remap = true))
+    private static void quality_food$clearDropDAta(final Level level, final BlockPos position, final BlockState state, final LivingEntity livingEntity, final InteractionHand hand, final CallbackInfoReturnable<Boolean> callback) {
+        DropData.current.remove();
+    }
+
     /** Set default quality state to bypass config */
     @ModifyArg(method = "getActionForBlock", at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
     private static Object quality_food$allowReplant(final Object object) {
