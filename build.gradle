@@ -90,7 +90,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
 
-    compileOnly fg.deobf("curse.maven:lets-do-vinery-704465:5437512") // 1.4.24
+    compileOnly fg.deobf("curse.maven:lets-do-vinery-704465:5467441") // 1.4.25
     compileOnly fg.deobf("curse.maven:do-api-864599:5402862") // 1.2.13
     compileOnly fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
 

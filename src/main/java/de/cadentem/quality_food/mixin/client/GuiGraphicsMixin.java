@@ -42,8 +42,7 @@ public abstract class GuiGraphicsMixin {
     }
 
     @Shadow
-    @Final
-    private Minecraft minecraft;
+    private @Final Minecraft minecraft;
 
     @Shadow
     protected abstract void renderItem(@Nullable LivingEntity pEntity, @Nullable Level pLevel, ItemStack pStack, int pX, int pY, int pSeed, int pGuiOffset);

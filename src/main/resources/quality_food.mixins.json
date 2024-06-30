@@ -49,7 +49,8 @@
     "toms_storage.CraftingTerminalBlockEntityMixin",
     "toms_storage.CraftingTerminalMenuMixin",
     "vinery.GrapeBushMixin",
-    "vinery.GrapeVineBlockMixin"
+    "vinery.GrapeVineBlockMixin",
+    "vinery.ObjectRegistryMixin"
   ],
   "client": [
     "client.GuiGraphicsMixin"
