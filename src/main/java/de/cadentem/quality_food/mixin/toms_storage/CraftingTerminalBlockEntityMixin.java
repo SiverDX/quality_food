@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(CraftingTerminalBlockEntity.class)
 public abstract class CraftingTerminalBlockEntityMixin {
     @Shadow(remap = false) @Final private CraftingContainer craftMatrix;
-    @Shadow private PlatformRecipe currentRecipe;
+    @Shadow(remap = false) private PlatformRecipe currentRecipe;
 
     @ModifyArg(method = "onCraftingMatrixChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V", ordinal = 1))
     private ItemStack quality_food$handleConversion(final ItemStack stack) {

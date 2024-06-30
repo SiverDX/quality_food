@@ -17,8 +17,8 @@ import java.util.concurrent.CompletableFuture;
 public class QFEffectTags extends TagsProvider<MobEffect> {
     public static final TagKey<MobEffect> BLACKLIST = new TagKey<>(Registries.MOB_EFFECT, new ResourceLocation(QualityFood.MODID, "blacklist"));
 
-    public QFEffectTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper fileHelper) {
-        super(output, Registries.MOB_EFFECT, provider, QualityFood.MODID, fileHelper);
+    public QFEffectTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper helper) {
+        super(output, Registries.MOB_EFFECT, provider, QualityFood.MODID, helper);
     }
 
     @Override

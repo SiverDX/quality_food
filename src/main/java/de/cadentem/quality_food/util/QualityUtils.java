@@ -235,17 +235,10 @@ public class QualityUtils {
             return 0;
         }).sum();
 
-        Quality quality = getQuality(data.getSecond());
+        Quality quality = getQuality(data.getSecond(), relevantItemCount);
 
-        if (quality.level() > 0) {
-            boolean doesCountMatch = data.getSecond()[quality.ordinal()] == relevantItemCount;
-
-            if (isRecipe && doesCountMatch) {
-                QualityUtils.applyQuality(result, quality);
-            } else if (handleCompacting && (doesCountMatch && getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9))) {
-                // TODO :: allow things like 3x diamond & 6x gold -> 1 compacted gold?
-                QualityUtils.applyQuality(result, quality);
-            }
+        if (quality.level() > 0 && (isRecipe || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
+            QualityUtils.applyQuality(result, quality);
         }
     }
 
@@ -273,21 +266,17 @@ public class QualityUtils {
         return Pair.of(items, qualities);
     }
 
-    /** Get the highest quality which comes up the most */
-    private static Quality getQuality(final int[] qualities) {
-        int ordinalToUse = Quality.NONE.ordinal();
-        int amount = 0;
+    /** Get the most fitting quality (if all items are diamond -> diamond / if half 3 are diamond and 6 are gold -> gold) */
+    private static Quality getQuality(final int[] qualities, int itemCount) {
+        for (int ordinal = Quality.DIAMOND.ordinal(); ordinal > 0; ordinal--) {
+            itemCount -= qualities[ordinal];
 
-        for (int ordinal = 0; ordinal < qualities.length; ordinal++) {
-            int storedAmount = qualities[ordinal];
-
-            if (storedAmount != 0 && storedAmount >= amount) {
-                ordinalToUse = ordinal;
-                amount = storedAmount;
+            if (itemCount <= 0) {
+                return Quality.get(ordinal);
             }
         }
 
-        return Quality.get(ordinalToUse);
+        return Quality.NONE;
     }
 
     private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {

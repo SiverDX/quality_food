@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.capability;
 
-import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
@@ -60,7 +60,7 @@ public class BlockDataProvider implements ICapabilitySerializable<CompoundTag> {
             return true;
         }
 
-        if (QualityFood.isModLoaded(QualityFood.FARMERSDELIGHT)) {
+        if (Compat.isModLoaded(Compat.FARMERSDELIGHT)) {
             return entity.getType() == ModBlockEntityTypes.COOKING_POT.get();
         }
 

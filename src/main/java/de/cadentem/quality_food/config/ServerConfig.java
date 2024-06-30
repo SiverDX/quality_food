@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.config;
 
 import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -29,14 +30,17 @@ public class ServerConfig {
     public static final ForgeConfigSpec.BooleanValue HANDLE_COMPACTING;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> QUALITY_BLOCKS;
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
     private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
     private static final List<String> RETAIN_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
+    private static final List<String> QUALITY_BLOCKS_DEFAULT = new ArrayList<>();
 
     static {
         fillNoQualityRecipes();
         fillRetainQualityRecipes();
+        fillQualityBlocks();
 
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
         String cropTargetChanceComment1 = "The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>";
@@ -73,6 +77,7 @@ public class ServerConfig {
         }
 
         BUILDER.push("Compatibility");
+        QUALITY_BLOCKS = BUILDER.comment("Java class name of the blocks which should be applicable to quality (tags are not present yet when this has to be decided)").defineList("quality_blocks", QUALITY_BLOCKS_DEFAULT, entry -> true);
         QUARK_HANDLE_CONFIG = BUILDER.comment("Handle Quark harvest & replant automatically (if you have custom behaviour configured regarding the quality block state turn this off)").define("quark_handle_config", true);
         BUILDER.pop();
 
@@ -235,54 +240,54 @@ public class ServerConfig {
     private static void fillNoQualityRecipes() {
         NO_QUALITY_RECIPES_DEFAULT.add("minecraft:hay_block");
         NO_QUALITY_RECIPES_DEFAULT.add("minecraft:wheat");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/apple_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/apple_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/beetroot_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/berry_sack_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/carrot_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/carrot_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/chorus_fruit_block");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/chorus_fruit_block_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/cocoa_bean_sack_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/glowberry_sack_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_apple_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_apple_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_carrot_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/golden_carrot_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/potato_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/potato_crate_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/sugar_cane_block");
-        NO_QUALITY_RECIPES_DEFAULT.add("quark:building/crafting/compressed/sugar_cane_block_uncompress");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:carrot_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:carrot_from_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:potato_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:potato_from_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:beetroot_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:beetroot_from_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:cabbage_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:cabbage");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:tomato_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:tomato");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:onion_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:onion");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_bale");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_panicle");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_bag");
-        NO_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice_from_bag");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:white_grape_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:white_grape");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:red_grape_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:red_grape");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:cherry_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:cherries");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:apple_crate");
-        NO_QUALITY_RECIPES_DEFAULT.add("vinery:apples");
-        NO_QUALITY_RECIPES_DEFAULT.add("supplementaries:sugar_cube");
-        NO_QUALITY_RECIPES_DEFAULT.add("supplementaries:sugar_cube_uncrafting");
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/apple_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/beetroot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/beetroot_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/berry_sack").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/berry_sack_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/carrot_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/chorus_fruit_block").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/chorus_fruit_block_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/cocoa_bean_sack").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/cocoa_bean_sack_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/glowberry_sack").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/glowberry_sack_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_apple_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_carrot_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/potato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/potato_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/sugar_cane_block").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/sugar_cane_block_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("carrot_from_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("potato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("potato_from_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("beetroot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("beetroot_from_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("cabbage_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("cabbage").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("onion_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("onion").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_bale").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_panicle").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("white_grape_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("white_grape").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("red_grape_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("red_grape").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("cherry_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("cherries").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("apples").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.supplementaries("sugar_cube").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.supplementaries("sugar_cube_uncrafting").toString());
     }
 
     private static void fillRetainQualityRecipes() {
@@ -290,15 +295,19 @@ public class ServerConfig {
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:melon_seeds");
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_sugar_cane");
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_honey_bottle");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("farmersdelight:tomato_seeds");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("farmersdelight:rice");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_red_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_white_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_red_savanna_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_white_savanna_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_red_taiga_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_white_taiga_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_red_jungle_grape");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("vinery:seed_from_white_jungle_grape");
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato_seeds").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_savanna_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_savanna_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_taiga_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_taiga_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_jungle_grape").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_jungle_grape").toString());
+    }
+
+    private static void fillQualityBlocks() {
+        QUALITY_BLOCKS_DEFAULT.add("");
     }
 }

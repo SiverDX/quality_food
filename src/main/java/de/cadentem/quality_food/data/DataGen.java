@@ -11,10 +11,10 @@ public class DataGen {
     @SubscribeEvent
     public static void configureDataGen(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
-        generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), fileHelper));
+        generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), helper));
         generator.addProvider(event.includeServer(), new QFLootModifiers(generator.getPackOutput()));
-        generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), event.getLookupProvider(), fileHelper));
+        generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), event.getLookupProvider(), helper));
     }
 }
