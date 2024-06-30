@@ -10,6 +10,7 @@ import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.network.SyncCookingParticle;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SugarBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.food.FoodProperties;
@@ -73,7 +74,7 @@ public class Utils {
                 || block instanceof HoneyBlock
         ) {
             return true;
-        } // FIXME :: compacted blocks (store quality separately or add state to all blocks)
+        }
 
         if (Compat.isModLoaded(Compat.VINERY) && block instanceof GrapeVineBlock) {
             return true;
@@ -84,6 +85,10 @@ public class Utils {
         }
 
         if (Compat.isModLoaded(Compat.QUARK) && (block instanceof QuarkBlock || block instanceof QuarkPillarBlock)) {
+            return true;
+        }
+
+        if (Compat.isModLoaded(Compat.SUPPLEMENTARIES) && block instanceof SugarBlock) {
             return true;
         }
 
