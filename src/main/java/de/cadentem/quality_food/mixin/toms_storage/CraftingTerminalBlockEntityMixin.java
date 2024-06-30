@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.mixin.toms_storage;
 
+import com.tom.storagemod.platform.PlatformRecipe;
 import com.tom.storagemod.tile.CraftingTerminalBlockEntity;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -13,11 +14,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 /** Apply quality when items are converted from / to their storage variants */
 @Mixin(CraftingTerminalBlockEntity.class)
 public abstract class CraftingTerminalBlockEntityMixin {
-    @ModifyArg(method = "onCraftingMatrixChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
+    @Shadow(remap = false) @Final private CraftingContainer craftMatrix;
+    @Shadow private PlatformRecipe currentRecipe;
+
+    @ModifyArg(method = "onCraftingMatrixChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V", ordinal = 1))
     private ItemStack quality_food$handleConversion(final ItemStack stack) {
-        QualityUtils.handleConversion(stack, craftMatrix);
+        QualityUtils.handleConversion(stack, craftMatrix, currentRecipe.recipe());
         return stack;
     }
-
-    @Shadow(remap = false) @Final private CraftingContainer craftMatrix;
 }

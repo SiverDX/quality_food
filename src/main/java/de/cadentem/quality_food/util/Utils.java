@@ -57,7 +57,7 @@ public class Utils {
 
     public static boolean isValidBlock(final Block block) {
         // TODO :: Other way of handling blocks? Cannot check 'asItem()' due to 'StateDefinitionMixin' running into "Attemped to override already set default value. This is not allowed: The object air (name minecraft:air)"
-        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CaveVinesBlock || block instanceof CocoaBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
+        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CaveVinesBlock || block instanceof CocoaBlock || block instanceof SugarCaneBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
             return true;
         }
 

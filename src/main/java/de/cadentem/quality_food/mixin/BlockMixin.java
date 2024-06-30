@@ -1,8 +1,11 @@
 package de.cadentem.quality_food.mixin;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -62,11 +65,43 @@ public class BlockMixin {
         DropData.current.remove();
     }
 
-    // Used for Cave Vines (i.e. Glow Berries)
+    /** Set missing drop data context if needed */
     @Inject(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
-    private static void quality_food$applyQuality(final Level level, final BlockPos position, final ItemStack stack, final CallbackInfo callback) {
+    private static void quality_food$setDropData(final Level level, final BlockPos position, final ItemStack stack, final CallbackInfo callback, @Share("flag") final LocalRef<Boolean> flagRef) {
         if (DropData.current.get() == null) {
-            QualityUtils.applyQuality(stack, level.getBlockState(position), null, level.getBlockState(position.below()));
+            DropData.current.set(new DropData(level.getBlockState(position), null, level.getBlockState(position.below())));
+            flagRef.set(true);
+        }
+    }
+
+    /** Clear previously set drop data context if needed */
+    @Inject(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("TAIL"))
+    private static void quality_food$clearDropData(final Level level, final BlockPos position, final ItemStack stack, final CallbackInfo callback, @Share("flag") final LocalRef<Boolean> flagRef) {
+        Boolean flag = flagRef.get();
+
+        if (flag != null) {
+            // Only clear context if it was set from this method
+            DropData.current.remove();
+        }
+    }
+
+    /** Set missing drop data context if needed */
+    @Inject(method = "popResourceFromFace", at = @At("HEAD"))
+    private static void quality_food$setDropData(final Level level, final BlockPos position, final Direction direction, final ItemStack stack, final CallbackInfo callback, @Share("flag") final LocalRef<Boolean> flagRef) {
+        if (DropData.current.get() == null) {
+            DropData.current.set(new DropData(level.getBlockState(position), null, level.getBlockState(position.below())));
+            flagRef.set(true);
+        }
+    }
+
+    /** Clear previously set drop data context if needed */
+    @Inject(method = "popResourceFromFace", at = @At("TAIL"))
+    private static void quality_food$clearDropData(final Level level, final BlockPos position, final Direction direction, final ItemStack stack, final CallbackInfo callback, @Share("flag") final LocalRef<Boolean> flagRef) {
+        Boolean flag = flagRef.get();
+
+        if (flag != null) {
+            // Only clear context if it was set from this method
+            DropData.current.remove();
         }
     }
 
