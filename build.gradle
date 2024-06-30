@@ -110,6 +110,8 @@ dependencies {
     implementation fg.deobf("curse.maven:quark-243121:4812006") // 3.4-418
     implementation fg.deobf("curse.maven:autoreglib-250363:4100299") // 1.8.2-55
 
+    compileOnly fg.deobf("curse.maven:rightclickharvest-452834:4690530") // 3.2.3
+
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:3872808")
 

@@ -103,7 +103,9 @@ If you find some items having quality where it doesn't make much sense you can b
   - Properly roll quality when auto harvesting
 - [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
   - Auto harvesting & replanting
-  - The `Luck` attribute bonus to quality chance may not work properly
+  - Quality gets properly rolled
+- [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
+  - Quality gets properly rolled
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
