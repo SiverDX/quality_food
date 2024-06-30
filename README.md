@@ -79,6 +79,13 @@ For crafting (crafting bench) there are three configs:
 - `no_quality_recipes`: Entries will not roll for quality (useful in case items can be crated back and forth)
 - `handle_compacting`: If enabled then (de)compacting results should retain quality automatically without having to specify the relevant recipes
 
+Cooking quality items will store a quality bonus within the furnace / cooking pot / ...
+- Higher quality will store a higher bonus per cooked item
+- Once enough bonus is stored particles will start to show
+  - A higher bonus results in more particles
+  - This can be disabled through the client config
+- Once you take out the result the stored bonus will be used up and grant a higher chance to a quality result
+
 ---
 
 For compatibility’s sake certain blocks (and their item variant) are supported in a broader way than needed 
