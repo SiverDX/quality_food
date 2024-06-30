@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -21,42 +20,40 @@ import javax.annotation.Nullable;
 
 @Mixin(Block.class)
 public class BlockMixin {
-    @Unique private static final ThreadLocal<DropData> quality_food$storedData = new ThreadLocal<>();
-
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", at = @At("HEAD"))
     private static void quality_food$storeBlockState(final BlockState state, final Level level, final BlockPos position, final CallbackInfo callback) {
-        quality_food$storedData.set(DropData.create(state, null, level.getBlockState(position.below())));
+        DropData.current.set(DropData.create(state, null, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", at = @At("TAIL"))
     private static void quality_food$clearBlockState(final BlockState state, final Level level, final BlockPos position, final CallbackInfo callback) {
-        quality_food$storedData.remove();
+        DropData.current.remove();
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("HEAD"))
     private static void quality_food$storeBlockState(final BlockState state, final LevelAccessor level, final BlockPos position, final @Nullable BlockEntity blockEntity, final CallbackInfo callback) {
-        quality_food$storedData.set(DropData.create(state, null, level.getBlockState(position.below())));
+        DropData.current.set(DropData.create(state, null, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;)V", at = @At("TAIL"))
     private static void quality_food$clearBlockState(final BlockState state, final LevelAccessor level, final BlockPos position, final @Nullable BlockEntity blockEntity, final CallbackInfo callback) {
-        quality_food$storedData.remove();
+        DropData.current.remove();
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Z)V", at = @At("HEAD"), remap = false)
     private static void quality_food$storeBlockState(final BlockState state, final Level level, final BlockPos position, final @Nullable BlockEntity blockEntity, final Entity entity, final ItemStack tool, boolean dropExperience, final CallbackInfo callback) {
-        quality_food$storedData.set(DropData.create(state, entity, level.getBlockState(position.below())));
+        DropData.current.set(DropData.create(state, entity, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;Z)V", at = @At("TAIL"), remap = false)
     private static void quality_food$clearBlockState(final BlockState state, final Level level, final BlockPos position, final @Nullable BlockEntity blockEntity, final @Nullable Entity entity, final ItemStack tool, boolean dropExperience, final CallbackInfo callback) {
-        quality_food$storedData.remove();
+        DropData.current.remove();
     }
 
     // Used for Cave Vines (i.e. Glow Berries)
     @Inject(method = "popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
     private static void quality_food$applyQuality(final Level level, final BlockPos position, final ItemStack stack, final CallbackInfo callback) {
-        if (quality_food$storedData.get() == null) {
+        if (DropData.current.get() == null) {
             QualityUtils.applyQuality(stack, level.getBlockState(position), null, level.getBlockState(position.below()));
         }
     }
@@ -64,7 +61,7 @@ public class BlockMixin {
     /** Apply quality to block drops (not a loot modifier to make it also work with right-click harvesting) */
     @ModifyVariable(method = "popResource(Lnet/minecraft/world/level/Level;Ljava/util/function/Supplier;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"), argsOnly = true)
     private static ItemStack quality_food$applyQuality(final ItemStack stack) {
-        DropData dropData = quality_food$storedData.get();
+        DropData dropData = DropData.current.get();
 
         if (dropData == null) {
             QualityUtils.applyQuality(stack);

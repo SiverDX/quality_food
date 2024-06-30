@@ -38,6 +38,7 @@
     "fastentitytransfer.CommonUtilsMixin",
     "majruszsenchantments.TelekinesisEnchantmentMixin",
     "quark.SimpleHarvestModuleMixin",
+    "rightclickharvest.RightClickHarvestModInitMixin",
     "sophisticatedcore.CompactingUpgradeWrapperMixin",
     "sophisticatedcore.CraftingUpgradeContainerAccess",
     "sophisticatedcore.CraftingUpgradeContainerMixin",

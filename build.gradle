@@ -85,7 +85,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:toms-storage-378609:5211208") // 1.6.6
 
-    implementation fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
+    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
@@ -96,6 +96,8 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:quark-243121:5418252") // 4.0-458
     compileOnly fg.deobf("curse.maven:zeta-968868:5418213") // 1.0-19
+
+    compileOnly fg.deobf("curse.maven:rightclickharvest-452834:4690530") // 3.2.3
 
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")

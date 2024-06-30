@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.GrowingPlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -14,11 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(GrowingPlantBlock.class)
 public abstract class GrowingPlantBlockMixin {
     @ModifyReturnValue(method = "getStateForPlacement(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/level/block/state/BlockState;", at = @At("RETURN"))
-    private BlockState quality_food$setQualityState(final BlockState original, /* Method parameters: */ final BlockPlaceContext context) {
-        ItemStack itemInHand = context.getItemInHand();
+    private BlockState quality_food$setQualityState(@Nullable final BlockState original, /* Method parameters: */ final BlockPlaceContext context) {
+        if (original != null) {
+            ItemStack itemInHand = context.getItemInHand();
 
-        if (original.hasProperty(Utils.QUALITY_STATE)) {
-            return original.setValue(Utils.QUALITY_STATE, QualityUtils.getPlacementQuality(itemInHand));
+            if (original.hasProperty(Utils.QUALITY_STATE)) {
+                return original.setValue(Utils.QUALITY_STATE, QualityUtils.getPlacementQuality(itemInHand));
+            }
         }
 
         return original;
