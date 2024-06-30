@@ -20,4 +20,9 @@ public abstract class RightClickHarvestModInitMixin {
     private static void quality_food$setDropData(final BlockState state, final ServerLevel level, final BlockPos position, final Entity entity, final ItemStack tool, final CallbackInfo callback) {
         DropData.current.set(new DropData(state, entity instanceof Player player ? player : null, level.getBlockState(position.below())));
     }
+
+    @Inject(method = "dropStacks", at = @At("TAIL"))
+    private static void quality_food$clearDropDAta(final BlockState state, final ServerLevel level, final BlockPos position, final Entity entity, final ItemStack tool, final CallbackInfo callback) {
+        DropData.current.remove();
+    }
 }
