@@ -21,6 +21,7 @@
     "ResultSlotMixin",
     "StateDefinitionMixin",
     "StemBlockMixin",
+    "SugarCaneBlockMixin",
     "SweetBerryBushBlockMixin",
     "ThrownEggMixin",
     "create.BasinRecipeMixin",

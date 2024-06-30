@@ -1,10 +1,10 @@
 package de.cadentem.quality_food.util;
 
+import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
-import de.cadentem.quality_food.data.QFItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
@@ -216,11 +217,43 @@ public class QualityUtils {
         }
     }
 
-    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container) {
-        if (result == ItemStack.EMPTY) {
+    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe) {
+        boolean isRecipe = ServerConfig.isRetainQualityRecipe(recipe);
+        boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
+
+        if (!isRecipe && !handleCompacting) {
             return;
         }
 
+        Pair<HashMap<Item, Integer>, int[]> data = getContainerData(container);
+
+        int relevantItemCount = data.getFirst().entrySet().stream().mapToInt(entry -> {
+            if (Utils.isValidItem(entry.getKey().getDefaultInstance())) {
+                return entry.getValue();
+            }
+
+            return 0;
+        }).sum();
+
+        Quality quality = getQuality(data.getSecond());
+
+        if (quality.level() > 0) {
+            boolean doesCountMatch = data.getSecond()[quality.ordinal()] == relevantItemCount;
+
+            if (isRecipe && doesCountMatch) {
+                QualityUtils.applyQuality(result, quality);
+            } else if (handleCompacting && (doesCountMatch && getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9))) {
+                // TODO :: allow things like 3x diamond & 6x gold -> 1 compacted gold?
+                QualityUtils.applyQuality(result, quality);
+            }
+        }
+    }
+
+    public static boolean isInvalidItem(final ItemStack stack) {
+        return hasQuality(stack) || !Utils.isValidItem(stack);
+    }
+
+    private static Pair<HashMap<Item, Integer>, int[]> getContainerData(final Container container) {
         // Collect the amount of qualities present for all items in the container
         int[] qualities = new int[Quality.values().length];
         HashMap<Item, Integer> items = new HashMap<>();
@@ -237,7 +270,11 @@ public class QualityUtils {
             qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
         }
 
-        // Get the quality which comes up the most among the items
+        return Pair.of(items, qualities);
+    }
+
+    /** Get the highest quality which comes up the most */
+    private static Quality getQuality(final int[] qualities) {
         int ordinalToUse = Quality.NONE.ordinal();
         int amount = 0;
 
@@ -250,29 +287,14 @@ public class QualityUtils {
             }
         }
 
-        Quality quality = Quality.get(ordinalToUse);
-
-        if (quality.level() == 0) {
-            return;
-        }
-
-        // Only allow compacting if all items related to the compacting are of the same quality
-        boolean shouldConvert = getCompactingSize(items, container) == amount;
-
-        if (shouldConvert || result.is(QFItemTags.RECIPE_CONVERSION) || isDecompacting(items, result, container)) {
-            QualityUtils.applyQuality(result, quality);
-        }
-    }
-
-    public static boolean isInvalidItem(final ItemStack stack) {
-        return hasQuality(stack) || !Utils.isValidItem(stack);
+        return Quality.get(ordinalToUse);
     }
 
     private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {
         Set<Item> keys = items.keySet();
 
         if (keys.size() != 1 && !(keys.size() == 2 && keys.contains(Items.AIR))) {
-            // Either the crafting container only contains 1 item or it contains 2 and the other item is air (i.e. no item)
+            // Either the crafting container only contains 1 type of item or it contains 2 and the other item is air (i.e. no item)
             return -1;
         }
 
@@ -283,6 +305,7 @@ public class QualityUtils {
             int itemCount = items.get(key);
 
             if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
+                // If the other slots (besides 2x2 / 3x3) are not empty then it's not a valid compacting recipe
                 return -1;
             } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
                 result = itemCount;
@@ -290,33 +313,6 @@ public class QualityUtils {
         }
 
         return result;
-    }
-
-    private static boolean isDecompacting(final HashMap<Item, Integer> items, final ItemStack result, final Container container) {
-        if (result.getCount() != 9 && result.getCount() != 4) {
-            return false;
-        }
-
-        if (items.size() == 1 && container.getContainerSize() == 1 && items.keySet().iterator().next() != Items.AIR) {
-            return true;
-        }
-
-        if (items.size() == 2) {
-            Set<Item> keys = items.keySet();
-            boolean isValid = true;
-
-            for (Item key : keys) {
-                if (key == Items.AIR && items.get(key) != container.getContainerSize() - 1) {
-                    isValid = false;
-                } else if (key != Items.AIR && items.get(key) != 1) {
-                    isValid = false;
-                }
-            }
-
-            return isValid;
-        }
-
-        return false;
     }
 
     public static float getBonus(final Quality quality) {

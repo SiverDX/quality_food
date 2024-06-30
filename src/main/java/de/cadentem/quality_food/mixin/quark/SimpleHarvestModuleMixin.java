@@ -27,7 +27,7 @@ public abstract class SimpleHarvestModuleMixin {
     }
 
     /** Clear context */
-    @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", shift = At.Shift.AFTER, remap = true))
+    @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;gameEvent(Lnet/minecraft/world/level/gameevent/GameEvent;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/gameevent/GameEvent$Context;)V", shift = At.Shift.AFTER, remap = true))
     private static void quality_food$clearDropDAta(final Level level, final BlockPos position, final BlockState state, final LivingEntity livingEntity, final InteractionHand hand, final CallbackInfoReturnable<Boolean> callback) {
         DropData.current.remove();
     }
