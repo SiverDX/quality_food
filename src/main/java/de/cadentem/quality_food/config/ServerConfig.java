@@ -30,17 +30,14 @@ public class ServerConfig {
     public static final ForgeConfigSpec.BooleanValue HANDLE_COMPACTING;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> QUALITY_BLOCKS;
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
     private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
     private static final List<String> RETAIN_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
-    private static final List<String> QUALITY_BLOCKS_DEFAULT = new ArrayList<>();
 
     static {
         fillNoQualityRecipes();
         fillRetainQualityRecipes();
-        fillQualityBlocks();
 
         LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
         String cropTargetChanceComment1 = "The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>";
@@ -71,13 +68,12 @@ public class ServerConfig {
             config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
             config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
             config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
-            config.effect_list_internal = BUILDER.comment("List of effects this rarity can grant (<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
+            config.effect_list_internal = BUILDER.comment("List of effects this rarity can grant (the item can be a tag) (<item>;<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
             QUALITY_CONFIG.put(quality, config);
             BUILDER.pop();
         }
 
         BUILDER.push("Compatibility");
-        QUALITY_BLOCKS = BUILDER.comment("Java class name of the blocks which should be applicable to quality (tags are not present yet when this has to be decided)").defineList("quality_blocks", QUALITY_BLOCKS_DEFAULT, entry -> true);
         QUARK_HANDLE_CONFIG = BUILDER.comment("Handle Quark harvest & replant automatically (if you have custom behaviour configured regarding the quality block state turn this off)").define("quark_handle_config", true);
         BUILDER.pop();
 
@@ -305,9 +301,5 @@ public class ServerConfig {
         RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_taiga_grape").toString());
         RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_jungle_grape").toString());
         RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_jungle_grape").toString());
-    }
-
-    private static void fillQualityBlocks() {
-        QUALITY_BLOCKS_DEFAULT.add("");
     }
 }
