@@ -71,12 +71,13 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 
 ---
 
-There is support for a guaranteed quality application when crafting (e.g. turning a quality `minecraft:melon_slice` into `minecraft:melon_seed`) through the item tag `quality_food:recipe_conversion`
-
-(De)compacting recipes are handled separately from this tag
-
-There is a config for recipes (`no_quality_recipe`) with default values of some (de)compacting blocks
-- These entries will not roll for quality when crafting (since the results can be crafted back and forth)
+For crafting there are three configs:
+- `retain_quality_recipes`: The result will retain the quality of the ingredients, examples:
+  - If all items are `diamond` quality the result will be `diamond`
+  - If three items are `gold` quality and two are `diamond` the result will be `gold`
+  - If two items are `iron` quality and the rest have none then the result will also have none
+- `no_quality_recipes`: Entries will not roll for quality (useful in case items can be crated back and forth)
+- `handle_compacting`: If enabled then (de)compacting results should retain quality automatically without having to specify the relevant recipes
 
 ---
 
@@ -89,6 +90,7 @@ If you find some items having quality where it doesn't make much sense you can b
   - Apply quality when crafting
   - Handle quality block state for growing plants (rice and tomato)
   - Apply quality to served items (feast blocks)
+  - Storage blocks retain quality when placed
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
   - Use stored quality bonus of the furnace
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
@@ -104,6 +106,7 @@ If you find some items having quality where it doesn't make much sense you can b
 - [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
   - Auto harvesting & replanting
   - Quality gets properly rolled
+  - Storage blocks retain quality when placed
 - [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
   - Quality gets properly rolled
 

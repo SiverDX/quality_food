@@ -1,7 +1,11 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.capability.BlockDataProvider;
+import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.farmersdelight.FarmersDelightBaleBlock;
+import de.cadentem.quality_food.compat.farmersdelight.FarmersDelightBlock;
+import de.cadentem.quality_food.compat.quark.QuarkBlock;
+import de.cadentem.quality_food.compat.quark.QuarkPillarBlock;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.NetworkHandler;
@@ -16,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import satisfyu.vinery.block.grape.GrapeVineBlock;
 import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {
@@ -55,14 +60,31 @@ public class Utils {
         return false;
     }
 
+    // Needs to use 'instanceof' since for block state registrations tags are not loaded yet
     public static boolean isValidBlock(final Block block) {
-        // TODO :: Other way of handling blocks? Cannot check 'asItem()' due to 'StateDefinitionMixin' running into "Attemped to override already set default value. This is not allowed: The object air (name minecraft:air)"
-        if (block instanceof BushBlock || block instanceof StemGrownBlock || block instanceof VineBlock || block instanceof CaveVinesBlock || block instanceof CocoaBlock || block instanceof SugarCaneBlock || block instanceof CakeBlock || block instanceof CandleCakeBlock) {
+        if (block instanceof BushBlock // Crops / Mushrooms / Sea pickles / ...
+                || block instanceof StemGrownBlock // Pumpkin / Melon
+                || block instanceof CaveVinesBlock // Glow berries
+                || block instanceof CocoaBlock
+                || block instanceof SugarCaneBlock
+                || block instanceof CakeBlock
+                || block instanceof CandleCakeBlock
+                || block instanceof HayBlock
+                || block instanceof HoneyBlock
+        ) {
+            return true;
+        } // FIXME :: compacted blocks (store quality separately or add state to all blocks)
+
+        if (Compat.isModLoaded(Compat.VINERY) && block instanceof GrapeVineBlock) {
             return true;
         }
 
-        if (QualityFood.isModLoaded(QualityFood.FARMERSDELIGHT)) {
-            return block instanceof FeastBlock;
+        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock || block instanceof FarmersDelightBlock || block instanceof FarmersDelightBaleBlock)) {
+            return true;
+        }
+
+        if (Compat.isModLoaded(Compat.QUARK) && (block instanceof QuarkBlock || block instanceof QuarkPillarBlock)) {
+            return true;
         }
 
         return false;

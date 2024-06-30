@@ -14,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 public class QFEffectTags extends ForgeRegistryTagsProvider<MobEffect> {
     public static final TagKey<MobEffect> BLACKLIST = new TagKey<>(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(QualityFood.MODID, "blacklist"));
 
-    public QFEffectTags(final DataGenerator generator, @Nullable final ExistingFileHelper fileHelper) {
-        super(generator, ForgeRegistries.MOB_EFFECTS, QualityFood.MODID, fileHelper);
+    public QFEffectTags(final DataGenerator generator, @Nullable final ExistingFileHelper helper) {
+        super(generator, ForgeRegistries.MOB_EFFECTS, QualityFood.MODID, helper);
     }
 
     @Override

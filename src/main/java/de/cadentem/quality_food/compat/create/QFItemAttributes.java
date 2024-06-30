@@ -1,4 +1,4 @@
-package de.cadentem.quality_food.core.create;
+package de.cadentem.quality_food.compat.create;
 
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import de.cadentem.quality_food.core.Quality;

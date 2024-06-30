@@ -4,6 +4,7 @@ import de.cadentem.quality_food.QualityFood;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
+import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -17,8 +18,8 @@ public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
     public static final TagKey<Item> BLACKLIST = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(QualityFood.MODID, "blacklist"));
 
-    public QFItemTags(final DataGenerator generator, final BlockTagsProvider provider, final ExistingFileHelper fileHelper) {
-        super(generator, provider, QualityFood.MODID, fileHelper);
+    public QFItemTags(final DataGenerator generator, final BlockTagsProvider provider, final ExistingFileHelper helper) {
+        super(generator, provider, QualityFood.MODID, helper);
     }
 
     @Override
@@ -28,42 +29,49 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(forge("dough"))
-                .addOptionalTag(forge("flour"))
-                .addOptionalTag(farmersdelight("wild_crops"))
+                .addOptionalTag(Compat.forge("dough"))
+                .addOptionalTag(Compat.forge("flour"))
+                .addOptionalTag(Compat.farmersdelight("wild_crops"))
                 .add(Items.SUGAR)
                 .add(Items.SUGAR_CANE)
                 .add(Items.COCOA_BEANS)
                 .add(Items.INK_SAC) // Farmer's Delight
-                .addOptional(farmersdelight("rice_panicle"))
+                .addOptional(Compat.farmersdelight("rice_panicle"))
                 /* Storage blocks */
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
-                .addOptional(farmersdelight("carrot_crate"))
-                .addOptional(farmersdelight("potato_crate"))
-                .addOptional(farmersdelight("beetroot_crate"))
-                .addOptional(farmersdelight("cabbage_crate"))
-                .addOptional(farmersdelight("tomato_crate"))
-                .addOptional(farmersdelight("onion_crate"))
-                .addOptional(farmersdelight("chorus_crate"))
-                .addOptional(farmersdelight("rice_bale"))
-                .addOptional(farmersdelight("rice_bag"))
-                .addOptional(quark("apple_crate"))
-                .addOptional(quark("beetroot_crate"))
-                .addOptional(quark("berry_sack"))
-                .addOptional(quark("carrot_crate"))
-                .addOptional(quark("chorus_fruit_block"))
-                .addOptional(quark("cocoa_beans_sack"))
-                .addOptional(quark("glowberry_sack"))
-                .addOptional(quark("golden_apple_crate"))
-                .addOptional(quark("golden_carrot_crate"))
-                .addOptional(quark("potato_crate"))
-                .addOptional(quark("sugar_cane_block"))
-                .addOptional(supplementaries("sugar_cube"))
+                .addOptional(Compat.farmersdelight("carrot_crate"))
+                .addOptional(Compat.farmersdelight("potato_crate"))
+                .addOptional(Compat.farmersdelight("beetroot_crate"))
+                .addOptional(Compat.farmersdelight("cabbage_crate"))
+                .addOptional(Compat.farmersdelight("tomato_crate"))
+                .addOptional(Compat.farmersdelight("onion_crate"))
+                .addOptional(Compat.farmersdelight("chorus_crate"))
+                .addOptional(Compat.farmersdelight("rice_bale"))
+                .addOptional(Compat.farmersdelight("rice_bag"))
+                .addOptional(Compat.quark("apple_crate"))
+                .addOptional(Compat.quark("beetroot_crate"))
+                .addOptional(Compat.quark("berry_sack"))
+                .addOptional(Compat.quark("carrot_crate"))
+                .addOptional(Compat.quark("chorus_fruit_block"))
+                .addOptional(Compat.quark("cocoa_beans_sack"))
+                .addOptional(Compat.quark("glowberry_sack"))
+                .addOptional(Compat.quark("golden_apple_crate"))
+                .addOptional(Compat.quark("golden_carrot_crate"))
+                .addOptional(Compat.quark("potato_crate"))
+                .addOptional(Compat.quark("sugar_cane_block"))
+                .addOptional(Compat.supplementaries("sugar_cube"))
+                .addOptional(Compat.vinery("white_grape_bag"))
+                .addOptional(Compat.vinery("red_grape_bag"))
+                .addOptional(Compat.vinery("cherry_bag"))
+                .addOptional(Compat.vinery("apple_bag"));
+
+                /*
                 .addOptional(vinery("white_grape_crate"))
                 .addOptional(vinery("red_grape_crate"))
                 .addOptional(vinery("cherry_crate"))
                 .addOptional(vinery("apple_crate"));
+                */
 
         tag(BLACKLIST)
                 .addTag(ItemTags.FLOWERS)
@@ -82,31 +90,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.WARPED_ROOTS) // Nether's Delight
                 .add(Items.CRIMSON_ROOTS) // Nether's Delight
                 .add(Items.NETHER_SPROUTS)
-                .addOptional(supplementaries("flax"))
-                .addOptional(supplementaries("flax_seeds"));
-    }
-
-    private ResourceLocation quark(final String path) {
-        return location("quark", path);
-    }
-
-    private ResourceLocation farmersdelight(final String path) {
-        return location("farmersdelight", path);
-    }
-
-    private ResourceLocation supplementaries(final String path) {
-        return location("supplementaries", path);
-    }
-
-    private ResourceLocation vinery(final String path) {
-        return location("vinery", path);
-    }
-
-    private ResourceLocation forge(final String path) {
-        return location("forge", path);
-    }
-
-    private ResourceLocation location(final String namespace, final String path) {
-        return new ResourceLocation(namespace, path);
+                .addOptional(Compat.supplementaries("flax"))
+                .addOptional(Compat.supplementaries("flax_seeds"));
     }
 }

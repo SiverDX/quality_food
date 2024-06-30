@@ -13,10 +13,10 @@ public class DataGen {
     @SubscribeEvent
     public static void configureDataGen(final GatherDataEvent event){
         DataGenerator generator = event.getGenerator();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
-        generator.addProvider(event.includeServer(), new QFItemTags(generator, new BlockTagsProvider(generator, QualityFood.MODID, fileHelper), fileHelper));
+        generator.addProvider(event.includeServer(), new QFItemTags(generator, new BlockTagsProvider(generator, QualityFood.MODID, helper), helper));
         generator.addProvider(event.includeServer(), new QFLootModifiers(generator));
-        generator.addProvider(event.includeServer(), new QFEffectTags(generator, fileHelper));
+        generator.addProvider(event.includeServer(), new QFEffectTags(generator, helper));
     }
 }
