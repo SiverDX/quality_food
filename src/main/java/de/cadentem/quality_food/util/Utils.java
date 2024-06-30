@@ -6,6 +6,7 @@ import de.cadentem.quality_food.compat.farmersdelight.FarmersDelightBaleBlock;
 import de.cadentem.quality_food.compat.farmersdelight.FarmersDelightBlock;
 import de.cadentem.quality_food.compat.quark.QuarkBlock;
 import de.cadentem.quality_food.compat.quark.QuarkPillarBlock;
+import de.cadentem.quality_food.compat.vinery.VineryBlock;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.NetworkHandler;
@@ -20,8 +21,8 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.network.PacketDistributor;
+import net.satisfy.vinery.block.grape.GrapeVineBlock;
 import org.jetbrains.annotations.Nullable;
-import satisfyu.vinery.block.grape.GrapeVineBlock;
 import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {
@@ -76,7 +77,7 @@ public class Utils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.VINERY) && block instanceof GrapeVineBlock) {
+        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock || block instanceof VineryBlock)) {
             return true;
         }
 
