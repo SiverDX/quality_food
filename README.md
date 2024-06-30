@@ -71,7 +71,7 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 
 ---
 
-For crafting (crafting bench) there are three configs:
+For crafting (crafting table) there are three configs:
 - `retain_quality_recipes`: The result will retain the quality of the ingredients, examples:
   - If all items are `diamond` quality the result will be `diamond`
   - If three items are `gold` quality and two are `diamond` the result will be `gold`
