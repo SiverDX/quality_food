@@ -97,7 +97,7 @@ If you find some items having quality where it doesn't make much sense you can b
   - Apply quality when crafting
   - Handle quality block state for growing plants (rice and tomato)
   - Apply quality to served items (feast blocks)
-  - Storage blocks retain quality when placed
+  - Certain storage blocks retain quality when placed
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
   - Use stored quality bonus of the furnace
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
@@ -113,9 +113,13 @@ If you find some items having quality where it doesn't make much sense you can b
 - [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
   - Auto harvesting & replanting
   - Quality gets properly rolled
-  - Storage blocks retain quality when placed
+  - Certain storage blocks retain quality when placed
 - [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
   - Quality gets properly rolled
+- [[Let's Do] Vinery](https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery)
+  - `White Grape Bag`, `Red Grape Bag`, `Cherry Bag` and `Apple Bag` blocks retain quality when placed
+- [Supplementaries](https://www.curseforge.com/minecraft/mc-mods/supplementaries)
+  - `Sugar Cube` block retains quality when placed
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly
