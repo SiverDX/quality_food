@@ -256,7 +256,7 @@ public class QualityUtils {
             Item item = containerStack.getItem();
             items.put(item, items.getOrDefault(item, 0) + 1);
 
-            if (containerStack.isEmpty() || /* Honey Block -> Honey Bottle */ containerStack.getItem() == Items.GLASS_BOTTLE) {
+            if (!Utils.isValidItem(containerStack)) {
                 continue;
             }
 
