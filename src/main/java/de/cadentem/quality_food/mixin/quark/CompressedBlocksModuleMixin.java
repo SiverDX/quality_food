@@ -1,39 +1,36 @@
 package de.cadentem.quality_food.mixin.quark;
 
-import de.cadentem.quality_food.compat.quark.QuarkBlock;
-import de.cadentem.quality_food.compat.quark.QuarkPillarBlock;
+import de.cadentem.quality_food.compat.PropertiesExtension;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.violetmoon.quark.content.building.module.CompressedBlocksModule;
-import org.violetmoon.zeta.block.ZetaFlammableBlock;
-import org.violetmoon.zeta.block.ZetaFlammablePillarBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 
 /** To identify the blocks which need the quality state */
 @Mixin(value = CompressedBlocksModule.class, remap = false)
 public abstract class CompressedBlocksModuleMixin {
-    @Redirect(method = "crate", at = @At(value = "NEW", args = "class=org/violetmoon/zeta/block/ZetaFlammableBlock"))
-    private ZetaFlammableBlock quality_food$handleCrate(final String registryName, final ZetaModule module, int flammability, final BlockBehaviour.Properties properties) {
-        return new QuarkBlock(registryName, module, flammability, properties);
+    @ModifyArg(method = "crate", at = @At(value = "INVOKE", target = "Lorg/violetmoon/zeta/block/ZetaFlammableBlock;<init>(Ljava/lang/String;Lorg/violetmoon/zeta/module/ZetaModule;ILnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"))
+    private BlockBehaviour.Properties quality_food$handleCrate(final BlockBehaviour.Properties properties) {
+        return ((PropertiesExtension) properties).quality_food$qualityBlock();
     }
 
-    @Redirect(method = "sack(Ljava/lang/String;Lnet/minecraft/world/level/material/MapColor;IZLjava/util/function/BooleanSupplier;)Lnet/minecraft/world/level/block/Block;", at = @At(value = "NEW", args = "class=org/violetmoon/zeta/block/ZetaFlammableBlock"))
-    private ZetaFlammableBlock quality_food$handleSack(final String registryName, ZetaModule module, int flammability, BlockBehaviour.Properties properties) {
+    @ModifyArg(method = "sack(Ljava/lang/String;Lnet/minecraft/world/level/material/MapColor;IZLjava/util/function/BooleanSupplier;)Lnet/minecraft/world/level/block/Block;", at = @At(value = "INVOKE", target = "Lorg/violetmoon/zeta/block/ZetaFlammableBlock;<init>(Ljava/lang/String;Lorg/violetmoon/zeta/module/ZetaModule;ILnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"))
+    private BlockBehaviour.Properties quality_food$handleSack(final String registryName, final ZetaModule module, int flammability, final BlockBehaviour.Properties properties) {
         if (registryName.equals("cocoa_beans_sack") || registryName.equals("berry_sack") || registryName.equals("glowberry_sack")) {
-            return new QuarkBlock(registryName, module, flammability, properties);
+            return ((PropertiesExtension) properties).quality_food$qualityBlock();
         }
 
-        return new ZetaFlammableBlock(registryName, module, flammability, properties);
+        return properties;
     }
 
-    @Redirect(method = "pillar", at = @At(value = "NEW", args = "class=org/violetmoon/zeta/block/ZetaFlammablePillarBlock"))
-    private ZetaFlammablePillarBlock quality_food$handlePillar(final String registryName, ZetaModule module, int flammability, BlockBehaviour.Properties properties) {
+    @ModifyArg(method = "pillar", at = @At(value = "INVOKE", target = "Lorg/violetmoon/zeta/block/ZetaFlammablePillarBlock;<init>(Ljava/lang/String;Lorg/violetmoon/zeta/module/ZetaModule;ILnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"))
+    private BlockBehaviour.Properties quality_food$handlePillar(final String registryName, final ZetaModule module, int flammability, final BlockBehaviour.Properties properties) {
         if (registryName.equals("sugar_cane_block") || registryName.equals("chorus_fruit_block")) {
-            return new QuarkPillarBlock(registryName, module, flammability, properties);
+            return ((PropertiesExtension) properties).quality_food$qualityBlock();
         }
 
-        return new ZetaFlammablePillarBlock(registryName, module, flammability, properties);
+        return properties;
     }
 }

@@ -8,6 +8,7 @@
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
     "AbstractFurnaceMenuMixin",
+    "BlockBehaviourMixin",
     "BlockItemMixin",
     "BlockMixin",
     "CakeBlockMixin",
@@ -18,6 +19,7 @@
     "InventoryMenuMixin",
     "ItemMixin",
     "LevelMixin",
+    "PropertiesMixin",
     "ResultSlotMixin",
     "StateDefinitionMixin",
     "StemBlockMixin",
