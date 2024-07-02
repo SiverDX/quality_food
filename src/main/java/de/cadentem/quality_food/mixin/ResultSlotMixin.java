@@ -33,13 +33,6 @@ public abstract class ResultSlotMixin extends Slot {
             return;
         }
 
-        int size = craftSlots.getContainerSize();
-        float bonus = 0;
-
-        for (int slot = 0; slot < size; slot++) {
-            bonus += QualityUtils.getBonus(QualityUtils.getQuality(craftSlots.getItem(slot)));
-        }
-
-        QualityUtils.applyQuality(stack, player, Bonus.additive(bonus));
+        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftSlots)));
     }
 }

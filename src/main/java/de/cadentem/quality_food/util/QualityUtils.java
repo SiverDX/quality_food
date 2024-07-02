@@ -13,6 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -57,12 +58,39 @@ public class QualityUtils {
      * @param isSlotValid To test whether the slot is relevant or not (since the list usually contains the inventory as well)
      */
     public static float getQualityBonus(final List<Slot> slots, final Predicate<Slot> isSlotValid) {
+        int validIngredients = 0;
         float bonus = 0;
 
         for (Slot slot : slots) {
-            if (isSlotValid.test(slot)) {
-                bonus += getBonus(QualityUtils.getQuality(slot.getItem()));
+            if (isSlotValid.test(slot) && Utils.isValidItem(slot.getItem())) {
+                validIngredients++;
             }
+        }
+
+        if (validIngredients == 0) {
+            return 0;
+        }
+
+        for (Slot slot : slots) {
+            if (isSlotValid.test(slot)) {
+                bonus += QualityConfig.getCraftingBonus(QualityUtils.getQuality(slot.getItem())) / validIngredients;
+            }
+        }
+
+        return bonus;
+    }
+
+    public static float getQualityBonus(final CraftingContainer container) {
+        int validIngredients = QualityUtils.countIngredients(container);
+
+        if (validIngredients == 0) {
+            return 0;
+        }
+
+        float bonus = 0;
+
+        for (ItemStack ingredient : container.getItems()) {
+            bonus += QualityConfig.getCraftingBonus(getQuality(ingredient)) / validIngredients;
         }
 
         return bonus;
@@ -304,15 +332,6 @@ public class QualityUtils {
         return result;
     }
 
-    public static float getBonus(final Quality quality) {
-        return switch (quality) {
-            case IRON -> 0.05f;
-            case GOLD -> 0.1f;
-            case DIAMOND -> 0.15f;
-            default -> 0;
-        };
-    }
-
     public static float getCookingBonus(final ItemStack stack) {
         Quality quality = getQuality(stack);
 
@@ -346,5 +365,17 @@ public class QualityUtils {
 
     public static boolean isValidQuality(final Quality quality) {
         return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
+    }
+
+    public static int countIngredients(final CraftingContainer container) {
+        int count = 0;
+
+        for (ItemStack stack : container.getItems()) {
+            if (Utils.isValidItem(stack)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 }

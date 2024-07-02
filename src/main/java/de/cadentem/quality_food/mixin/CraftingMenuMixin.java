@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CraftingMenu.class)
 public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer>  {
     @Shadow @Final private ResultContainer resultSlots;
+    @Shadow @Final private CraftingContainer craftSlots;
 
     public CraftingMenuMixin(final MenuType<?> type, int containerId) {
         super(type, containerId);
@@ -30,7 +31,7 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
             return;
         }
 
-        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(slots, slot -> slot.container instanceof CraftingContainer)));
+        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftSlots)));
     }
 
     /** Apply quality when items are converted from / to their storage variants */
