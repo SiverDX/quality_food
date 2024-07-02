@@ -2,11 +2,7 @@ package de.cadentem.quality_food.util;
 
 import de.cadentem.quality_food.capability.BlockDataProvider;
 import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.compat.farmersdelight.FarmersDelightBaleBlock;
-import de.cadentem.quality_food.compat.farmersdelight.FarmersDelightBlock;
-import de.cadentem.quality_food.compat.quark.QuarkBlock;
-import de.cadentem.quality_food.compat.quark.QuarkPillarBlock;
-import de.cadentem.quality_food.compat.vinery.VineryBlock;
+import de.cadentem.quality_food.compat.QualityBlock;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.NetworkHandler;
@@ -62,8 +58,8 @@ public class Utils {
         return false;
     }
 
-    // Needs to use 'instanceof' since for block state registrations tags are not loaded yet
     public static boolean isValidBlock(final Block block) {
+        // Tags are not loaded yet -> instanceof
         if (block instanceof BushBlock // Crops / Mushrooms / Sea pickles / ...
                 || block instanceof StemGrownBlock // Pumpkin / Melon
                 || block instanceof CaveVinesBlock // Glow berries
@@ -77,15 +73,15 @@ public class Utils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock || block instanceof VineryBlock)) {
+        if (block instanceof QualityBlock qualityBlock && qualityBlock.quality_food$isQualityBlock()) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock || block instanceof FarmersDelightBlock || block instanceof FarmersDelightBaleBlock)) {
+        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock)) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.QUARK) && (block instanceof QuarkBlock || block instanceof QuarkPillarBlock)) {
+        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock)) {
             return true;
         }
 
