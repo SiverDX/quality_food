@@ -68,6 +68,9 @@ public class ServerConfig {
             config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
             config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
             config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
+            String craftingBonusComment1 = "Additive bonus to the chance an ingredient gives (when crafting through a crafting table)";
+            String craftingBonusComment2 = "\nThis value is divided by the amount of ingredient types (which can have quality) (i.e. 1x diamond & 1x no quality -> total bonus of 0.35 (if diamond provides a bonus of 0.7))";
+            config.craftingBonus = BUILDER.comment(craftingBonusComment1 + craftingBonusComment2).defineInRange("crating_bonus", QualityConfig.getCraftingBonus(quality), 0, 1);
             config.effect_list_internal = BUILDER.comment("List of effects this rarity can grant (the item can be a tag) (<item>;<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
             QUALITY_CONFIG.put(quality, config);
             BUILDER.pop();

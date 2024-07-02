@@ -19,6 +19,8 @@ public class QualityConfig {
     public ForgeConfigSpec.DoubleValue nutritionMultiplier;
     public ForgeConfigSpec.DoubleValue saturationMultiplier;
 
+    public ForgeConfigSpec.DoubleValue craftingBonus;
+
     public ForgeConfigSpec.ConfigValue<List<? extends String>> effect_list_internal;
 
     public static float getChance(@NotNull final Quality quality) {
@@ -88,6 +90,21 @@ public class QualityConfig {
         }
 
         return 1 + quality.level() * 0.25f;
+    }
+
+    public static float getCraftingBonus(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
+
+        if (config != null) {
+            return config.craftingBonus.get().floatValue();
+        }
+
+        return switch (quality) {
+            case IRON -> 0.15f;
+            case GOLD -> 0.4f;
+            case DIAMOND -> 0.7f;
+            default -> 0;
+        };
     }
 
     public void initializeEffects() {

@@ -8,6 +8,7 @@ import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
@@ -20,7 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /** Apply quality when crafting with shift-click */
 @Mixin(CraftingTerminalMenu.class)
 public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
-    @Shadow(remap = false) @Final private ResultContainer craftResult;
+    @Shadow(remap = false) private @Final ResultContainer craftResult;
+    @Shadow(remap = false) private @Final CraftingContainer craftMatrix;
 
     public CraftingTerminalMenuMixin(int id, final Inventory inventory) {
         super(id, inventory);
@@ -32,6 +34,6 @@ public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
             return;
         }
 
-        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(slots, slot -> slot instanceof CraftingTerminalMenu.SlotCrafting)));
+        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftMatrix)));
     }
 }

@@ -79,6 +79,8 @@ For crafting (crafting table) there are three configs:
 - `no_quality_recipes`: Entries will not roll for quality (useful in case items can be crated back and forth)
 - `handle_compacting`: If enabled then (de)compacting results should retain quality automatically without having to specify the relevant recipes
 
+The bonus quality a quality ingredient provides is configurable for the crafting table (`crafting_bonus`)
+
 Cooking quality items will store a quality bonus within the furnace / cooking pot / ...
 - Higher quality will store a higher bonus per cooked item
 - Once enough bonus is stored particles will start to show
