@@ -29,7 +29,7 @@ public abstract class ResultSlotMixin extends Slot {
 
     @Inject(method = "checkTakeAchievements", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onCraftedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;I)V", shift = At.Shift.AFTER))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
-        if (player.level().isClientSide() || container instanceof RecipeHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed())) {
+        if (player.getLevel().isClientSide() || container instanceof RecipeHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed())) {
             return;
         }
 

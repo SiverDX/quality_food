@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.config;
 
 import de.cadentem.quality_food.QualityFood;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
@@ -45,7 +45,7 @@ public class EffectConfig {
         EffectConfig config = new EffectConfig(new Effect(effect, chance, duration, amplifier, probability));
 
         if (data[ITEM].startsWith("#")) {
-            TagKey<Item> testItem = TagKey.create(Registries.ITEM, ResourceLocation.tryParse(data[ITEM].substring(1)));
+            TagKey<Item> testItem = TagKey.create(Registry.ITEM_REGISTRY, ResourceLocation.tryParse(data[ITEM].substring(1)));
             config.predicate = stack -> stack.is(testItem);
         } else {
             Item testItem = ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(data[ITEM]));

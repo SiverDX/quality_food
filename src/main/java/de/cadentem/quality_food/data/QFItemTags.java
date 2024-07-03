@@ -61,17 +61,10 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.quark("potato_crate"))
                 .addOptional(Compat.quark("sugar_cane_block"))
                 .addOptional(Compat.supplementaries("sugar_cube"))
-                .addOptional(Compat.vinery("white_grape_bag"))
-                .addOptional(Compat.vinery("red_grape_bag"))
-                .addOptional(Compat.vinery("cherry_bag"))
-                .addOptional(Compat.vinery("apple_bag"));
-
-                /*
-                .addOptional(vinery("white_grape_crate"))
-                .addOptional(vinery("red_grape_crate"))
-                .addOptional(vinery("cherry_crate"))
-                .addOptional(vinery("apple_crate"));
-                */
+                .addOptional(Compat.vinery("white_grape_crate"))
+                .addOptional(Compat.vinery("red_grape_crate"))
+                .addOptional(Compat.vinery("cherry_crate"))
+                .addOptional(Compat.vinery("apple_crate"));
 
         tag(BLACKLIST)
                 .addTag(ItemTags.FLOWERS)

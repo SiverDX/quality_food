@@ -89,8 +89,8 @@ public class QualityUtils {
 
         float bonus = 0;
 
-        for (ItemStack ingredient : container.getItems()) {
-            bonus += QualityConfig.getCraftingBonus(getQuality(ingredient)) / validIngredients;
+        for (int index = 0; index < container.getContainerSize(); index++) {
+            bonus += QualityConfig.getCraftingBonus(getQuality(container.getItem(index))) / validIngredients;
         }
 
         return bonus;
@@ -370,8 +370,8 @@ public class QualityUtils {
     public static int countIngredients(final CraftingContainer container) {
         int count = 0;
 
-        for (ItemStack stack : container.getItems()) {
-            if (Utils.isValidItem(stack)) {
+        for (int index = 0; index < container.getContainerSize(); index++) {
+            if (Utils.isValidItem(container.getItem(index))) {
                 count++;
             }
         }

@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.network.PacketDistributor;
-import net.satisfy.vinery.block.grape.GrapeVineBlock;
 import org.jetbrains.annotations.Nullable;
+import satisfyu.vinery.block.grape.GrapeVineBlock;
 import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {

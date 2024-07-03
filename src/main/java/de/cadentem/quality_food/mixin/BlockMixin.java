@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
 
 @Mixin(Block.class)
 public abstract class BlockMixin {
-public class BlockMixin {
     @Inject(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/storage/loot/LootContext$Builder;)V", at = @At("HEAD"))
     private static void quality_food$storeBlockState(final BlockState state, final LootContext.Builder context, final CallbackInfo callback) {
         DropData.current.set(DropData.create(state, null, context.getLevel().getBlockState(new BlockPos(context.getParameter(LootContextParams.ORIGIN)).below())));
