@@ -10,17 +10,12 @@ import de.cadentem.quality_food.core.commands.QualityArgument;
 import de.cadentem.quality_food.core.commands.QualityItemArgument;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.commands.arguments.item.ItemInput;
-import net.minecraft.commands.synchronization.ArgumentTypeInfo;
-import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,20 +23,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.Collection;
 
 public class QFCommands {
-    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(Registry.COMMAND_ARGUMENT_TYPE_REGISTRY, QualityFood.MODID);
-
-    static {
-        COMMAND_ARGUMENTS.register("quality", () -> ArgumentTypeInfos.registerByClass(QualityArgument.class, SingletonArgumentInfo.contextFree(QualityArgument::new)));
-        COMMAND_ARGUMENTS.register("item", () -> ArgumentTypeInfos.registerByClass(QualityItemArgument.class, SingletonArgumentInfo.contextAware(QualityItemArgument::item)));
-    }
-
     /**
-     * Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#register(CommandDispatcher, CommandBuildContext)}
+     * Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#register(CommandDispatcher)}
      */
     public static void registerCommands(final RegisterCommandsEvent event) {
         event.getDispatcher().register(
@@ -54,7 +41,7 @@ public class QFCommands {
                                                         .then(
                                                                 Commands.argument("quality", new QualityArgument())
                                                                         .then(
-                                                                                Commands.argument("item", QualityItemArgument.item(event.getBuildContext()))
+                                                                                Commands.argument("item", QualityItemArgument.item())
                                                                                         .executes(context -> giveItem(context.getSource(), ItemArgument.getItem(context, "item"), EntityArgument.getPlayers(context, "targets"), 1, QualityArgument.get(context)))
                                                                                         .then(
                                                                                                 Commands.argument("count", IntegerArgumentType.integer(1))
@@ -80,7 +67,7 @@ public class QFCommands {
 
     private static int applyQuality(final CommandSourceStack source, final Quality quality, boolean canOverride) {
         if (quality.level() == 0) {
-            source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
+            source.sendFailure(new TranslatableComponent("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
         }
 
@@ -88,12 +75,12 @@ public class QFCommands {
             ItemStack stack = livingSource.getMainHandItem();
 
             if (!Utils.isValidItem(stack)) {
-                source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", stack.getDisplayName()));
+                source.sendFailure(new TranslatableComponent("commands.quality_food.quality.failed.no_quality", stack.getDisplayName()));
                 return 0;
             }
 
             if (QualityUtils.hasQuality(stack) && !canOverride) {
-                source.sendFailure(Component.translatable("commands.quality_food.quality.failed.already_has_quality", stack.getDisplayName()));
+                source.sendFailure(new TranslatableComponent("commands.quality_food.quality.failed.already_has_quality", stack.getDisplayName()));
                 return 0;
             }
 
@@ -116,7 +103,7 @@ public class QFCommands {
                 stack.getTag().remove(QualityUtils.QUALITY_TAG);
                 return 1;
             } else {
-                source.sendFailure(Component.translatable("commands.quality_food.quality.failed.missing_quality", stack.getDisplayName()));
+                source.sendFailure(new TranslatableComponent("commands.quality_food.quality.failed.missing_quality", stack.getDisplayName()));
                 return 0;
             }
         }
@@ -129,7 +116,7 @@ public class QFCommands {
      */
     private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final Quality quality) throws CommandSyntaxException {
         if (quality.level() == 0) {
-            source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
+            source.sendFailure(new TranslatableComponent("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
         }
 
@@ -138,12 +125,12 @@ public class QFCommands {
         ItemStack tempStack = input.createItemStack(1, false);
 
         if (QualityUtils.isInvalidItem(tempStack)) {
-            source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", tempStack.getDisplayName()));
+            source.sendFailure(new TranslatableComponent("commands.quality_food.quality.failed.no_quality", tempStack.getDisplayName()));
             return 0;
         }
 
         if (count > maxCount) {
-            source.sendFailure(Component.translatable("commands.give.failed.toomanyitems", maxCount, tempStack.getDisplayName()));
+            source.sendFailure(new TranslatableComponent("commands.give.failed.toomanyitems", maxCount, tempStack.getDisplayName()));
             return 0;
         }
 
@@ -180,9 +167,9 @@ public class QFCommands {
         }
 
         if (players.size() == 1) {
-            source.sendSuccess(Component.translatable("commands.give.success.single", count, tempStack.getDisplayName(), players.iterator().next().getDisplayName()), true);
+            source.sendSuccess(new TranslatableComponent("commands.give.success.single", count, tempStack.getDisplayName(), players.iterator().next().getDisplayName()), true);
         } else {
-            source.sendSuccess(Component.translatable("commands.give.success.single", count, tempStack.getDisplayName(), players.size()), true);
+            source.sendSuccess(new TranslatableComponent("commands.give.success.single", count, tempStack.getDisplayName(), players.size()), true);
         }
 
         return players.size();

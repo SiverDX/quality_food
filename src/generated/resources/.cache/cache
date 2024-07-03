@@ -1,0 +1,5 @@
+43f7e22a098c3b3adf11ad72f4343620a9dd8a13 data/forge/loot_modifiers/global_loot_modifiers.json
+dc1837eeeee0258758a425bdbf1eb611cacad83d data/quality_food/loot_modifiers/quality_loot_modifier.json
+f2470e42d8106f50e64d18fad831848256ae0fa4 data/quality_food/tags/items/blacklist.json
+07ac8bee363654b5903e9687ac8ffa9df7049cb5 data/quality_food/tags/items/material_whitelist.json
+74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/quality_food/tags/mob_effect/blacklist.json

@@ -9,10 +9,11 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeRegistryTagsProvider;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QFEffectTags extends ForgeRegistryTagsProvider<MobEffect> {
-    public static final TagKey<MobEffect> BLACKLIST = new TagKey<>(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(QualityFood.MODID, "blacklist"));
+    public static final TagKey<MobEffect> BLACKLIST = TagKey.create(Registry.MOB_EFFECT_REGISTRY, new ResourceLocation(QualityFood.MODID, "blacklist"));
 
     public QFEffectTags(final DataGenerator generator, @Nullable final ExistingFileHelper helper) {
         super(generator, ForgeRegistries.MOB_EFFECTS, QualityFood.MODID, helper);
@@ -21,5 +22,10 @@ public class QFEffectTags extends ForgeRegistryTagsProvider<MobEffect> {
     @Override
     protected void addTags() {
         tag(BLACKLIST);
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return "Quality Food Mob Effects";
     }
 }

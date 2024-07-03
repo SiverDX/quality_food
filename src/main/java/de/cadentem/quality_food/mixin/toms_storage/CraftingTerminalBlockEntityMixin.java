@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin.toms_storage;
 
-import com.tom.storagemod.tile.CraftingTerminalBlockEntity;
+import com.tom.storagemod.tile.TileEntityCraftingTerminal;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 /** Apply quality when items are converted from / to their storage variants */
-@Mixin(CraftingTerminalBlockEntity.class)
+@Mixin(TileEntityCraftingTerminal.class)
 public abstract class CraftingTerminalBlockEntityMixin {
     @Shadow(remap = false) @Final private CraftingContainer craftMatrix;
     @Shadow(remap = false) private CraftingRecipe currentRecipe;

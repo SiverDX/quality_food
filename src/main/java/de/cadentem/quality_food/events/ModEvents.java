@@ -1,13 +1,15 @@
 package de.cadentem.quality_food.events;
 
-import de.cadentem.quality_food.util.QualityUtils;
-import it.crystalnest.harvest_with_ease.api.event.HarvestEvents;
-import net.minecraft.world.item.ItemStack;
+import de.cadentem.quality_food.core.loot_modifiers.QualityLootModifier;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvents {
-    public static void handleHarvestEvent(final HarvestEvents.HarvestDropsEvent event) {
-        for (ItemStack stack : event.getDrops()) {
-            QualityUtils.applyQuality(stack, event.getCrop(), event.getEntity(), event.getLevel().getBlockState(event.getPos().below()));
-        }
+    @SubscribeEvent
+    public static void onModConfigEvent(final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
+        event.getRegistry().register(QualityLootModifier.SERIALIZER.setRegistryName(QualityLootModifier.ID));
     }
 }

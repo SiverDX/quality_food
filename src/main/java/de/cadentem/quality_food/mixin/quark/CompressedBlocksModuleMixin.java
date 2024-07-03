@@ -18,7 +18,7 @@ public abstract class CompressedBlocksModuleMixin {
 
     @ModifyArg(method = "sack(Ljava/lang/String;Lnet/minecraft/world/level/material/MaterialColor;IZLjava/util/function/BooleanSupplier;)Lnet/minecraft/world/level/block/Block;", at = @At(value = "INVOKE", target = "Lvazkii/quark/base/block/QuarkFlammableBlock;<init>(Ljava/lang/String;Lvazkii/quark/base/module/QuarkModule;Lnet/minecraft/world/item/CreativeModeTab;ILnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"))
     private BlockBehaviour.Properties quality_food$handleSack(final BlockBehaviour.Properties properties, @Local(argsOnly = true) final String registryName) {
-        if (registryName.equals("cocoa_beans_sack") || registryName.equals("berry_sack") || registryName.equals("glowberry_sack")) {
+        if (registryName.equals("cocoa_beans") || registryName.equals("berry") || registryName.equals("glowberry")) {
             return ((PropertiesExtension) properties).quality_food$qualityBlock();
         }
 
@@ -27,7 +27,7 @@ public abstract class CompressedBlocksModuleMixin {
 
     @ModifyArg(method = "pillar", at = @At(value = "INVOKE", target = "Lvazkii/quark/base/block/QuarkFlammablePillarBlock;<init>(Ljava/lang/String;Lvazkii/quark/base/module/QuarkModule;Lnet/minecraft/world/item/CreativeModeTab;ILnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V"))
     private BlockBehaviour.Properties quality_food$handlePillar(final BlockBehaviour.Properties properties, @Local(argsOnly = true) final String registryName) {
-        if (registryName.equals("sugar_cane_block") || registryName.equals("chorus_fruit_block")) {
+        if (registryName.equals("sugar_cane") || registryName.equals("chorus_fruit")) {
             return ((PropertiesExtension) properties).quality_food$qualityBlock();
         }
 

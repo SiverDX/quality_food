@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.mixin.toms_storage;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.tom.storagemod.gui.CraftingTerminalMenu;
-import com.tom.storagemod.gui.StorageTerminalMenu;
+import com.tom.storagemod.gui.ContainerCraftingTerminal;
+import com.tom.storagemod.gui.ContainerStorageTerminal;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Apply quality when crafting with shift-click */
-@Mixin(CraftingTerminalMenu.class)
-public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
+@Mixin(ContainerCraftingTerminal.class)
+public abstract class CraftingTerminalMenuMixin extends ContainerStorageTerminal {
     @Shadow(remap = false) private @Final ResultContainer craftResult;
     @Shadow(remap = false) private @Final CraftingContainer craftMatrix;
 
@@ -28,7 +28,7 @@ public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
         super(id, inventory);
     }
 
-    @Inject(method = "shiftClickItems", at = @At(value = "INVOKE", target = "Lcom/tom/storagemod/gui/CraftingTerminalMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", shift = At.Shift.BEFORE))
+    @Inject(method = "shiftClickItems", at = @At(value = "INVOKE", target = "Lcom/tom/storagemod/gui/ContainerCraftingTerminal;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int index, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
         if (ServerConfig.isNoQualityRecipe(craftResult.getRecipeUsed())) {
             return;

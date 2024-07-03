@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import satisfyu.vinery.block.grape.GrapeVineBlock;
 import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {
@@ -74,10 +73,6 @@ public class Utils {
         }
 
         if (block instanceof QualityBlock qualityBlock && qualityBlock.quality_food$isQualityBlock()) {
-            return true;
-        }
-
-        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock)) {
             return true;
         }
 

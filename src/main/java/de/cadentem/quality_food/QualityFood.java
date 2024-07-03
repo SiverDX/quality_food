@@ -3,14 +3,17 @@ package de.cadentem.quality_food;
 import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.capability.BlockData;
 import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.create.QFItemAttributes;
+import de.cadentem.quality_food.compat.harvest_with_ease.Events;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.compat.create.QFItemAttributes;
-import de.cadentem.quality_food.events.ModEvents;
+import de.cadentem.quality_food.core.commands.QualityArgument;
+import de.cadentem.quality_food.core.commands.QualityItemArgument;
 import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.registry.QFCommands;
 import de.cadentem.quality_food.registry.QFItems;
-import de.cadentem.quality_food.registry.QFLootModifiers;
+import net.minecraft.commands.synchronization.ArgumentTypes;
+import net.minecraft.commands.synchronization.EmptyArgumentSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,12 +35,10 @@ public class QualityFood {
         modEventBus.register(this);
 
         QFItems.ITEMS.register(modEventBus);
-        QFLootModifiers.LOOT_MODIFIERS.register(modEventBus);
-        QFCommands.COMMAND_ARGUMENTS.register(modEventBus);
         MinecraftForge.EVENT_BUS.addListener(QFCommands::registerCommands);
 
         if (Compat.isModLoaded(Compat.HARVEST_WITH_EASE)) {
-            MinecraftForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);
+            MinecraftForge.EVENT_BUS.addListener(Events::handleHarvestEvent);
         }
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
@@ -47,6 +48,11 @@ public class QualityFood {
     @SubscribeEvent
     public void commonSetup(final FMLCommonSetupEvent event) {
         NetworkHandler.register();
+
+        event.enqueueWork(() -> {
+            ArgumentTypes.register("quality_food.quality", QualityArgument.class, new EmptyArgumentSerializer<>(QualityArgument::new));
+            ArgumentTypes.register("quality_food.item", QualityItemArgument.class, new EmptyArgumentSerializer<>(QualityItemArgument::new));
+        });
 
         if (Compat.isModLoaded(Compat.CREATE)) {
             event.enqueueWork(QFItemAttributes::register);

@@ -1,6 +1,6 @@
 {
+  "replace": false,
   "entries": [
     "quality_food:quality_loot_modifier"
-  ],
-  "replace": false
+  ]
 }

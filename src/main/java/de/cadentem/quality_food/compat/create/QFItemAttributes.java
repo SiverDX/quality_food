@@ -6,7 +6,7 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class QFItemAttributes implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         if (quality == null) {
-            return new Object[]{ComponentContents.EMPTY};
+            return new Object[]{Component.EMPTY};
         }
 
         String name = quality.getName();
@@ -59,7 +59,7 @@ public class QFItemAttributes implements ItemAttribute {
             default -> ChatFormatting.DARK_GRAY;
         };
 
-        return new Object[]{Component.literal(name).withStyle(color)};
+        return new Object[]{new TextComponent(name).withStyle(color)};
     }
 
     @Override

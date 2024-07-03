@@ -5,9 +5,7 @@ import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,18 +20,18 @@ import vazkii.quark.content.tweaks.module.SimpleHarvestModule;
 public abstract class SimpleHarvestModuleMixin {
     /** Roll quality with more context */
     @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", shift = At.Shift.BEFORE, remap = true))
-    private static void quality_food$setDropData(final Level level, final BlockPos position, final BlockState state, final Entity entity, final ItemStack tool, final CallbackInfo callback) {
-        DropData.current.set(new DropData(state, entity instanceof Player player ? player : null, level.getBlockState(position.below())));
+    private static void quality_food$setDropData(final Level level, final BlockPos position, final BlockState state, final Player player, final CallbackInfo callback) {
+        DropData.current.set(new DropData(state, player, level.getBlockState(position.below())));
     }
 
     /** Clear context */
-    @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;gameEvent(Lnet/minecraft/world/level/gameevent/GameEvent;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/gameevent/GameEvent$Context;)V", shift = At.Shift.AFTER, remap = true))
-    private static void quality_food$clearDropDAta(final Level level, final BlockPos position, final BlockState state, final Entity entity, final ItemStack tool, final CallbackInfo callback) {
+    @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;spawnAfterBreak(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.AFTER, remap = true))
+    private static void quality_food$clearDropDAta(final Level level, final BlockPos position, final BlockState state, final Player player, final CallbackInfo callback) {
         DropData.current.remove();
     }
 
     /** Set default quality state to bypass config */
-    @ModifyArg(method = "getAction", at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
+    @ModifyArg(method = "handle", at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z"))
     private static Object quality_food$allowReplant(final Object object) {
         if (!ServerConfig.QUARK_HANDLE_CONFIG.get()) {
             return object;

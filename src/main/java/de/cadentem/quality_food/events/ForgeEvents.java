@@ -6,8 +6,8 @@ import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +33,7 @@ public class ForgeEvents {
     public static void handleRightClick(final PlayerInteractEvent.RightClickBlock event) {
         BlockPos position = event.getHitVec().getBlockPos();
 
-        if (event.getLevel().getBlockEntity(position) != null) {
+        if (event.getPlayer().getLevel().getBlockEntity(position) != null) {
             Utils.BLOCK_ENTITY_POSITION.set(position);
         }
     }
@@ -66,26 +66,26 @@ public class ForgeEvents {
             return;
         }
 
-        FoodProperties foodProperties = event.getItemStack().getFoodProperties(event.getEntity());
+        FoodProperties foodProperties = event.getItemStack().getFoodProperties(event.getPlayer());
 
         if (foodProperties != null) {
             List<Pair<MobEffectInstance, Float>> effectData = foodProperties.getEffects();
 
             for (Pair<MobEffectInstance, Float> data : effectData) {
                 MobEffectInstance effect = data.getFirst();
-                MutableComponent effectTooltip = Component.translatable(effect.getDescriptionId());
+                MutableComponent effectTooltip = new TranslatableComponent(effect.getDescriptionId());
 
                 if (effect.getAmplifier() > 0) {
-                    effectTooltip = Component.translatable("potion.withAmplifier", effectTooltip, Component.translatable("potion.potency." + effect.getAmplifier()));
+                    effectTooltip = new TranslatableComponent("potion.withAmplifier", effectTooltip, new TranslatableComponent("potion.potency." + effect.getAmplifier()));
                 }
 
                 if (effect.getDuration() > 20) {
-                    effectTooltip = Component.translatable("potion.withDuration", effectTooltip, MobEffectUtil.formatDuration(effect, 1));
+                    effectTooltip = new TranslatableComponent("potion.withDuration", effectTooltip, MobEffectUtil.formatDuration(effect, 1));
                 }
 
                 ChatFormatting formatting = effect.getEffect().getCategory().getTooltipFormatting();
                 event.getToolTip().remove(effectTooltip.withStyle(formatting));
-                effectTooltip = Component.translatable("potion.withProbability", effectTooltip, FORMAT.format(data.getSecond() * 100) + "%").withStyle(formatting);
+                effectTooltip = new TranslatableComponent("potion.withProbability", effectTooltip, FORMAT.format(data.getSecond() * 100) + "%").withStyle(formatting);
 
                 if (!event.getToolTip().contains(effectTooltip)) {
                     event.getToolTip().add(effectTooltip);

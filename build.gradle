@@ -84,39 +84,35 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     /* --- Compatibility --- */
-    implementation fg.deobf("curse.maven:jade-324717:4914105") // 8.9.2
+    implementation fg.deobf("curse.maven:jade-324717:5079263") // 5.3.2
 
-    implementation fg.deobf("curse.maven:farmers-delight-398521:5051241") // 1.2.4
+    implementation fg.deobf("curse.maven:farmers-delight-398521:4679315") // 1.2.3
 
-    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202135") // 1.3.1
+    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5189455") // 1.3.1
 
-    compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5480599") // 9.0.1
+    compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5480588") // 9.0.1
 
-    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5296313") // 0.6.4.605
-    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5194759") // 3.20.2.1035
-    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5194750") // 0.9.7.765
+    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5296312") // 0.6.4.604
+    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5194758") // 3.20.2.1036
+    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5194748") // 0.9.7.764
 
-    compileOnly fg.deobf("curse.maven:toms-storage-378609:5211204") // 1.5.10
+    compileOnly fg.deobf("curse.maven:toms-storage-378609:5211203") // 1.4.5
 
-    compileOnly fg.deobf("curse.maven:create-328085:4835190") // 0.5.1f
+    compileOnly fg.deobf("curse.maven:create-328085:4835188") // 0.5.1f
 
-    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5177126") // 1.10.7
-    compileOnly fg.deobf("curse.maven:majrusz-library-437409:5177143") // 7.0.5
+    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:4753793") // 1.9.2
+    compileOnly fg.deobf("curse.maven:majrusz-library-437409:4764513") // 5.1.2
 
-    compileOnly fg.deobf("curse.maven:lets-do-vinery-704465:4833017") // 1.3.12b
-    compileOnly fg.deobf("curse.maven:do-api-864599:4676882") // 1.1.0b
-    compileOnly fg.deobf("curse.maven:architectury-api-419699:5137942") // 6.6.92
+    implementation fg.deobf("curse.maven:quark-243121:3840125") // 3.2-358
+    implementation fg.deobf("curse.maven:autoreglib-250363:3642382") // 1.7-53
 
-    compileOnly fg.deobf("curse.maven:quark-243121:4812006") // 3.4-418
-    compileOnly fg.deobf("curse.maven:autoreglib-250363:4100299") // 1.8.2-55
+    compileOnly fg.deobf("curse.maven:rightclickharvest-452834:4557334") // 3.2.0
 
-    compileOnly fg.deobf("curse.maven:rightclickharvest-452834:4690534") // 3.2.3
-
-    compileOnly fg.deobf("curse.maven:supplementaries-412082:5152602") // 2.4.20
-    compileOnly fg.deobf("curse.maven:selene-499980:4983974") // 2.3.6
+    compileOnly fg.deobf("curse.maven:supplementaries-412082:4548315") // 1.5.18
+    compileOnly fg.deobf("curse.maven:selene-499980:4747959") // 1.17.14
 
     /* --- Test --- */
-    implementation fg.deobf("curse.maven:appleskin-248787:3872808")
+    implementation fg.deobf("curse.maven:appleskin-248787:4770822") // 2.5.1
 
     /* --- Mixin Configuration --- */
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))

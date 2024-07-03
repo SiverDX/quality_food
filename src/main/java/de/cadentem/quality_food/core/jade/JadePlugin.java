@@ -1,15 +1,16 @@
 package de.cadentem.quality_food.core.jade;
 
+import mcp.mobius.waila.api.IWailaClientRegistration;
+import mcp.mobius.waila.api.IWailaPlugin;
+import mcp.mobius.waila.api.TooltipPosition;
+import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.world.level.block.Block;
-import snownee.jade.api.IWailaClientRegistration;
-import snownee.jade.api.IWailaPlugin;
-import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnstableApiUsage"})
 public class JadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(final IWailaClientRegistration registration) {
-        registration.registerBlockComponent(new QualityProvider(), Block.class);
+        registration.registerComponentProvider(new QualityProvider(), TooltipPosition.BODY, Block.class);
     }
 }

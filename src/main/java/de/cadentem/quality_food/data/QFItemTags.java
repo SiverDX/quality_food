@@ -1,10 +1,10 @@
 package de.cadentem.quality_food.data;
 
 import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
-import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -60,11 +60,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.quark("golden_carrot_crate"))
                 .addOptional(Compat.quark("potato_crate"))
                 .addOptional(Compat.quark("sugar_cane_block"))
-                .addOptional(Compat.supplementaries("sugar_cube"))
-                .addOptional(Compat.vinery("white_grape_crate"))
-                .addOptional(Compat.vinery("red_grape_crate"))
-                .addOptional(Compat.vinery("cherry_crate"))
-                .addOptional(Compat.vinery("apple_crate"));
+                .addOptional(Compat.supplementaries("sugar_cube"));
 
         tag(BLACKLIST)
                 .addTag(ItemTags.FLOWERS)

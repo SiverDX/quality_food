@@ -4,7 +4,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.cadentem.quality_food.util.QualityUtils;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -13,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class QualityItemArgument extends ItemArgument {
-    public QualityItemArgument(final CommandBuildContext context) {
-        super(context);
+    public QualityItemArgument() {
+        super();
     }
 
-    public static QualityItemArgument item(final CommandBuildContext context) {
-        return new QualityItemArgument(context);
+    public static QualityItemArgument item() {
+        return new QualityItemArgument();
     }
 
     @Override

@@ -1,4 +1,4 @@
 {
-  "type": "quality_food:quality_loot_modifier",
-  "conditions": []
+  "conditions": [],
+  "type": "quality_food:quality_loot_modifier"
 }

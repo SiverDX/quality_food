@@ -7,7 +7,6 @@ import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -25,10 +24,7 @@ import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class QualityUtils {
@@ -37,7 +33,7 @@ public class QualityUtils {
     public static final String EFFECT_TAG = "effects";
     public static final String EFFECT_PROBABILITY_KEY = "chance";
 
-    private static final RandomSource RANDOM = RandomSource.create();
+    private static final Random RANDOM = new Random();
 
     public static boolean hasQuality(final ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
@@ -121,7 +117,7 @@ public class QualityUtils {
 
         Utils.LAST_STACK.set(stack);
 
-        RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
+        Random random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
         double rolls = 1 + (entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 0);
 
         if (rolls < 0) {
@@ -139,7 +135,7 @@ public class QualityUtils {
         checkAndRoll(stack, random, bonusList, Quality.IRON, rolls);
     }
 
-    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls) {
+    private static boolean checkAndRoll(final ItemStack stack, @NotNull final Random random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls) {
         float chance = QualityConfig.getChance(quality);
 
         for (Bonus bonus : bonusList) {

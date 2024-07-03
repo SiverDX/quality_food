@@ -4,9 +4,9 @@ import de.cadentem.quality_food.QualityFood;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGen {
@@ -15,8 +15,10 @@ public class DataGen {
         DataGenerator generator = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
 
-        generator.addProvider(event.includeServer(), new QFItemTags(generator, new BlockTagsProvider(generator, QualityFood.MODID, helper), helper));
-        generator.addProvider(event.includeServer(), new QFLootModifiers(generator));
-        generator.addProvider(event.includeServer(), new QFEffectTags(generator, helper));
+        if (event.includeServer()) {
+            generator.addProvider(new QFItemTags(generator, new BlockTagsProvider(generator, QualityFood.MODID, helper), helper));
+            generator.addProvider(new QFLootModifiers(generator));
+            generator.addProvider(new QFEffectTags(generator, helper));
+        }
     }
 }

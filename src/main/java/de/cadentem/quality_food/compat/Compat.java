@@ -11,7 +11,6 @@ public class Compat {
     public static final String QUARK = "quark";
     public static final String FORGE = "forge";
     public static final String CREATE = "create";
-    public static final String VINERY = "vinery";
     public static final String FARMERSDELIGHT = "farmersdelight";
     public static final String SUPPLEMENTARIES = "supplementaries";
     public static final String HARVEST_WITH_EASE = "harvestwithease";
@@ -40,10 +39,6 @@ public class Compat {
 
     public static ResourceLocation supplementaries(final String path) {
         return location(SUPPLEMENTARIES, path);
-    }
-
-    public static ResourceLocation vinery(final String path) {
-        return location(VINERY, path);
     }
 
     public static ResourceLocation forge(final String path) {

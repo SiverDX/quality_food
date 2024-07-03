@@ -37,7 +37,6 @@
     "farmersdelight.ModBlocksMixin",
     "farmersdelight.RiceBlockMixin",
     "farmersdelight.RiceRollMedleyBlockMixin",
-    "farmersdelight.TextUtilsMixin",
     "farmersdelight.TomatoVineBlockMixin",
     "fastentitytransfer.CommonUtilsMixin",
     "majruszsenchantments.TelekinesisEnchantmentMixin",
@@ -49,13 +48,11 @@
     "sophisticatedcore.CraftingUpgradeContainerMixin",
     "sophisticatedcore.StorageContainerMenuBaseMixin",
     "toms_storage.CraftingTerminalBlockEntityMixin",
-    "toms_storage.CraftingTerminalMenuMixin",
-    "vinery.GrapeBushMixin",
-    "vinery.GrapeVineBlockMixin",
-    "vinery.ObjectRegistryMixin"
+    "toms_storage.CraftingTerminalMenuMixin"
   ],
   "client": [
-    "client.ItemRendererMixin"
+    "client.ItemRendererMixin",
+    "farmersdelight.TextUtilsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
