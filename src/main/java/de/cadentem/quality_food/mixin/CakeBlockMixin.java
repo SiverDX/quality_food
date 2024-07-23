@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.level.block.CakeBlock;

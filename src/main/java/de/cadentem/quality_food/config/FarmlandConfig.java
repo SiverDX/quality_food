@@ -1,11 +1,11 @@
 package de.cadentem.quality_food.config;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.BiPredicate;
 
@@ -31,17 +31,17 @@ public class FarmlandConfig {
                 TagKey<Block> testFarmland = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(data[FARMLAND].substring(1)));
                 predicate = (crop, farmland) -> crop.is(testCrop) && farmland.is(testFarmland);
             } else {
-                Block testFarmland = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(data[FARMLAND]));
+                Block testFarmland = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(data[FARMLAND]));
                 predicate = (crop, farmland) -> crop.is(testCrop) && farmland.getBlock() == testFarmland;
             }
         } else {
-            Block testCrop = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(data[CROP]));
+            Block testCrop = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(data[CROP]));
 
             if (data[FARMLAND].startsWith("#")) {
                 TagKey<Block> testFarmland = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(data[FARMLAND].substring(1)));
                 predicate = (crop, farmland) -> crop.getBlock() == testCrop && farmland.is(testFarmland);
             } else {
-                Block testFarmland = ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(data[FARMLAND]));
+                Block testFarmland = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(data[FARMLAND]));
                 predicate = (crop, farmland) -> crop.getBlock() == testCrop && farmland.getBlock() == testFarmland;
             }
         }

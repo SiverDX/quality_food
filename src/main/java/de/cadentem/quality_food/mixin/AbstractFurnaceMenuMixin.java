@@ -2,7 +2,8 @@ package de.cadentem.quality_food.mixin;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.capability.BlockDataProvider;
+import de.cadentem.quality_food.capability.BlockData;
+import de.cadentem.quality_food.capability.AttachmentHandler;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
@@ -14,6 +15,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Allow material (with quality) to grant its bonus when shift-clicking the crafting result */
 @Mixin(AbstractFurnaceMenu.class)
-public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container> {
+public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<SingleRecipeInput, AbstractCookingRecipe> {
     public AbstractFurnaceMenuMixin(final MenuType<?> type, int containerId) {
         super(type, containerId);
     }
@@ -38,7 +40,12 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container>
 
         if (quality_food$blockEntityPosition != null && !player.level().isClientSide()) {
             BlockEntity blockEntity = player.level().getBlockEntity(quality_food$blockEntityPosition);
-            BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality()));
+
+            if (blockEntity != null) {
+                BlockData blockData = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
+                bonus.set(blockData.useQuality());
+                blockEntity.setChanged();
+            }
         }
 
         QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));

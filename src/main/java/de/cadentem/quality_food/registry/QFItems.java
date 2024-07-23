@@ -2,9 +2,7 @@ package de.cadentem.quality_food.registry;
 
 import de.cadentem.quality_food.QualityFood;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class QFItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, QualityFood.MODID);

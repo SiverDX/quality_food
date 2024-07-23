@@ -14,19 +14,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.ItemFishedEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-@Mod.EventBusSubscriber
-public class ForgeEvents {
+@EventBusSubscriber
+public class GameEvents {
     private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @SubscribeEvent
@@ -40,7 +40,7 @@ public class ForgeEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleFishing(final ItemFishedEvent event) {
-        if (event.getHookEntity() != null && event.getHookEntity().level().isClientSide()) {
+        if (event.getEntity().level().isClientSide()) {
             return;
         }
 
@@ -69,10 +69,10 @@ public class ForgeEvents {
         FoodProperties foodProperties = event.getItemStack().getFoodProperties(event.getEntity());
 
         if (foodProperties != null) {
-            List<Pair<MobEffectInstance, Float>> effectData = foodProperties.getEffects();
+            List<FoodProperties.PossibleEffect> effectData = foodProperties.effects();
 
-            for (Pair<MobEffectInstance, Float> data : effectData) {
-                MobEffectInstance effect = data.getFirst();
+            for (FoodProperties.PossibleEffect data : effectData) {
+                MobEffectInstance effect = data.effect();
                 MutableComponent effectTooltip = Component.translatable(effect.getDescriptionId());
 
                 if (effect.getAmplifier() > 0) {
@@ -85,7 +85,7 @@ public class ForgeEvents {
 
                 ChatFormatting formatting = effect.getEffect().getCategory().getTooltipFormatting();
                 event.getToolTip().remove(effectTooltip.withStyle(formatting));
-                effectTooltip = Component.translatable("potion.withProbability", effectTooltip, FORMAT.format(data.getSecond() * 100) + "%").withStyle(formatting);
+                effectTooltip = Component.translatable("potion.withProbability", effectTooltip, FORMAT.format(data.probability() * 100) + "%").withStyle(formatting);
 
                 if (!event.getToolTip().contains(effectTooltip)) {
                     event.getToolTip().add(effectTooltip);

@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
-import de.cadentem.quality_food.config.QualityConfig;
+import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
@@ -44,13 +44,13 @@ public class QualityUtils {
             return false;
         }
 
-        boolean hasTag = stack.getTag() != null && stack.getTag().get(QUALITY_TAG) != null;
+        de.cadentem.quality_food.component.Quality quality = stack.get(QFRegistries.QUALITY_DATA_COMPONENT);
 
-        if (!hasTag) {
+        if (quality == null) {
             return false;
         }
 
-        return stack.getTag().getCompound(QUALITY_TAG).getInt(QUALITY_KEY) != 0;
+        return quality.level() > 0;
     }
 
     /**
@@ -245,7 +245,7 @@ public class QualityUtils {
         }
     }
 
-    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe) {
+    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final RecipeHolder<?> recipe) {
         boolean isRecipe = ServerConfig.isRetainQualityRecipe(recipe);
         boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
 

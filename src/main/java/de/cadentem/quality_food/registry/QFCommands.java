@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.core.commands.QualityArgument;
 import de.cadentem.quality_food.core.commands.QualityItemArgument;
@@ -21,14 +22,15 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.commands.GiveCommand;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.registries.DeferredRegister;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Collection;
 
@@ -97,10 +99,6 @@ public class QFCommands {
                 return 0;
             }
 
-            if (canOverride && stack.getTag() != null) {
-                stack.getTag().remove(QualityUtils.QUALITY_TAG);
-            }
-
             QualityUtils.applyQuality(stack, quality);
             return 1;
         }
@@ -112,8 +110,8 @@ public class QFCommands {
         if (source.getEntity() instanceof LivingEntity livingSource) {
             ItemStack stack = livingSource.getMainHandItem();
 
-            if (stack.getTag() != null) {
-                stack.getTag().remove(QualityUtils.QUALITY_TAG);
+            if (stack.has(QFRegistries.QUALITY_DATA_COMPONENT)) {
+                stack.remove(QFRegistries.QUALITY_DATA_COMPONENT);
                 return 1;
             } else {
                 source.sendFailure(Component.translatable("commands.quality_food.quality.failed.missing_quality", stack.getDisplayName()));
@@ -133,9 +131,9 @@ public class QFCommands {
             return 0;
         }
 
-        int maxStackSize = input.getItem().getMaxStackSize();
-        int maxCount = maxStackSize * /* MAX_ALLOWED_ITEMSTACKS */ 100;
         ItemStack tempStack = input.createItemStack(1, false);
+        int maxStackSize = tempStack.getMaxStackSize();
+        int maxCount = maxStackSize * GiveCommand.MAX_ALLOWED_ITEMSTACKS;
 
         if (QualityUtils.isInvalidItem(tempStack)) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", tempStack.getDisplayName()));

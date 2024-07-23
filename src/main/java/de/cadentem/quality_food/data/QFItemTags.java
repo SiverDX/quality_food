@@ -6,21 +6,20 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public class QFItemTags extends ItemTagsProvider {
-    public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
-    public static final TagKey<Item> BLACKLIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "blacklist"));
+    public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, QualityFood.location("material_whitelist"));
+    public static final TagKey<Item> BLACKLIST = TagKey.create(Registries.ITEM, QualityFood.location("blacklist"));
 
     public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper helper) {
         super(output, provider, CompletableFuture.completedFuture(null), QualityFood.MODID, helper);
@@ -73,7 +72,7 @@ public class QFItemTags extends ItemTagsProvider {
         tag(BLACKLIST)
                 .addTag(ItemTags.FLOWERS)
                 .addTag(ItemTags.SAPLINGS)
-                .add(Items.GRASS)
+                .add(Items.SHORT_GRASS)
                 .add(Items.TALL_GRASS)
                 .add(Items.FERN)
                 .add(Items.LARGE_FERN)

@@ -1,4 +1,4 @@
-package de.cadentem.quality_food.core.jade;
+package de.cadentem.quality_food.compat.jade;
 
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.Quality;

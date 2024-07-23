@@ -1,158 +1,136 @@
 plugins {
+    id 'java-library'
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle' version '[6.0.18,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
 }
 
 version = minecraft_version + "-" + mod_version
-
-base {
-    archivesName = mod_id
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        configureEach {
-            workingDirectory project.file("run/${it.name}")
-            property 'forge.logging.markers', 'SCAN' /* REGISTRIES / REGISTRYDUMP */
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            // Support for mixins of other mods
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-        }
-
-        clientRandom {
-            parent runs.client
-            // #### will be replaced with a random number | UUID is a randomly generated one
-            args '--username', 'Dev####', '--uuid', 'fdb0e318-1ac3-4049-b6f8-d024c0b87a56'
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            // Support for mixins of other mods
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-        }
-
-        data {
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
-    }
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+group = mod_group_id
 
 repositories {
+    mavenLocal()
     flatDir { dirs 'dev' }
     maven { url = "https://jitpack.io" } // Mixin Squared
     maven { url = "https://www.cursemaven.com" } // CurseForge
 }
 
-dependencies {
-    minecraft "net.neoforged:forge:${minecraft_version}-${neo_version}"
-
-    /* --- Compatibility --- */
-    implementation fg.deobf("curse.maven:jade-324717:5390389") // 11.9.3
-
-    implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
-
-    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
-
-    compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5480617") // 9.0.1
-
-    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5326245") // 0.6.22.611
-    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5296475") // 3.20.5.1044
-    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5327377") // 0.10.25.804
-
-    compileOnly fg.deobf("curse.maven:toms-storage-378609:5211208") // 1.6.6
-
-    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
-
-    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
-    compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
-
-    compileOnly fg.deobf("curse.maven:lets-do-vinery-704465:5467441") // 1.4.25
-    compileOnly fg.deobf("curse.maven:do-api-864599:5402862") // 1.2.13
-    compileOnly fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
-
-    compileOnly fg.deobf("curse.maven:quark-243121:5418252") // 4.0-458
-    compileOnly fg.deobf("curse.maven:zeta-968868:5418213") // 1.0-19
-
-    compileOnly fg.deobf("curse.maven:rightclickharvest-452834:4690530") // 3.2.3
-
-    compileOnly fg.deobf("curse.maven:supplementaries-412082:5458843") // 2.8.17
-    compileOnly fg.deobf("curse.maven:selene-499980:5478857") // 2.12.6
-
-    /* --- Test --- */
-    implementation fg.deobf("curse.maven:appleskin-248787:4770828")
-
-    /* --- Mixin Configuration --- */
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
-    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")) {
-        jarJar.ranged(it, "[${mixin_extras_version},)")
-    }
-
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+base {
+    archivesName = mod_id
 }
 
-mixin {
-    config "${mod_id}.mixins.json"
-    add sourceSets.main, "${mod_id}.refmap.json"
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
+
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
+
+    gameTestServer {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    data {
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+
+    /* --- Compatibility --- */
+    implementation "curse.maven:jade-324717:5529595" // 15.1.4
+
+    implementation "curse.maven:harvest-with-ease-602171:5545357" // 9.0.2
+
+    implementation "curse.maven:toms-storage-378609:5548590" // 2.0.7
+
+    implementation "curse.maven:rightclickharvest-452834:5492116" // 4.3.1
+
+//    implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
+//
+//    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
+//
+//    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5326245") // 0.6.22.611
+//    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5296475") // 3.20.5.1044
+//    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5327377") // 0.10.25.804
+//
+//    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
+//
+//    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
+//    compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
+//
+//    compileOnly fg.deobf("curse.maven:lets-do-vinery-704465:5467441") // 1.4.25
+//    compileOnly fg.deobf("curse.maven:do-api-864599:5402862") // 1.2.13
+//    compileOnly fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
+//
+//    compileOnly fg.deobf("curse.maven:quark-243121:5418252") // 4.0-458
+//    compileOnly fg.deobf("curse.maven:zeta-968868:5418213") // 1.0-19
+//
+//    compileOnly fg.deobf("curse.maven:supplementaries-412082:5458843") // 2.8.17
+//    compileOnly fg.deobf("curse.maven:selene-499980:5478857") // 2.12.6
+
+    /* --- Test --- */
+    implementation "curse.maven:appleskin-248787:5525729" // 3.0.4
+
+//    /* --- Mixin Configuration --- */
+//    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+//    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")) {
+//        jarJar.ranged(it, "[${mixin_extras_version},)")
+//    }
 }
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
-            minecraft_version: minecraft_version,
-            mod_id           : mod_id,
-            mod_name         : mod_name,
-            mod_license      : mod_license,
-            mod_version      : mod_version,
-            mod_author       : mod_author,
-            mod_description  : mod_description
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            neo_version_range      : neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            mod_description        : mod_description
     ]
 
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
     }
-}
-
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_author,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : mod_version,
-                'Implementation-Vendor'   : mod_author,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }

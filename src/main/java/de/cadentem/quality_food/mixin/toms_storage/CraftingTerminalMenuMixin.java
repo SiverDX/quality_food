@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.mixin.toms_storage;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.tom.storagemod.gui.CraftingTerminalMenu;
-import com.tom.storagemod.gui.StorageTerminalMenu;
+import com.tom.storagemod.menu.CraftingTerminalMenu;
+import com.tom.storagemod.menu.StorageTerminalMenu;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -28,7 +28,7 @@ public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
         super(id, inventory);
     }
 
-    @Inject(method = "shiftClickItems", at = @At(value = "INVOKE", target = "Lcom/tom/storagemod/gui/CraftingTerminalMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", shift = At.Shift.BEFORE))
+    @Inject(method = "shiftClickItems", at = @At(value = "INVOKE", target = "Lcom/tom/storagemod/menu/CraftingTerminalMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int index, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
         if (ServerConfig.isNoQualityRecipe(craftResult.getRecipeUsed())) {
             return;

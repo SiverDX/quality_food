@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
-import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFEffectTags;
 import net.minecraft.nbt.CompoundTag;

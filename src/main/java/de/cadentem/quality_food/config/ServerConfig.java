@@ -2,36 +2,36 @@ package de.cadentem.quality_food.config;
 
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.core.Quality;
-import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ServerConfig {
-    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static final ModConfigSpec SPEC;
 
-    public static final Map<Quality, QualityConfig> QUALITY_CONFIG = new HashMap<>();
     public static final List<FarmlandConfig> FARMLAND_CONFIG = new ArrayList<>();
 
-    public static final ForgeConfigSpec.DoubleValue LUCK_MULTIPLIER;
-    public static final ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
-    public static final ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
-    public static final ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
-    public static final ForgeConfigSpec.BooleanValue HANDLE_COMPACTING;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
+    public static final ModConfigSpec.DoubleValue LUCK_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue CROP_TARGET_CHANCE;
+    public static final ModConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
+    public static final ModConfigSpec.BooleanValue HANDLE_COMPACTING;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
 
-    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
+    private static final ModConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
     private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
     private static final List<String> RETAIN_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
 
@@ -54,28 +54,6 @@ public class ServerConfig {
         HANDLE_COMPACTING = BUILDER.comment("Defines whether (de)compacting should be handled automatically (in terms of retaining quality)").define("handle_compacting", true);
         BUILDER.pop();
 
-        for (Quality quality : Quality.values()) {
-            if (!QualityUtils.isValidQuality(quality) || quality == Quality.UNDEFINED) {
-                continue;
-            }
-
-            BUILDER.push(quality.name());
-
-            QualityConfig config = new QualityConfig();
-            config.chance = BUILDER.comment("The chance for a quality to occur (with no luck or other bonus)").defineInRange("chance", QualityConfig.getChance(quality), 0, 1);
-            config.durationMultiplier = BUILDER.comment("By how much the duration of the effect will get multiplied (beneficial) or divided (harmful) for").defineInRange("duration_multiplier", QualityConfig.getDurationMultiplier(quality), 1, 100);
-            config.probabilityAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the probability (chance for the effect to apply)").defineInRange("probability_addition", QualityConfig.getProbabilityAddition(quality), 0, 1);
-            config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
-            config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
-            config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
-            String craftingBonusComment1 = "Additive bonus to the chance an ingredient gives (when crafting through a crafting table)";
-            String craftingBonusComment2 = "\nThis value is divided by the amount of ingredient types (which can have quality) (i.e. 1x diamond & 1x no quality -> total bonus of 0.35 (if diamond provides a bonus of 0.7))";
-            config.craftingBonus = BUILDER.comment(craftingBonusComment1 + craftingBonusComment2).defineInRange("crating_bonus", QualityConfig.getCraftingBonus(quality), 0, 1);
-            config.effect_list_internal = BUILDER.comment("List of effects this rarity can grant (the item can be a tag) (<item>;<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
-            QUALITY_CONFIG.put(quality, config);
-            BUILDER.pop();
-        }
-
         BUILDER.push("Compatibility");
         QUARK_HANDLE_CONFIG = BUILDER.comment("Handle Quark harvest & replant automatically (if you have custom behaviour configured regarding the quality block state turn this off)").define("quark_handle_config", true);
         BUILDER.pop();
@@ -97,20 +75,20 @@ public class ServerConfig {
         }
     }
 
-    public static boolean isNoQualityRecipe(@Nullable final Recipe<?> recipe) {
+    public static boolean isNoQualityRecipe(@Nullable final RecipeHolder<?> recipe) {
         if (recipe == null) {
             return false;
         }
 
-        return NO_QUALITY_RECIPES.get().contains(recipe.getId().toString());
+        return NO_QUALITY_RECIPES.get().contains(recipe.id().toString());
     }
 
-    public static boolean isRetainQualityRecipe(@Nullable final Recipe<?> recipe) {
+    public static boolean isRetainQualityRecipe(@Nullable final RecipeHolder<?> recipe) {
         if (recipe == null) {
             return false;
         }
 
-        return RETAIN_QUALITY_RECIPES.get().contains(recipe.getId().toString());
+        return RETAIN_QUALITY_RECIPES.get().contains(recipe.id().toString());
     }
 
     public static double getFarmlandMultiplier(final BlockState crop, final BlockState farmland) {
@@ -127,7 +105,7 @@ public class ServerConfig {
 
     private static boolean validateRecipe(final Object object) {
         if (object instanceof String string) {
-            return ResourceLocation.isValidResourceLocation(string);
+            return ResourceLocation.tryParse(string) != null;
         }
 
         return false;
@@ -147,13 +125,13 @@ public class ServerConfig {
 
             String crop = data[FarmlandConfig.CROP];
 
-            if (!ResourceLocation.isValidResourceLocation(crop.startsWith("#") ? crop.substring(1) : crop)) {
+            if (ResourceLocation.tryParse(crop.startsWith("#") ? crop.substring(1) : crop) == null) {
                 return false;
             }
 
             String farmland = data[FarmlandConfig.FARMLAND];
 
-            if (!ResourceLocation.isValidResourceLocation(farmland.startsWith("#") ? farmland.substring(1) : farmland)) {
+            if (ResourceLocation.tryParse(farmland.startsWith("#") ? farmland.substring(1) : farmland) == null) {
                 return false;
             }
 
@@ -171,53 +149,6 @@ public class ServerConfig {
         }
 
         return false;
-    }
-
-    private static boolean isEffectListValid(final Object object) {
-        if (object instanceof String string) {
-            String[] data = string.split(";");
-
-            if (data.length != 6) {
-                return false;
-            }
-
-            if (!ResourceLocation.isValidResourceLocation(data[EffectConfig.ITEM])) {
-                return false;
-            }
-
-            if (!ResourceLocation.isValidResourceLocation(data[EffectConfig.EFFECT])) {
-                return false;
-            }
-
-            if (isInvalidChance(data[EffectConfig.CHANCE])) {
-                return false;
-            }
-
-            if (isInvalidInteger(data[EffectConfig.DURATION])) {
-                return false;
-            }
-
-            if (isInvalidInteger(data[EffectConfig.AMPLIFIER])) {
-                return false;
-            }
-
-            return !isInvalidChance(data[EffectConfig.PROBABILITY]);
-        }
-
-        return false;
-    }
-
-    private static boolean isInvalidChance(final String value) {
-        if (value == null) {
-            return true;
-        }
-
-        try {
-            double chance = Double.parseDouble(value);
-            return chance < 0 || chance > 1;
-        } catch (NumberFormatException ignored) { /* Nothing to do */ }
-
-        return true;
     }
 
     private static boolean isInvalidInteger(final String value) {

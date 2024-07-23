@@ -6,7 +6,7 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,7 @@ public abstract class ResultSlotMixin extends Slot {
 
     @Inject(method = "checkTakeAchievements", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onCraftedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;I)V", shift = At.Shift.AFTER))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
-        if (player.level().isClientSide() || container instanceof RecipeHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed())) {
+        if (player.level().isClientSide() || container instanceof RecipeCraftingHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed())) {
             return;
         }
 

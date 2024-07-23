@@ -1,13 +1,11 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.capability.BlockDataProvider;
-import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.capability.AttachmentHandler;
+import de.cadentem.quality_food.capability.BlockData;
 import de.cadentem.quality_food.compat.QualityBlock;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFItemTags;
-import de.cadentem.quality_food.network.NetworkHandler;
-import de.cadentem.quality_food.network.SyncCookingParticle;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SugarBlock;
+import de.cadentem.quality_food.network.CookingParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.food.FoodProperties;
@@ -16,10 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraftforge.network.PacketDistributor;
-import net.satisfy.vinery.block.grape.GrapeVineBlock;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {
     /** Safety measure to avoid trying to apply quality multiple times to the same item */
@@ -61,7 +57,7 @@ public class Utils {
     public static boolean isValidBlock(final Block block) {
         // Tags are not loaded yet -> instanceof
         if (block instanceof BushBlock // Crops / Mushrooms / Sea pickles / ...
-                || block instanceof StemGrownBlock // Pumpkin / Melon
+//                || block instanceof StemGrownBlock // Pumpkin / Melon
                 || block instanceof CaveVinesBlock // Glow berries
                 || block instanceof CocoaBlock
                 || block instanceof SugarCaneBlock
@@ -77,17 +73,17 @@ public class Utils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock)) {
-            return true;
-        }
-
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock)) {
-            return true;
-        }
-
-        if (Compat.isModLoaded(Compat.SUPPLEMENTARIES) && block instanceof SugarBlock) {
-            return true;
-        }
+//        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock)) {
+//            return true;
+//        }
+//
+//        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock)) {
+//            return true;
+//        }
+//
+//        if (Compat.isModLoaded(Compat.SUPPLEMENTARIES) && block instanceof SugarBlock) {
+//            return true;
+//        }
 
         return false;
     }
@@ -103,17 +99,16 @@ public class Utils {
         return null;
     }
 
-    public static void sendParticles(final ServerLevel serverLevel, final BlockEntity blockEntity, final BlockPos position) {
+    public static void sendParticles(final ServerLevel serverLevel, final BlockEntity furnace, final BlockPos position) {
         int tickOffset = serverLevel.getRandom().nextInt(-3, 3);
 
         if (serverLevel.getGameTime() % (10 + tickOffset) == 0) {
-            BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
-                double qualityBonus = data.getQuality();
+            BlockData blockData = furnace.getData(AttachmentHandler.BLOCK_DATA);
+            double qualityBonus = blockData.getQuality();
 
-                if (qualityBonus > 0) {
-                    NetworkHandler.CHANNEL.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(position.getX(), position.getY(), position.getZ(), 64, serverLevel.dimension())), new SyncCookingParticle(position, qualityBonus));
-                }
-            });
+            if (qualityBonus > 0) {
+                PacketDistributor.sendToPlayersNear(serverLevel, null, position.getX(), position.getY(), position.getZ(), 64, new CookingParticles(position, qualityBonus));
+            }
         }
     }
 
@@ -126,6 +121,8 @@ public class Utils {
             return;
         }
 
-        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> data.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount));
+        BlockData blockData = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
+        blockData.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount);
+        blockEntity.setChanged();
     }
 }

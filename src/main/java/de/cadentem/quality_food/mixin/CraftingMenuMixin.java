@@ -7,6 +7,8 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CraftingMenu.class)
-public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer>  {
+public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
     @Shadow @Final private ResultContainer resultSlots;
     @Shadow @Final private CraftingContainer craftSlots;
 

@@ -1,4 +1,4 @@
-package de.cadentem.quality_food.core.jade;
+package de.cadentem.quality_food.compat.jade;
 
 import net.minecraft.world.level.block.Block;
 import snownee.jade.api.IWailaClientRegistration;

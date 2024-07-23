@@ -1,13 +1,14 @@
 package de.cadentem.quality_food.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
-    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static final ModConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.BooleanValue PARTICLES;
-    public static final ForgeConfigSpec.BooleanValue EFFECT_TOOLTIPS;
+    public static final ModConfigSpec.BooleanValue PARTICLES;
+    public static final ModConfigSpec.BooleanValue EFFECT_TOOLTIPS;
 
     static {
         PARTICLES = BUILDER.comment("Enable / disable particles to indicate the quality level of certain blocks (e.g. furnace)").define("particles", true);
