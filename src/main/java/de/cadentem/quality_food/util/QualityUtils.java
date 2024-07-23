@@ -1,15 +1,16 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
+import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.component.QFRegistries;
+import de.cadentem.quality_food.component.Quality;
+import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.core.Quality;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -21,22 +22,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class QualityUtils {
-    public static final String QUALITY_TAG = "quality_food";
-    public static final String QUALITY_KEY = "quality";
-    public static final String EFFECT_TAG = "effects";
-    public static final String EFFECT_PROBABILITY_KEY = "chance";
-
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static boolean hasQuality(final ItemStack stack) {
@@ -73,7 +66,11 @@ public class QualityUtils {
 
         for (Slot slot : slots) {
             if (isSlotValid.test(slot)) {
-                bonus += QualityConfig.getCraftingBonus(QualityUtils.getQuality(slot.getItem())) / validIngredients;
+                Optional<QualityType> type = QualityUtils.getType(slot.getItem());
+
+                if (type.isPresent()) {
+                    bonus += (float) (type.get().craftingBonus() / validIngredients);
+                }
             }
         }
 
@@ -90,7 +87,11 @@ public class QualityUtils {
         float bonus = 0;
 
         for (ItemStack ingredient : container.getItems()) {
-            bonus += QualityConfig.getCraftingBonus(getQuality(ingredient)) / validIngredients;
+            Optional<QualityType> type = QualityUtils.getType(ingredient);
+
+            if (type.isPresent()) {
+                bonus += (float) (type.get().craftingBonus() / validIngredients);
+            }
         }
 
         return bonus;
@@ -128,19 +129,23 @@ public class QualityUtils {
             rolls = 0.1;
         }
 
-        if (checkAndRoll(stack, random, bonusList, Quality.DIAMOND, rolls)) {
+        Registry<QualityType> registry = Utils.getQualityRegistry();
+
+        if (registry == null) {
+            QualityFood.LOG.warn("Registry for the 'Quality Type' could not be retrieved - quality will not be applied");
             return;
         }
 
-        if (checkAndRoll(stack, random, bonusList, Quality.GOLD, rolls)) {
-            return;
+        // TODO 1.21 :: cache?
+        List<QualityType> types = new ArrayList<>();
+
+        for (Map.Entry<ResourceKey<QualityType>, QualityType> entry : registry.entrySet()) {
+            types.add(entry.getValue());
         }
 
-        checkAndRoll(stack, random, bonusList, Quality.IRON, rolls);
-    }
+        types.sort(Comparator.comparingInt(QualityType::level));
 
-    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls) {
-        float chance = QualityConfig.getChance(quality);
+        float chance = random.nextFloat();
 
         for (Bonus bonus : bonusList) {
             chance = switch (bonus.type()) {
@@ -151,52 +156,35 @@ public class QualityUtils {
 
         int fullRolls = (int) rolls;
 
+        if (random.nextDouble() <= (rolls - fullRolls)) {
+            fullRolls++;
+        }
+
         for (int i = 0; i < fullRolls; i++) {
-            if (random.nextFloat() <= chance) {
-                applyQuality(stack, quality);
-                return true;
+            for (QualityType type : types) {
+                if (chance >= type.chance()) {
+                    boolean wasApplied = applyQuality(stack, type.createQuality(stack));
+
+                    if (wasApplied) {
+                        break;
+                    }
+                }
             }
         }
-
-        if (random.nextDouble() <= (rolls - fullRolls) && random.nextFloat() <= chance) {
-            applyQuality(stack, quality);
-            return true;
-        }
-
-        return false;
     }
 
     /**
      * @param stack   The item to apply quality to
-     * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
+     * @param quality The quality to directly set
+     * @return If the quality was successfully set true otherwise false
      */
-    public static void applyQuality(final ItemStack stack, final Quality quality) {
+    public static boolean applyQuality(final ItemStack stack, final Quality quality) {
         if (!isValidQuality(quality) || isInvalidItem(stack)) {
-            return;
+            return false;
         }
 
-        CompoundTag qualityTag = new CompoundTag();
-        qualityTag.putInt(QUALITY_KEY, quality.level());
-
-        if (stack.getFoodProperties(null) != null) {
-            QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
-            ListTag effects = new ListTag();
-
-            config.getEffects().forEach(effectConfig -> {
-                if (effectConfig.test(stack)) {
-                    if (RANDOM.nextDouble() <= effectConfig.getEffect().chance()) {
-                        CompoundTag effectTag = new CompoundTag();
-                        effectTag.putDouble(EFFECT_PROBABILITY_KEY, effectConfig.getEffect().probability());
-                        effects.add(new MobEffectInstance(effectConfig.getEffect().effect(), effectConfig.getEffect().duration(), effectConfig.getEffect().amplifier()).save(effectTag));
-                    }
-                }
-            });
-
-            qualityTag.put(EFFECT_TAG, effects);
-        }
-
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.put(QUALITY_TAG, qualityTag);
+        stack.set(QFRegistries.QUALITY_DATA_COMPONENT, quality);
+        return true;
     }
 
     public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
@@ -332,39 +320,33 @@ public class QualityUtils {
         return result;
     }
 
-    public static float getCookingBonus(final ItemStack stack) {
-        Quality quality = getQuality(stack);
-
-        return switch (quality) {
-            case IRON -> 1 / 256f;
-            case GOLD -> 1 / 128f;
-            case DIAMOND -> 1 / 64f;
-            default -> 0;
-        };
-    }
-
+    /** Returns the {@link Quality} if present, otherwise {@link Quality#NONE} */
     public static Quality getQuality(@Nullable final ItemStack stack) {
         if (stack == null) {
             return Quality.NONE;
         }
 
-        CompoundTag tag = stack.getTag();
+        Quality quality = stack.get(QFRegistries.QUALITY_DATA_COMPONENT);
 
-        if (tag != null) {
-            CompoundTag qualityTag = tag.getCompound(QUALITY_TAG);
-            return Quality.get(qualityTag.getInt(QUALITY_KEY));
+        if (quality == null) {
+            return Quality.NONE;
         }
 
-        return Quality.NONE;
+        return quality;
+    }
+
+    /** Returns the corresponding {@link QualityType} to the {@link Quality} if possible, otherwise {@link QualityType#NONE} */
+    public static QualityType getType(final ItemStack stack) {
+        return QualityUtils.getQuality(stack).getType();
     }
 
     public static int getPlacementQuality(@Nullable final ItemStack stack) {
         Quality quality = getQuality(stack);
-        return quality != Quality.NONE ? quality.ordinal() : Quality.NONE_PLAYER_PLACED.ordinal();
+        return quality != null && quality.level() > 0 ? quality.level() : -1;
     }
 
     public static boolean isValidQuality(final Quality quality) {
-        return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
+        return quality != null && quality.level() > 0;
     }
 
     public static int countIngredients(final CraftingContainer container) {

@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.core.commands.QualityArgument;
 import de.cadentem.quality_food.core.commands.QualityItemArgument;
 import de.cadentem.quality_food.util.QualityUtils;

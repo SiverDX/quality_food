@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin.client;
 
-import de.cadentem.quality_food.util.OverlayUtils;
+import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,14 +30,16 @@ public abstract class GuiGraphicsMixin {
 
     @Unique
     private void quality_food$renderIcon(final LivingEntity entity, final Level level, final ItemStack stack, int x, int y, int seed, int guiOffset) {
-        if (!QualityUtils.hasQuality(stack) || OverlayUtils.isOverlay(stack)) {
-            return;
-        }
+//        if (!QualityUtils.hasQuality(stack)) {
+//            return;
+//        }
 
         GuiGraphics instance = (GuiGraphics) (Object) this;
         instance.pose().pushPose();
         instance.pose().translate(0, 0, 100);
-        renderItem(entity, level, OverlayUtils.getOverlay(stack), x, y, seed, guiOffset);
+        // FIXME
+        instance.blit(QualityFood.location("textures/icon/iron.png"), x, y, 0, 0, 16, 16);
+//        renderItem(entity, level, OverlayUtils.getOverlay(stack), x, y, seed, guiOffset);
         instance.pose().popPose();
     }
 

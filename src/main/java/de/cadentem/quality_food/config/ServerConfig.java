@@ -64,8 +64,6 @@ public class ServerConfig {
     @SubscribeEvent
     public static void reloadConfig(final ModConfigEvent event) {
         if (event.getConfig().getSpec() == SPEC && /* Can not be the case when stopping the server? */ SPEC.isLoaded()) {
-            QUALITY_CONFIG.values().forEach(QualityConfig::initializeEffects);
-
             FARMLAND_CONFIG.clear();
             FARMLAND_CONFIG_INTERNAL.get().forEach(entry -> FARMLAND_CONFIG.add(new FarmlandConfig(entry)));
             FARMLAND_CONFIG.sort(Comparator.comparingInt(entry -> entry.index));

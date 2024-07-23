@@ -20,9 +20,9 @@ public class QFRegistries {
     public static RegistrySetBuilder bootstrap() {
         return new RegistrySetBuilder()
                 .add(QUALITY_TYPE_REGISTRY, bootstrap -> {
-                    bootstrap.register(ResourceKey.create(QUALITY_TYPE_REGISTRY, QualityFood.location("iron")), new QualityType(1, 0.1, 1.5, 1.25, 1, 1.5, 1.25, 0.15, Optional.empty(), QualityFood.location("textures/icon/iron.png")));
-                    bootstrap.register(ResourceKey.create(QUALITY_TYPE_REGISTRY, QualityFood.location("gold")), new QualityType(2, 0.03, 2, 1.5, 2, 2, 1.5, 0.4, Optional.empty(), QualityFood.location("textures/icon/gold.png")));
-                    bootstrap.register(ResourceKey.create(QUALITY_TYPE_REGISTRY, QualityFood.location("diamond")), new QualityType(3, 0.005, 2.5, 2, 3, 2.5, 1.75, 0.7, Optional.empty(), QualityFood.location("textures/icon/diamond.png")));
+                    bootstrap.register(ResourceKey.create(QUALITY_TYPE_REGISTRY, QualityFood.location("iron")), new QualityType(1, 0.1, 1.5, 1.25, 1, 1.5, 1.25, 0.15, 1 / 256d, Optional.empty(), QualityFood.location("textures/icon/iron.png")));
+                    bootstrap.register(ResourceKey.create(QUALITY_TYPE_REGISTRY, QualityFood.location("gold")), new QualityType(2, 0.03, 2, 1.5, 2, 2, 1.5, 0.4, 1 / 128d, Optional.empty(), QualityFood.location("textures/icon/gold.png")));
+                    bootstrap.register(ResourceKey.create(QUALITY_TYPE_REGISTRY, QualityFood.location("diamond")), new QualityType(3, 0.005, 2.5, 2, 3, 2.5, 1.75, 0.7, 1 / 64d, Optional.empty(), QualityFood.location("textures/icon/diamond.png")));
                 });
     }
 

@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.compat;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.LoadingModList;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.LoadingModList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +51,6 @@ public class Compat {
     }
 
     private static ResourceLocation location(final String namespace, final String path) {
-        return new ResourceLocation(namespace, path);
+        return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 }

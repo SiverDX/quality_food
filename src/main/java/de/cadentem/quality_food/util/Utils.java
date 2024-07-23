@@ -2,11 +2,15 @@ package de.cadentem.quality_food.util;
 
 import de.cadentem.quality_food.capability.AttachmentHandler;
 import de.cadentem.quality_food.capability.BlockData;
+import de.cadentem.quality_food.client.ClientProxy;
 import de.cadentem.quality_food.compat.QualityBlock;
-import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.component.QFRegistries;
+import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.CookingParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -14,7 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class Utils {
@@ -35,7 +41,7 @@ public class Utils {
 
         FoodProperties properties = stack.getFoodProperties(null);
 
-        if (properties != null && (properties.getNutrition() > 0 || properties.getSaturationModifier() > 0)) {
+        if (properties != null && (properties.nutrition() > 0 || properties.saturation() > 0)) {
             return true;
         }
 
@@ -121,8 +127,24 @@ public class Utils {
             return;
         }
 
-        BlockData blockData = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
-        blockData.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount);
-        blockEntity.setChanged();
+        QualityType type = QualityUtils.getType(stack);
+
+        if (type != QualityType.NONE) {
+            BlockData blockData = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
+            blockData.incrementQuality(type.cookingBonus() / ingredientCount);
+            blockEntity.setChanged();
+        }
+    }
+
+    public static @Nullable Registry<QualityType> getQualityRegistry() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+
+        if (server != null) {
+            return server.registryAccess().registry(QFRegistries.QUALITY_TYPE_REGISTRY).orElse(null);
+        } else if (FMLEnvironment.dist.isClient()) {
+            return ClientProxy.getQualityRegistry();
+        }
+
+        return null;
     }
 }

@@ -1,10 +1,14 @@
 package de.cadentem.quality_food.client;
 
+import de.cadentem.quality_food.component.QFRegistries;
+import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import org.jetbrains.annotations.Nullable;
 
 public class ClientProxy {
     public static void handleCookingParticles(final BlockPos position, double qualityBonus) {
@@ -26,5 +30,15 @@ public class ClientProxy {
 
             level.addParticle(ParticleTypes.GLOW, x, y, z, 0, 0, 0);
         }
+    }
+
+    public static @Nullable Registry<QualityType> getQualityRegistry() {
+        ClientLevel level = Minecraft.getInstance().level;
+
+        if (level != null) {
+            return level.registryAccess().registry(QFRegistries.QUALITY_TYPE_REGISTRY).orElse(null);
+        }
+
+        return null;
     }
 }

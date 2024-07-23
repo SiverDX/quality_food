@@ -1,10 +1,11 @@
 package de.cadentem.quality_food.events;
 
-import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -80,10 +81,12 @@ public class GameEvents {
                 }
 
                 if (effect.getDuration() > 20) {
-                    effectTooltip = Component.translatable("potion.withDuration", effectTooltip, MobEffectUtil.formatDuration(effect, 1));
+                    ClientLevel level = Minecraft.getInstance().level;
+                    float tickRate = level != null ? level.tickRateManager().tickrate() : 20f;
+                    effectTooltip = Component.translatable("potion.withDuration", effectTooltip, MobEffectUtil.formatDuration(effect, 1f, tickRate));
                 }
 
-                ChatFormatting formatting = effect.getEffect().getCategory().getTooltipFormatting();
+                ChatFormatting formatting = effect.getEffect().value().getCategory().getTooltipFormatting();
                 event.getToolTip().remove(effectTooltip.withStyle(formatting));
                 effectTooltip = Component.translatable("potion.withProbability", effectTooltip, FORMAT.format(data.probability() * 100) + "%").withStyle(formatting);
 

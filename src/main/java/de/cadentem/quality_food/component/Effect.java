@@ -15,6 +15,7 @@ import java.util.Optional;
 public record Effect(Optional<HolderSet<Item>> applicableTo, List<FoodProperties.PossibleEffect> effects) {
     public static Codec<Effect> CODEC = RecordCodecBuilder.create(builder -> builder.group(
                     RegistryCodecs.homogeneousList(Registries.ITEM).optionalFieldOf("applicable_to").forGetter(Effect::applicableTo),
+                    // FIXME 1.21 :: custom type with probability to apply to item
                     FoodProperties.PossibleEffect.CODEC.listOf().fieldOf("effects").forGetter(Effect::effects))
             .apply(builder, Effect::new));
 
