@@ -2,11 +2,11 @@ package de.cadentem.quality_food.compat.jade;
 
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.attachments.AttachmentHandler;
-import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.component.Quality;
 import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -28,10 +28,20 @@ public class QualityProvider implements IBlockComponentProvider, IServerDataProv
         CompoundTag tag = accessor.getServerData();
 
         if (tag.contains(QualityFood.concat("type"))) {
-            toolTip.add(Component.translatable(QualityFood.concat("quality")));
             ResourceLocation location = ResourceLocation.parse(tag.getString(QualityFood.concat("type")));
+
+            toolTip.add(Component.translatable(QualityFood.concat("quality")));
             toolTip.append(Component.literal(I18n.get("quality_type." + location.toLanguageKey())));
-            toolTip.append(ElementHelper.INSTANCE.sprite(location, 10, 10).translate(TRANSLATE));
+
+            Registry<QualityType> registry = Utils.getQualityRegistry();
+
+            if (registry != null) {
+                QualityType type = registry.get(location);
+
+                if (type != null) {
+                    toolTip.append(ElementHelper.INSTANCE.sprite(type.icon(), 10, 10).translate(TRANSLATE));
+                }
+            }
         }
     }
 

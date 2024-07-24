@@ -4,7 +4,7 @@
   "cooking_bonus": 0.00390625,
   "crafting_bonus": 0.15,
   "duration_multiplier": 1.5,
-  "icon": "quality_food:iron",
+  "icon": "quality_food:quality_icon/iron",
   "level": 1,
   "nutrition_multiplier": 1.5,
   "probability_multiplier": 1.25,
