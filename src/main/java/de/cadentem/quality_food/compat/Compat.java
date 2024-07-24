@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Compat {
+    public static final String APPLESKIN = "appleskin";
     public static final String QUARK = "quark";
     public static final String FORGE = "forge";
     public static final String CREATE = "create";

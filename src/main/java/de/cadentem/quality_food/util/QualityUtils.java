@@ -18,8 +18,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -182,50 +184,48 @@ public class QualityUtils {
         return true;
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
+    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
         if (farmland == null) {
-            applyQuality(stack, state, player);
+            applyQuality(stack, quality, state, player);
             return;
         }
 
         double farmlandMultiplier = ServerConfig.getFarmlandMultiplier(state, farmland);
 
         if (farmlandMultiplier == -1) {
-            applyQuality(stack, state, player);
+            applyQuality(stack, quality, state, player);
         } else {
             Bonus farmlandBonus = Bonus.multiplicative((float) farmlandMultiplier);
             List<Bonus> bonusList = new ArrayList<>();
             bonusList.add(farmlandBonus);
-            applyQuality(stack, state, player, bonusList);
+            applyQuality(stack, quality, state, player, bonusList);
         }
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player) {
-        applyQuality(stack, state, player, new ArrayList<>());
+    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player) {
+        applyQuality(stack, quality, state, player, new ArrayList<>());
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
-//        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE), true) : Quality.NONE;
-//
-//        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
-//            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
-//
-//            if (stack.is(Tags.Items.SEEDS)) {
-//                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
-//            }
-//
-//            if (targetChance > 0 && quality.level() > 0) {
-//                float multiplier = targetChance / QualityConfig.getChance(quality);
-//                bonusList.add(Bonus.multiplicative(multiplier));
-//                QualityUtils.applyQuality(stack, player, bonusList);
-//            } else {
-//                QualityUtils.applyQuality(stack, player, bonusList);
-//            }
-//        } else if (QualityUtils.isValidQuality(quality)) {
-//            QualityUtils.applyQuality(stack, quality);
-//        } else if (quality != Quality.NONE_PLAYER_PLACED) {
-//            QualityUtils.applyQuality(stack, player);
-//        }
+    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
+        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
+            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
+
+            if (stack.is(Tags.Items.SEEDS)) {
+                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
+            }
+
+            if (targetChance > 0 && quality.level() > 0) {
+                float multiplier = (float) (targetChance / quality.getType().chance());
+                bonusList.add(Bonus.multiplicative(multiplier));
+                QualityUtils.applyQuality(stack, player, bonusList);
+            } else {
+                QualityUtils.applyQuality(stack, player, bonusList);
+            }
+        } else if (QualityUtils.isValidQuality(quality)) {
+            QualityUtils.applyQuality(stack, quality);
+        } else if (quality != Quality.PLAYER_PLACED) {
+            QualityUtils.applyQuality(stack, player);
+        }
     }
 
     public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final RecipeHolder<?> recipe) {
@@ -236,7 +236,7 @@ public class QualityUtils {
             return;
         }
 
-        Pair<HashMap<Item, Integer>, int[]> data = getContainerData(container);
+        Pair<HashMap<Item, Integer>, HashMap<Integer, Integer>> data = getContainerData(container);
 
         int relevantItemCount = data.getFirst().entrySet().stream().mapToInt(entry -> {
             if (Utils.isValidItem(entry.getKey().getDefaultInstance())) {
@@ -246,7 +246,7 @@ public class QualityUtils {
             return 0;
         }).sum();
 
-        Quality quality = getQuality(data.getSecond(), relevantItemCount);
+        Quality quality = getQuality(data.getSecond(), relevantItemCount, result);
 
         if (quality.level() > 0 && (isRecipe || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
             QualityUtils.applyQuality(result, quality);
@@ -257,9 +257,9 @@ public class QualityUtils {
         return hasQuality(stack) || !Utils.isValidItem(stack);
     }
 
-    private static Pair<HashMap<Item, Integer>, int[]> getContainerData(final Container container) {
+    private static Pair<HashMap<Item, Integer>, HashMap<Integer, Integer>> getContainerData(final Container container) {
         // Collect the amount of qualities present for all items in the container
-        int[] qualities = new int[/*Quality.values().length*/99];
+        HashMap<Integer, Integer> qualities = new HashMap<>();
         HashMap<Item, Integer> items = new HashMap<>();
 
         for (int i = 0; i < container.getContainerSize(); i++) {
@@ -271,21 +271,25 @@ public class QualityUtils {
                 continue;
             }
 
-//            qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
+            Quality quality = QualityUtils.getQuality(containerStack);
+            qualities.compute(quality.level(), (key, value) -> value == null ? 1 : value + 1);
         }
 
         return Pair.of(items, qualities);
     }
 
     /** Get the most fitting quality (if all items are diamond -> diamond / if half 3 are diamond and 6 are gold -> gold) */
-    private static Quality getQuality(final int[] qualities, int itemCount) {
-//        for (int ordinal = Quality.DIAMOND.ordinal(); ordinal > 0; ordinal--) {
-//            itemCount -= qualities[ordinal];
-//
-//            if (itemCount <= 0) {
-//                return Quality.get(ordinal);
-//            }
-//        }
+    private static Quality getQuality(final HashMap<Integer, Integer> qualities, int itemCount, final ItemStack result) {
+        List<Integer> levels = qualities.keySet().stream().sorted(Comparator.comparingInt(Integer::intValue)).toList();
+
+        for (Integer level : levels) {
+            itemCount -= qualities.get(level);
+
+            if (itemCount <= 0) {
+                // FIXME 1.21 :: if there are not multiple don't re-create (would constantly randomize effects)
+                return Quality.getRandom(result, level);
+            }
+        }
 
         return Quality.NONE;
     }

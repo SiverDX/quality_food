@@ -1,63 +1,101 @@
 # General
-This mod adds quality to food and certain food-related material (e.g. crops) through NBT data (meaning no new items)
+This mod adds quality to food and certain food-related material (e.g. crops) through data components
 
 Quality can:
 - Increase nutrition and saturation
 - Improve positive effects and diminish (or outright remove) negative effects gained from eating food
-- Impact the result of crafted (quality applicable) items (the `minecraft:generic.luck` attribute increases the chance as well)
+- Impact the result of crafted (quality applicable) items (the `minecraft:generic.luck` will increase the amount of rolls)
 
 ---
 
-You can give yourself a quality item like this: `/give @s farmersdelight:roast_chicken_block{quality_food:{quality:2}}`
-- `quality` is a value between `0` (`NONE`) and `3` (`DIAMOND`)
-- Setting `NONE` does not make sense since it will not affect anything and just makes the item unstackable with non-quality items
+Quality Types are defined per datapack
 
-You can also use the following commands 
-- `/quality_food give`
-- `/quality_food apply`
-- `/quality_food remove`
+Syntax example:
 
-# Configuration
-There is a configuration per quality - aside from some normal things you can also specify which item should gain which effects
-- Example: `effect_list = ["minecraft:apple;minecraft:regeneration;0.5;120;3;0.45"]`
-  - `minecraft:apple` is the item this effect should apply to (can also be a tag, e.g. `#minecraft:cat_food`)
-  - `minecraft:regeneration` is the effect
-  - `0.5` is the chance for a food item to gain this effect (`1` means 100%)
-  - `120` is the duration in ticks (`20` ticks means 1 second)
-  - `3` is the amplifier (`0` results in an effect level of 1 (i.e. no level shown))
-  - `0.45` is the probability to gain this effect when eating the item (`1` means 100%)
-
-The tag of an item with effects applied to it looks like this:
 ```json
 {
-  quality_food: {
-    effects: [
-      {
-        "forge:id": "minecraft:regeneration", 
-        chance: 0.45d, 
-        Ambient: 0b, 
-        CurativeItems: [
-          {
-            id: "minecraft:milk_bucket", 
-            Count: 1b
-          }
-        ], 
-        ShowIcon: 1b, 
-        ShowParticles: 1b, 
-        Duration: 120, 
-        Id: 10, 
-        Amplifier: 3b
-      }
-    ], 
-    quality: 1
-  }
+  "amplifier_modifier": 1,
+  "chance": 0.1,
+  "cooking_bonus": 0.00390625,
+  "crafting_bonus": 0.15,
+  "duration_multiplier": 1.5,
+  "effects": [
+    {
+      "applicable_to": "#c:foods/fruit",
+      "effects": [
+        {
+          "effect": {
+            "effect": {
+              "amplifier": 2,
+              "duration": 100,
+              "id": "minecraft:absorption",
+              "neoforge:cures": [
+                "protected_by_totem",
+                "milk"
+              ],
+              "show_icon": true
+            },
+            "probability": 0.6
+          },
+          "chance": 0.5
+        },
+        {
+          "effect": {
+            "effect": {
+              "duration": 40,
+              "id": "minecraft:regeneration",
+              "neoforge:cures": [
+                "protected_by_totem",
+                "milk"
+              ],
+              "show_icon": true
+            },
+            "probability": 0.2
+          },
+          "chance": 1
+        }
+      ]
+    }
+  ],
+  "icon": "quality_food:quality_icon/iron",
+  "level": 1,
+  "nutrition_multiplier": 1.5,
+  "probability_multiplier": 1.25,
+  "saturation_multiplier": 1.25
 }
 ```
-
-I don't recommend manually creating such items - the `quality_food` commands will apply the configured effects
+- `level`: The level of the effect - higher level ones will be rolled first
+- `chance`: Chance of this quality being applied
+  - Value between `0` and `1` (1 being 100%)
+- `nutrition_multiplier`: The amount the nutrition will be multiplied by
+- `saturation_multiplier`: The amount the saturation will be multiplied by
+- `icon`: The icon shown for the quality (texture needs to be in the `textures/gui/sprites` directory)
+- (Optional) `duration_multiplier`: The amount the duration of existing beneficial effects will be multiplied by (or divided if the effect is harmful)
+  - If the duration reaches 0 during modifications the effect will be removed
+- (Optional) `probability_multiplier`: The amount the probability of the beneficial effect will be multiplied by (or divided if the effect is harmful)
+  - If the probability reaches 0 during modifications the effect will be removed
+- (Optional) `amplifier_multiplier`: The amount the amplifier of the beneficial effect will be increased by (or decreased if the effect is harmful)
+  - If the amplifier goes below 0 during modifications the effect will be removed
+- (Optional) `crafting_bonus`: Additive bonus to the chance of rolling for quality (actual bonus will be `crafting_bonus / quality_applicable_ingredients`)
+  - **Example**: 1x diamond quality (bonus of 0.7) + 1x iron quality (bonus of 0.15) ingredients = (0.7 / 2) + (0.15 / 2) = total bonus of 0.425
+  - Value between `0` and `1` (1 being 100%)
+- (Optional) `cooking_bonus`: The bonus each cooked item of this quality will provide for the stored bonus of the cooking block entity
+  - Value between `0` and `1` (1 being 100%)
+- (Optional) `effects`: List of effect configurations
+  - (Optional) `applicable_to`: The item (or item tag) these effects will be applied to - if empty it will be applied to all items
+  - `effects`: List of effects which will be applied
+    - `effect`: The effect (see the single effect [here](https://minecraft.wiki/w/Data_component_format#food))
+    - `chance`: The chance this effect will be applied to the item when the quality is applied
+      - Value between `0` and `1` (1 being 100%)
 
 ---
 
+# Commands
+- `/quality_food give`: Gives you an item with the defined quality (only lists item which are applicable to quality)
+- `/quality_food apply`: Applies a quality to an item
+- `/quality_food remove`: Removes quality from an item
+
+# Configuration
 There is a farmland configuration which allows you to define a bonus (can also be negative, i.e. 0.5) based on the farm block the crop is planted on
 - Example: `farmland_config = ["3;#minecraft:crops;farmersdelight:rich_soil_farmland;1.25"]`
   - `3` is the index (configurations are tested with the lowest one first - the first matching one will be applied) (needs to be positive)
@@ -79,10 +117,8 @@ For crafting (crafting table) there are three configs:
 - `no_quality_recipes`: Entries will not roll for quality (useful in case items can be crated back and forth)
 - `handle_compacting`: If enabled then (de)compacting results should retain quality automatically without having to specify the relevant recipes
 
-The bonus quality a quality ingredient provides is configurable for the crafting table (`crafting_bonus`)
-
 Cooking quality items will store a quality bonus within the furnace / cooking pot / ...
-- Higher quality will store a higher bonus per cooked item
+- The bonus is defined in the quality type with `cooking_bonus`
 - Once enough bonus is stored particles will start to show
   - A higher bonus results in more particles
   - This can be disabled through the client config

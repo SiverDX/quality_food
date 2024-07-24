@@ -7,6 +7,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,5 +54,13 @@ public class LevelData implements INBTSerializable<CompoundTag> {
             Quality quality = Quality.CODEC.parse(NbtOps.INSTANCE, tag.getCompound(key)).resultOrPartial(QualityFood.LOG::error).orElse(Quality.NONE);
             qualities.put(Long.parseLong(key), quality);
         });
+    }
+
+    public static @NotNull Quality get(@NotNull final LevelAccessor level, @NotNull final BlockPos position) {
+        if (level instanceof ServerLevel serverLevel) {
+            return serverLevel.getData(AttachmentHandler.LEVEL_DATA).get(position);
+        }
+
+        return Quality.NONE;
     }
 }

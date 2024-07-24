@@ -3,6 +3,7 @@ package de.cadentem.quality_food;
 import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.attachments.AttachmentHandler;
 import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.appleskin.AppleSkinEvents;
 import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
@@ -15,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
@@ -46,6 +48,13 @@ public class QualityFood {
 //        if (Compat.isModLoaded(Compat.CREATE)) {
 //            event.enqueueWork(QFItemAttributes::register);
 //        }
+    }
+
+    @SubscribeEvent
+    public void clientSetup(final FMLClientSetupEvent ignored) {
+        if (Compat.isModLoaded(Compat.APPLESKIN)) {
+            NeoForge.EVENT_BUS.addListener(AppleSkinEvents::handleFoodProperties);
+        }
     }
 
     public static ResourceLocation location(final String path) {

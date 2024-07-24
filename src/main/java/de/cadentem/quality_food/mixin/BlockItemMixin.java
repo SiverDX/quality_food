@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
 import de.cadentem.quality_food.attachments.AttachmentHandler;
+import de.cadentem.quality_food.component.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.item.BlockItem;
@@ -17,7 +18,8 @@ public abstract class BlockItemMixin {
     @Inject(method = "placeBlock", at = @At("RETURN"))
     private void quality_food$storeQuality(final BlockPlaceContext context, final BlockState state, final CallbackInfoReturnable<Boolean> callback) {
         if (callback.getReturnValue() && Utils.isValidBlock(state.getBlock())) {
-            context.getLevel().getData(AttachmentHandler.LEVEL_DATA).set(context.getClickedPos(), QualityUtils.getQuality(context.getItemInHand()));
+            Quality quality = QualityUtils.getQuality(context.getItemInHand());
+            context.getLevel().getData(AttachmentHandler.LEVEL_DATA).set(context.getClickedPos(), quality != Quality.NONE ? quality : Quality.PLAYER_PLACED);
         }
     }
 }

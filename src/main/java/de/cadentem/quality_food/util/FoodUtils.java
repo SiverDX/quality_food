@@ -57,13 +57,23 @@ public class FoodUtils {
                     amplifier = amplifier + type.amplifierModifier();
                     probability = (float) (probability * type.probabilityMultiplier());
                 } else if (effect.value().getCategory() == MobEffectCategory.HARMFUL) {
-                    duration = (int) (duration / type.durationMultiplier());
+                    if (type.durationMultiplier() == 0) {
+                        duration = 0;
+                    } else {
+                        duration = (int) (duration / type.durationMultiplier());
+                    }
+
                     amplifier = amplifier - type.amplifierModifier();
-                    probability = (float) (probability / type.probabilityMultiplier());
+
+                    if (type.probabilityMultiplier() == 0) {
+                        probability = 0;
+                    } else {
+                        probability = (float) (probability / type.probabilityMultiplier());
+                    }
                 }
             }
 
-            if (amplifier >= 0 && duration > 0) {
+            if (amplifier >= 0 && duration > 0 && probability > 0) {
                 int finalDuration = duration;
                 int finalAmplifier = Math.min(255, amplifier);
                 builder.effect(() -> new MobEffectInstance(effect, finalDuration, finalAmplifier), Mth.clamp(probability, 0, 1));
