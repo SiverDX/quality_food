@@ -3,10 +3,11 @@ package de.cadentem.quality_food.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.util.Utils;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
+import net.neoforged.neoforge.common.CommonHooks;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,18 +22,16 @@ public record Quality(ResourceLocation type, int level, Optional<List<FoodProper
             .apply(builder, Quality::new));
 
     public QualityType getType() {
-        Registry<QualityType> registry = Utils.getQualityRegistry();
-
-        if (registry == null || this == NONE) {
+        if (this == NONE) {
             return QualityType.NONE;
         }
 
-        QualityType qualityType = registry.get(type);
+        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFRegistries.QUALITY_TYPE_REGISTRY);
 
-        if (qualityType == null) {
+        if (lookup == null) {
             return QualityType.NONE;
         }
 
-        return qualityType;
+        return lookup.get(QFRegistries.key(type)).map(Holder.Reference::value).orElse(QualityType.NONE);
     }
 }

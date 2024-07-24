@@ -1,13 +1,12 @@
 package de.cadentem.quality_food.mixin.client;
 
-import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.component.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,6 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiGraphics.class)
 public abstract class GuiGraphicsMixin {
+    @Shadow
+    private @Final Minecraft minecraft;
+
     @Inject(method = "renderItem(Lnet/minecraft/world/item/ItemStack;IIII)V", at = @At(value = "TAIL"))
     private void quality_food$renderIcon(final ItemStack stack, int x, int y, int seed, int guiOffset, final CallbackInfo callback) {
         quality_food$renderIcon(minecraft.player, minecraft.level, stack, x, y, seed, guiOffset);
@@ -30,22 +32,16 @@ public abstract class GuiGraphicsMixin {
 
     @Unique
     private void quality_food$renderIcon(final LivingEntity entity, final Level level, final ItemStack stack, int x, int y, int seed, int guiOffset) {
-//        if (!QualityUtils.hasQuality(stack)) {
-//            return;
-//        }
+        Quality quality = QualityUtils.getQuality(stack);
+
+        if (quality == Quality.NONE) {
+            return;
+        }
 
         GuiGraphics instance = (GuiGraphics) (Object) this;
         instance.pose().pushPose();
-        instance.pose().translate(0, 0, 100);
-        // FIXME
-        instance.blit(QualityFood.location("textures/icon/iron.png"), x, y, 0, 0, 16, 16);
-//        renderItem(entity, level, OverlayUtils.getOverlay(stack), x, y, seed, guiOffset);
+        instance.pose().translate(0, 0, 300);
+        instance.blitSprite(quality.getType().icon(), x, y, 16, 16);
         instance.pose().popPose();
     }
-
-    @Shadow
-    private @Final Minecraft minecraft;
-
-    @Shadow
-    protected abstract void renderItem(@Nullable LivingEntity pEntity, @Nullable Level pLevel, ItemStack pStack, int pX, int pY, int pSeed, int pGuiOffset);
 }

@@ -64,10 +64,13 @@ dependencies {
     implementation "curse.maven:jade-324717:5529595" // 15.1.4
 
     implementation "curse.maven:harvest-with-ease-602171:5545357" // 9.0.2
+    implementation "curse.maven:cobweb-968456:5531713" // 1.1.2
 
     implementation "curse.maven:toms-storage-378609:5548590" // 2.0.7
 
     implementation "curse.maven:rightclickharvest-452834:5492116" // 4.3.1
+    implementation "curse.maven:architectury-api-419699:5553800" // 13.0.6
+    implementation "curse.maven:jamlib-623764:5427400" // 1.0.9
 
 //    implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
 //

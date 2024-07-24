@@ -6,10 +6,10 @@
     "minecraft:ink_sac",
     "minecraft:hay_block",
     "minecraft:honey_block",
-    "#forge:eggs",
-    "#forge:seeds",
-    "#forge:crops",
-    "#forge:mushrooms",
+    "#c:eggs",
+    "#c:seeds",
+    "#c:crops",
+    "#c:mushrooms",
     {
       "id": "#forge:dough",
       "required": false

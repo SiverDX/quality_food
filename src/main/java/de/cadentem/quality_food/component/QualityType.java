@@ -52,7 +52,6 @@ public record QualityType(int level, double chance, double durationMultiplier, d
             return null;
         }
 
-
         if (effects.isPresent()) {
             List<FoodProperties.PossibleEffect> effectsToApply = new ArrayList<>();
 

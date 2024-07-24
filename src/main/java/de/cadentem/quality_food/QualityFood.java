@@ -1,6 +1,7 @@
 package de.cadentem.quality_food;
 
 import com.mojang.logging.LogUtils;
+import de.cadentem.quality_food.attachments.AttachmentHandler;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.config.ClientConfig;
@@ -27,6 +28,7 @@ public class QualityFood {
         bus.register(this);
 
         QFRegistries.REGISTRAR.register(bus);
+        AttachmentHandler.ATTACHMENT_TYPES.register(bus);
         QFLootModifiers.LOOT_MODIFIERS.register(bus);
         QFCommands.COMMAND_ARGUMENTS.register(bus);
         NeoForge.EVENT_BUS.addListener(QFCommands::registerCommands);
@@ -48,5 +50,9 @@ public class QualityFood {
 
     public static ResourceLocation location(final String path) {
         return ResourceLocation.fromNamespaceAndPath(QualityFood.MODID, path);
+    }
+
+    public static String concat(final String path) {
+        return QualityFood.MODID + "." + path;
     }
 }

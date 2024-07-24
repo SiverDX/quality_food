@@ -3,6 +3,10 @@
 
   "quality_food.quality": "Quality: ",
 
+  "quality_type.quality_food.iron": "Iron",
+  "quality_type.quality_food.gold": "Gold",
+  "quality_type.quality_food.diamond": "Diamond",
+
   "config.jade.plugin_quality_food.quality": "Quality",
 
   "create.item_attributes.quality_food.quality": "has '%1$s' quality",

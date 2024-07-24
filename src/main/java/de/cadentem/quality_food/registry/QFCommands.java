@@ -6,7 +6,8 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.core.commands.QualityArgument;
+import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.core.commands.QualityTypeArgument;
 import de.cadentem.quality_food.core.commands.QualityItemArgument;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
@@ -37,7 +38,7 @@ public class QFCommands {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, QualityFood.MODID);
 
     static {
-        COMMAND_ARGUMENTS.register("quality", () -> ArgumentTypeInfos.registerByClass(QualityArgument.class, SingletonArgumentInfo.contextFree(QualityArgument::new)));
+        COMMAND_ARGUMENTS.register("quality", () -> ArgumentTypeInfos.registerByClass(QualityTypeArgument.class, SingletonArgumentInfo.contextAware(QualityTypeArgument::new)));
         COMMAND_ARGUMENTS.register("item", () -> ArgumentTypeInfos.registerByClass(QualityItemArgument.class, SingletonArgumentInfo.contextAware(QualityItemArgument::item)));
     }
 
@@ -53,13 +54,13 @@ public class QFCommands {
                                         .then(
                                                 Commands.argument("targets", EntityArgument.players())
                                                         .then(
-                                                                Commands.argument("quality", new QualityArgument())
+                                                                Commands.argument("quality_type", new QualityTypeArgument(event.getBuildContext()))
                                                                         .then(
                                                                                 Commands.argument("item", QualityItemArgument.item(event.getBuildContext()))
-                                                                                        .executes(context -> giveItem(context.getSource(), ItemArgument.getItem(context, "item"), EntityArgument.getPlayers(context, "targets"), 1, QualityArgument.get(context)))
+                                                                                        .executes(context -> giveItem(context.getSource(), ItemArgument.getItem(context, "item"), EntityArgument.getPlayers(context, "targets"), 1, QualityTypeArgument.get(context)))
                                                                                         .then(
                                                                                                 Commands.argument("count", IntegerArgumentType.integer(1))
-                                                                                                        .executes(context -> giveItem(context.getSource(), ItemArgument.getItem(context, "item"), EntityArgument.getPlayers(context, "targets"), IntegerArgumentType.getInteger(context, "count"), QualityArgument.get(context)))
+                                                                                                        .executes(context -> giveItem(context.getSource(), ItemArgument.getItem(context, "item"), EntityArgument.getPlayers(context, "targets"), IntegerArgumentType.getInteger(context, "count"), QualityTypeArgument.get(context)))
                                                                                         )
                                                                         )
                                                         )
@@ -68,10 +69,10 @@ public class QFCommands {
                         .then(
                                 Commands.literal("apply")
                                         .then(
-                                                Commands.argument("quality", new QualityArgument())
-                                                        .executes(context -> applyQuality(context.getSource(), QualityArgument.get(context), false))
+                                                Commands.argument("quality_type", new QualityTypeArgument(event.getBuildContext()))
+                                                        .executes(context -> applyQuality(context.getSource(), QualityTypeArgument.get(context), false))
                                                         .then(Commands.argument("override", BoolArgumentType.bool())
-                                                                .executes(context -> applyQuality(context.getSource(), QualityArgument.get(context), BoolArgumentType.getBool(context, "override")))
+                                                                .executes(context -> applyQuality(context.getSource(), QualityTypeArgument.get(context), BoolArgumentType.getBool(context, "override")))
                                                         )
                                         )
                         )
@@ -79,8 +80,8 @@ public class QFCommands {
         );
     }
 
-    private static int applyQuality(final CommandSourceStack source, final Quality quality, boolean canOverride) {
-        if (quality.level() == 0) {
+    private static int applyQuality(final CommandSourceStack source, final QualityType type, boolean canOverride) {
+        if (type.level() <= 0) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
         }
@@ -98,7 +99,7 @@ public class QFCommands {
                 return 0;
             }
 
-            QualityUtils.applyQuality(stack, quality);
+            QualityUtils.applyQuality(stack, type);
             return 1;
         }
 
@@ -124,8 +125,8 @@ public class QFCommands {
     /**
      * Mostly a copy from {@link net.minecraft.server.commands.GiveCommand}
      */
-    private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final Quality quality) throws CommandSyntaxException {
-        if (quality.level() == 0) {
+    private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final QualityType type) throws CommandSyntaxException {
+        if (type.level() <= 0) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
         }
@@ -152,7 +153,7 @@ public class QFCommands {
                 toGive -= min;
 
                 ItemStack stack = input.createItemStack(min, false);
-                QualityUtils.applyQuality(stack, quality);
+                QualityUtils.applyQuality(stack, type);
                 boolean wasAdded = player.getInventory().add(stack);
 
                 if (wasAdded && stack.isEmpty()) {

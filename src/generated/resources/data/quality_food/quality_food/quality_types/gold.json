@@ -1,0 +1,12 @@
+{
+  "amplifier_modifier": 2,
+  "chance": 0.03,
+  "cooking_bonus": 0.0078125,
+  "crafting_bonus": 0.4,
+  "duration_multiplier": 2.0,
+  "icon": "quality_food:gold",
+  "level": 2,
+  "nutrition_multiplier": 2.0,
+  "probability_multiplier": 1.5,
+  "saturation_multiplier": 1.5
+}

@@ -1,9 +1,8 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.capability.AttachmentHandler;
-import de.cadentem.quality_food.capability.BlockData;
+import de.cadentem.quality_food.attachments.AttachmentHandler;
+import de.cadentem.quality_food.attachments.BlockData;
 import de.cadentem.quality_food.client.ClientProxy;
-import de.cadentem.quality_food.compat.QualityBlock;
 import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.data.QFItemTags;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -28,7 +26,6 @@ public class Utils {
     public static final ThreadLocal<ItemStack> LAST_STACK = new ThreadLocal<>();
     /** Bonus from the block entity for menu usage */
     public static final ThreadLocal<BlockPos> BLOCK_ENTITY_POSITION = new ThreadLocal<>();
-    public static final IntegerProperty QUALITY_STATE = IntegerProperty.create(QualityUtils.QUALITY_TAG, 0, Quality.values().length - 1);
 
     public static boolean isValidItem(final ItemStack stack) {
         if (stack.isEmpty()) {
@@ -61,7 +58,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        // Tags are not loaded yet -> instanceof
+        // FIXME 1.21 :: check tag
         if (block instanceof BushBlock // Crops / Mushrooms / Sea pickles / ...
 //                || block instanceof StemGrownBlock // Pumpkin / Melon
                 || block instanceof CaveVinesBlock // Glow berries
@@ -72,10 +69,6 @@ public class Utils {
                 || block instanceof HayBlock
                 || block instanceof HoneyBlock
         ) {
-            return true;
-        }
-
-        if (block instanceof QualityBlock qualityBlock && qualityBlock.quality_food$isQualityBlock()) {
             return true;
         }
 

@@ -7,7 +7,7 @@ issueTrackerURL = "https://github.com/SiverDX/quality_food/issues"
 modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
-authors = "${mod_author}"
+authors = "${mod_authors}"
 description = '''${mod_description}'''
 
 [[dependencies.${ mod_id }]]

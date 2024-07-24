@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(IItemExtension.class)
-public class IItemExtensionMixin {
+public interface IItemExtensionMixin {
     @ModifyReturnValue(method = "getFoodProperties", at = @At("RETURN"))
     private FoodProperties quality_food$modifyFoodProperties(final FoodProperties original, /* Parameters: */ final ItemStack stack) {
         if (QualityUtils.hasQuality(stack)) {

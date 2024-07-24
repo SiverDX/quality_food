@@ -1,14 +1,12 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
-import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.component.Quality;
 import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -20,9 +18,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,10 +63,10 @@ public class QualityUtils {
 
         for (Slot slot : slots) {
             if (isSlotValid.test(slot)) {
-                Optional<QualityType> type = QualityUtils.getType(slot.getItem());
+                QualityType type = QualityUtils.getType(slot.getItem());
 
-                if (type.isPresent()) {
-                    bonus += (float) (type.get().craftingBonus() / validIngredients);
+                if (type != QualityType.NONE) {
+                    bonus += (float) (type.craftingBonus() / validIngredients);
                 }
             }
         }
@@ -87,10 +84,10 @@ public class QualityUtils {
         float bonus = 0;
 
         for (ItemStack ingredient : container.getItems()) {
-            Optional<QualityType> type = QualityUtils.getType(ingredient);
+            QualityType type = QualityUtils.getType(ingredient);
 
-            if (type.isPresent()) {
-                bonus += (float) (type.get().craftingBonus() / validIngredients);
+            if (type != QualityType.NONE) {
+                bonus += (float) (type.craftingBonus() / validIngredients);
             }
         }
 
@@ -129,20 +126,14 @@ public class QualityUtils {
             rolls = 0.1;
         }
 
-        Registry<QualityType> registry = Utils.getQualityRegistry();
+        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFRegistries.QUALITY_TYPE_REGISTRY);
 
-        if (registry == null) {
-            QualityFood.LOG.warn("Registry for the 'Quality Type' could not be retrieved - quality will not be applied");
+        if (lookup == null) {
             return;
         }
 
-        // TODO 1.21 :: cache?
         List<QualityType> types = new ArrayList<>();
-
-        for (Map.Entry<ResourceKey<QualityType>, QualityType> entry : registry.entrySet()) {
-            types.add(entry.getValue());
-        }
-
+        lookup.listElements().forEach(entry -> types.add(entry.value()));
         types.sort(Comparator.comparingInt(QualityType::level));
 
         float chance = random.nextFloat();
@@ -171,6 +162,10 @@ public class QualityUtils {
                 }
             }
         }
+    }
+
+    public static boolean applyQuality(final ItemStack stack, final QualityType type) {
+        return applyQuality(stack, type.createQuality(stack));
     }
 
     /**
@@ -210,27 +205,27 @@ public class QualityUtils {
     }
 
     public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
-        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE), true) : Quality.NONE;
-
-        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
-            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
-
-            if (stack.is(Tags.Items.SEEDS)) {
-                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
-            }
-
-            if (targetChance > 0 && quality.level() > 0) {
-                float multiplier = targetChance / QualityConfig.getChance(quality);
-                bonusList.add(Bonus.multiplicative(multiplier));
-                QualityUtils.applyQuality(stack, player, bonusList);
-            } else {
-                QualityUtils.applyQuality(stack, player, bonusList);
-            }
-        } else if (QualityUtils.isValidQuality(quality)) {
-            QualityUtils.applyQuality(stack, quality);
-        } else if (quality != Quality.NONE_PLAYER_PLACED) {
-            QualityUtils.applyQuality(stack, player);
-        }
+//        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE), true) : Quality.NONE;
+//
+//        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
+//            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
+//
+//            if (stack.is(Tags.Items.SEEDS)) {
+//                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
+//            }
+//
+//            if (targetChance > 0 && quality.level() > 0) {
+//                float multiplier = targetChance / QualityConfig.getChance(quality);
+//                bonusList.add(Bonus.multiplicative(multiplier));
+//                QualityUtils.applyQuality(stack, player, bonusList);
+//            } else {
+//                QualityUtils.applyQuality(stack, player, bonusList);
+//            }
+//        } else if (QualityUtils.isValidQuality(quality)) {
+//            QualityUtils.applyQuality(stack, quality);
+//        } else if (quality != Quality.NONE_PLAYER_PLACED) {
+//            QualityUtils.applyQuality(stack, player);
+//        }
     }
 
     public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final RecipeHolder<?> recipe) {
@@ -264,7 +259,7 @@ public class QualityUtils {
 
     private static Pair<HashMap<Item, Integer>, int[]> getContainerData(final Container container) {
         // Collect the amount of qualities present for all items in the container
-        int[] qualities = new int[Quality.values().length];
+        int[] qualities = new int[/*Quality.values().length*/99];
         HashMap<Item, Integer> items = new HashMap<>();
 
         for (int i = 0; i < container.getContainerSize(); i++) {
@@ -276,7 +271,7 @@ public class QualityUtils {
                 continue;
             }
 
-            qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
+//            qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
         }
 
         return Pair.of(items, qualities);
@@ -284,13 +279,13 @@ public class QualityUtils {
 
     /** Get the most fitting quality (if all items are diamond -> diamond / if half 3 are diamond and 6 are gold -> gold) */
     private static Quality getQuality(final int[] qualities, int itemCount) {
-        for (int ordinal = Quality.DIAMOND.ordinal(); ordinal > 0; ordinal--) {
-            itemCount -= qualities[ordinal];
-
-            if (itemCount <= 0) {
-                return Quality.get(ordinal);
-            }
-        }
+//        for (int ordinal = Quality.DIAMOND.ordinal(); ordinal > 0; ordinal--) {
+//            itemCount -= qualities[ordinal];
+//
+//            if (itemCount <= 0) {
+//                return Quality.get(ordinal);
+//            }
+//        }
 
         return Quality.NONE;
     }
