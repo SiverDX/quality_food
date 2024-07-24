@@ -20,7 +20,6 @@ import snownee.jade.impl.ui.ElementHelper;
 
 public class QualityProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
     private static final ResourceLocation ID = QualityFood.location("quality");
-    private static final Vec2 SIZE = new Vec2(10, 10);
     private static final Vec2 TRANSLATE = new Vec2(2, 0.5f);
 
     @Override
@@ -28,6 +27,12 @@ public class QualityProvider implements IBlockComponentProvider, IServerDataProv
         CompoundTag tag = accessor.getServerData();
 
         if (tag.contains(QualityFood.concat("type"))) {
+            int level = tag.getInt(QualityFood.concat("level"));
+
+            if (level <= 0) {
+                return;
+            }
+
             ResourceLocation location = ResourceLocation.parse(tag.getString(QualityFood.concat("type")));
 
             toolTip.add(Component.translatable(QualityFood.concat("quality")));

@@ -5,6 +5,7 @@ import de.cadentem.quality_food.attachments.BlockData;
 import de.cadentem.quality_food.client.ClientProxy;
 import de.cadentem.quality_food.component.QFRegistries;
 import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.CookingParticles;
 import net.minecraft.core.BlockPos;
@@ -14,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -58,33 +59,7 @@ public class Utils {
     }
 
     public static boolean isValidBlock(final Block block) {
-        // FIXME 1.21 :: check tag
-        if (block instanceof BushBlock // Crops / Mushrooms / Sea pickles / ...
-//                || block instanceof StemGrownBlock // Pumpkin / Melon
-                || block instanceof CaveVinesBlock // Glow berries
-                || block instanceof CocoaBlock
-                || block instanceof SugarCaneBlock
-                || block instanceof CakeBlock
-                || block instanceof CandleCakeBlock
-                || block instanceof HayBlock
-                || block instanceof HoneyBlock
-        ) {
-            return true;
-        }
-
-//        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock)) {
-//            return true;
-//        }
-//
-//        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock)) {
-//            return true;
-//        }
-//
-//        if (Compat.isModLoaded(Compat.SUPPLEMENTARIES) && block instanceof SugarBlock) {
-//            return true;
-//        }
-
-        return false;
+        return block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS);
     }
 
     public static @Nullable BlockPos getBlockEntityPosition() {

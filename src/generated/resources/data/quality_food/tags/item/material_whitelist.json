@@ -1,15 +1,15 @@
 {
   "values": [
-    "minecraft:sugar",
-    "minecraft:sugar_cane",
+    "#c:mushrooms",
+    "#c:crops",
+    "#c:seeds",
+    "#c:eggs",
     "minecraft:cocoa_beans",
+    "minecraft:sugar_cane",
+    "minecraft:sugar",
     "minecraft:ink_sac",
     "minecraft:hay_block",
     "minecraft:honey_block",
-    "#c:eggs",
-    "#c:seeds",
-    "#c:crops",
-    "#c:mushrooms",
     {
       "id": "#forge:dough",
       "required": false

@@ -18,6 +18,8 @@ import java.util.Optional;
 public class LevelData implements INBTSerializable<CompoundTag> {
     private final HashMap<Long, Quality> qualities = new HashMap<>();
 
+    private Quality lastRemoved;
+
     public Quality get(final BlockPos position) {
         Quality quality = qualities.get(position.asLong());
 
@@ -33,7 +35,7 @@ public class LevelData implements INBTSerializable<CompoundTag> {
     }
 
     public void remove(final BlockPos position) {
-        qualities.remove(position.asLong());
+        lastRemoved = qualities.remove(position.asLong());
     }
 
     public CompoundTag serializeNBT(@NotNull final HolderLookup.Provider provider) {
@@ -56,11 +58,24 @@ public class LevelData implements INBTSerializable<CompoundTag> {
         });
     }
 
-    public static @NotNull Quality get(@NotNull final LevelAccessor level, @NotNull final BlockPos position) {
+    /** @return The stored quality or the last removed quality (since {@link de.cadentem.quality_food.mixin.LevelMixin} happens before the loot drops) if the flag is set to true */
+    public static @NotNull Quality get(@NotNull final LevelAccessor level, @NotNull final BlockPos position, boolean queryLastRemoved) {
+        Quality result = Quality.NONE;
+
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getData(AttachmentHandler.LEVEL_DATA).get(position);
+            LevelData data = serverLevel.getData(AttachmentHandler.LEVEL_DATA);
+            result = data.get(position);
+
+            if (queryLastRemoved && data.lastRemoved != null && result == Quality.NONE) {
+                result = data.lastRemoved;
+                data.lastRemoved = null;
+            }
         }
 
-        return Quality.NONE;
+        return result;
+    }
+
+    public static @NotNull Quality get(@NotNull final LevelAccessor level, @NotNull final BlockPos position) {
+        return get(level, position, false);
     }
 }

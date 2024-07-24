@@ -3,13 +3,13 @@ package de.cadentem.quality_food.data;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -18,26 +18,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class QFItemTags extends ItemTagsProvider {
-    public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, QualityFood.location("material_whitelist"));
-    public static final TagKey<Item> BLACKLIST = TagKey.create(Registries.ITEM, QualityFood.location("blacklist"));
+    public static final TagKey<Item> MATERIAL_WHITELIST = ItemTags.create(QualityFood.location("material_whitelist"));
+    public static final TagKey<Item> BLACKLIST = ItemTags.create(QualityFood.location("blacklist"));
 
-    public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper helper) {
-        super(output, provider, CompletableFuture.completedFuture(null), QualityFood.MODID, helper);
+    public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, final CompletableFuture<TagLookup<Block>> blockTags, @Nullable final ExistingFileHelper helper) {
+        super(output, provider, blockTags, QualityFood.MODID, helper);
     }
 
     @Override
     protected void addTags(@NotNull final HolderLookup.Provider provider) {
         tag(MATERIAL_WHITELIST)
-                .add(Items.SUGAR)
-                .add(Items.SUGAR_CANE)
+                .addTag(Tags.Items.MUSHROOMS)
+                .addTag(Tags.Items.CROPS)
+                .addTag(Tags.Items.SEEDS)
+                .addTag(Tags.Items.EGGS)
                 .add(Items.COCOA_BEANS)
+                .add(Items.SUGAR_CANE)
+                .add(Items.SUGAR)
                 .add(Items.INK_SAC) // Farmer's Delight
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
-                .addTag(Tags.Items.EGGS)
-                .addTag(Tags.Items.SEEDS)
-                .addTag(Tags.Items.CROPS)
-                .addTag(Tags.Items.MUSHROOMS)
                 .addOptionalTag(Compat.forge("dough"))
                 .addOptionalTag(Compat.forge("flour"))
                 .addOptionalTag(Compat.farmersdelight("wild_crops"))
@@ -70,22 +70,6 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.vinery("apple_bag"));
 
         tag(BLACKLIST)
-                .addTag(ItemTags.FLOWERS)
-                .addTag(ItemTags.SAPLINGS)
-                .add(Items.SHORT_GRASS)
-                .add(Items.TALL_GRASS)
-                .add(Items.FERN)
-                .add(Items.LARGE_FERN)
-                .add(Items.SMALL_DRIPLEAF)
-                .add(Items.BIG_DRIPLEAF)
-                .add(Items.LILY_PAD)
-                .add(Items.DEAD_BUSH)
-                .add(Items.VINE)
-                .add(Items.NETHER_WART) // Forbidden & Arcanus
-                .add(Items.SEAGRASS) // Ocean's Delight | Aquaculture 2
-                .add(Items.WARPED_ROOTS) // Nether's Delight
-                .add(Items.CRIMSON_ROOTS) // Nether's Delight
-                .add(Items.NETHER_SPROUTS)
                 .addOptional(Compat.supplementaries("flax"))
                 .addOptional(Compat.supplementaries("flax_seeds"));
     }

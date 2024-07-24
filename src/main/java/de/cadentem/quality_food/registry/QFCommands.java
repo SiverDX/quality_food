@@ -38,7 +38,7 @@ public class QFCommands {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, QualityFood.MODID);
 
     static {
-        COMMAND_ARGUMENTS.register("quality", () -> ArgumentTypeInfos.registerByClass(QualityTypeArgument.class, SingletonArgumentInfo.contextAware(QualityTypeArgument::new)));
+        COMMAND_ARGUMENTS.register("quality_type", () -> ArgumentTypeInfos.registerByClass(QualityTypeArgument.class, SingletonArgumentInfo.contextAware(QualityTypeArgument::new)));
         COMMAND_ARGUMENTS.register("item", () -> ArgumentTypeInfos.registerByClass(QualityItemArgument.class, SingletonArgumentInfo.contextAware(QualityItemArgument::item)));
     }
 

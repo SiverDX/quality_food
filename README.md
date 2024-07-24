@@ -8,9 +8,7 @@ Quality can:
 
 ---
 
-Quality Types are defined per datapack
-
-Syntax example:
+Quality Types are defined per datapack (`/<namespace>/quality_types/`), syntax example:
 
 ```json
 {
@@ -85,10 +83,24 @@ Syntax example:
   - (Optional) `applicable_to`: The item (or item tag) these effects will be applied to - if empty it will be applied to all items
   - `effects`: List of effects which will be applied
     - `effect`: The effect (see the single effect [here](https://minecraft.wiki/w/Data_component_format#food))
-    - `chance`: The chance this effect will be applied to the item when the quality is applied
+    - (Optional) `chance`: The chance this effect will be applied to the item when the quality is applied
       - Value between `0` and `1` (1 being 100%)
+      - If not supplied the value will be `1` 
 
----
+The actual quality data component which gets attached to items looks like this:
+
+```json
+{
+  components: {
+    "quality_food:quality": {
+      level: 2,
+      type: "quality_food:gold"
+    }
+  },
+  count: 1,
+  id: "minecraft:apple"
+}
+```
 
 # Commands
 - `/quality_food give`: Gives you an item with the defined quality (only lists item which are applicable to quality)
@@ -105,7 +117,12 @@ There is a farmland configuration which allows you to define a bonus (can also b
 
 ---
 
-Non-food items can be made applicable to quality by adding them to the `quality_food:material_whitelist` item tag
+All items with food properties should be applicable to quality by default
+- For other items (e.g. materials) the item tag `quality_food:material_whitelist` is used
+- In case some items should not have quality applied the item tag `quality_food:blacklist` is used
+
+Only blocks within the block tag `quality_food:quality_blocks` will support (i.e. retain) quality
+- If a block is applicable to quality the item for said block will be too
 
 ---
 
@@ -124,40 +141,15 @@ Cooking quality items will store a quality bonus within the furnace / cooking po
   - This can be disabled through the client config
 - Once you take out the result the stored bonus will be used up and grant a higher chance to a quality result
 
----
-
-For compatibility’s sake certain blocks (and their item variant) are supported in a broader way than needed 
-
-If you find some items having quality where it doesn't make much sense you can blacklist them using the item tag `quality_food:blacklist`
-
 # Compatibility
-- [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight)
-  - Apply quality when crafting
-  - Handle quality block state for growing plants (rice and tomato)
-  - Apply quality to served items (feast blocks)
-  - Certain storage blocks retain quality when placed
-- [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
-  - Use stored quality bonus of the furnace
+- [Jade](https://www.curseforge.com/minecraft/mc-mods/jade)
+  - Quality tooltip
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
   - Apply quality when crafting
-- [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
-  - Properly handle compacting
-  - Apply quality when crafting
-- [Create](https://www.curseforge.com/minecraft/mc-mods/create)
-  - Milling and Mechanical Mixer should apply the quality of the ingredients
-  - Quality item attribute (for filters)
 - [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
   - Properly roll quality when auto harvesting
-- [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
-  - Auto harvesting & replanting
-  - Quality gets properly rolled
-  - Certain storage blocks retain quality when placed
 - [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
-  - Quality gets properly rolled
-- [[Let's Do] Vinery](https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery)
-  - `White Grape Bag`, `Red Grape Bag`, `Cherry Bag` and `Apple Bag` blocks retain quality when placed
-- [Supplementaries](https://www.curseforge.com/minecraft/mc-mods/supplementaries)
-  - `Sugar Cube` block retains quality when placed
+  - Properly roll quality when auto harvesting
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly

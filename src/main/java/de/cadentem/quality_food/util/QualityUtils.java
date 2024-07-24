@@ -136,17 +136,9 @@ public class QualityUtils {
 
         List<QualityType> types = new ArrayList<>();
         lookup.listElements().forEach(entry -> types.add(entry.value()));
-        types.sort(Comparator.comparingInt(QualityType::level));
+        types.sort(Comparator.comparingInt(QualityType::level).reversed());
 
-        float chance = random.nextFloat();
-
-        for (Bonus bonus : bonusList) {
-            chance = switch (bonus.type()) {
-                case ADDITIVE -> chance + bonus.amount();
-                case MULTIPLICATIVE -> chance * bonus.amount();
-            };
-        }
-
+        float roll = random.nextFloat();
         int fullRolls = (int) rolls;
 
         if (random.nextDouble() <= (rolls - fullRolls)) {
@@ -155,7 +147,16 @@ public class QualityUtils {
 
         for (int i = 0; i < fullRolls; i++) {
             for (QualityType type : types) {
-                if (chance >= type.chance()) {
+                double chance = type.chance();
+
+                for (Bonus bonus : bonusList) {
+                    chance = switch (bonus.type()) {
+                        case ADDITIVE -> chance + bonus.amount();
+                        case MULTIPLICATIVE -> chance * bonus.amount();
+                    };
+                }
+
+                if (roll <= chance) {
                     boolean wasApplied = applyQuality(stack, type.createQuality(stack));
 
                     if (wasApplied) {
@@ -215,12 +216,10 @@ public class QualityUtils {
             }
 
             if (targetChance > 0 && quality.level() > 0) {
-                float multiplier = (float) (targetChance / quality.getType().chance());
-                bonusList.add(Bonus.multiplicative(multiplier));
-                QualityUtils.applyQuality(stack, player, bonusList);
-            } else {
-                QualityUtils.applyQuality(stack, player, bonusList);
+                bonusList.add(Bonus.multiplicative((float) (targetChance / quality.getType().chance())));
             }
+
+            QualityUtils.applyQuality(stack, player, bonusList);
         } else if (QualityUtils.isValidQuality(quality)) {
             QualityUtils.applyQuality(stack, quality);
         } else if (quality != Quality.PLAYER_PLACED) {
@@ -280,7 +279,7 @@ public class QualityUtils {
 
     /** Get the most fitting quality (if all items are diamond -> diamond / if half 3 are diamond and 6 are gold -> gold) */
     private static Quality getQuality(final HashMap<Integer, Integer> qualities, int itemCount, final ItemStack result) {
-        List<Integer> levels = qualities.keySet().stream().sorted(Comparator.comparingInt(Integer::intValue)).toList();
+        List<Integer> levels = qualities.keySet().stream().sorted(Comparator.comparingInt(Integer::intValue).reversed()).toList();
 
         for (Integer level : levels) {
             itemCount -= qualities.get(level);

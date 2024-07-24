@@ -15,7 +15,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class QFRegistries {
     public static final ResourceKey<Registry<QualityType>> QUALITY_TYPE_REGISTRY = ResourceKey.createRegistryKey(QualityFood.location("quality_types"));
     public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(QualityFood.MODID);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Quality>> QUALITY_DATA_COMPONENT = REGISTRAR.registerComponentType(QualityFood.MODID + ".quality", builder -> builder.persistent(Quality.CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Quality>> QUALITY_DATA_COMPONENT = REGISTRAR.registerComponentType("quality", builder -> builder.persistent(Quality.CODEC));
 
     @SubscribeEvent
     public static void register(final DataPackRegistryEvent.NewRegistry event) {

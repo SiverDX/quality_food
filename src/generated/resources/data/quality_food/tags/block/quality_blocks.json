@@ -1,0 +1,19 @@
+{
+  "remove": [
+    "minecraft:torchflower",
+    "minecraft:pitcher_crop"
+  ],
+  "values": [
+    "#minecraft:crops",
+    "#minecraft:candle_cakes",
+    "minecraft:sweet_berry_bush",
+    "minecraft:cave_vines",
+    "minecraft:cave_vines_plant",
+    "minecraft:cocoa",
+    "minecraft:sugar_cane",
+    "minecraft:cake",
+    "minecraft:hay_block",
+    "minecraft:honey_block",
+    "minecraft:honeycomb_block"
+  ]
+}
