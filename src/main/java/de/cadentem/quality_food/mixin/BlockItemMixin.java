@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
-import de.cadentem.quality_food.attachments.AttachmentHandler;
-import de.cadentem.quality_food.component.Quality;
+import de.cadentem.quality_food.core.attachments.AttachmentHandler;
+import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.item.BlockItem;

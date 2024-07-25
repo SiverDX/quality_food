@@ -1,4 +1,4 @@
-package de.cadentem.quality_food.attachments;
+package de.cadentem.quality_food.core.attachments;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

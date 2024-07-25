@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
-import de.cadentem.quality_food.component.Quality;
+import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;

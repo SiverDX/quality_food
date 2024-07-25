@@ -1,8 +1,9 @@
-package de.cadentem.quality_food.component;
+package de.cadentem.quality_food.core.codecs;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -30,13 +31,13 @@ public record Quality(ResourceLocation type, int level, Optional<List<FoodProper
             return QualityType.NONE;
         }
 
-        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFRegistries.QUALITY_TYPE_REGISTRY);
+        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFComponents.QUALITY_TYPE_REGISTRY);
 
         if (lookup == null) {
             return QualityType.NONE;
         }
 
-        return lookup.get(QFRegistries.key(type)).map(Holder.Reference::value).orElse(QualityType.NONE);
+        return lookup.get(QFComponents.key(type)).map(Holder.Reference::value).orElse(QualityType.NONE);
     }
 
     public static Quality getRandom(final ItemStack stack, int level) {

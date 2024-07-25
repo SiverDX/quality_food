@@ -1,7 +1,7 @@
-package de.cadentem.quality_food.attachments;
+package de.cadentem.quality_food.core.attachments;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.component.Quality;
+import de.cadentem.quality_food.core.codecs.Quality;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

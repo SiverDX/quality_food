@@ -1,9 +1,9 @@
 package de.cadentem.quality_food.compat.jade;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.attachments.AttachmentHandler;
-import de.cadentem.quality_food.component.Quality;
-import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.core.attachments.AttachmentHandler;
+import de.cadentem.quality_food.core.codecs.Quality;
+import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;

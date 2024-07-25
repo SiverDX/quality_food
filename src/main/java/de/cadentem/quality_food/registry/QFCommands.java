@@ -5,8 +5,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.core.commands.QualityTypeArgument;
 import de.cadentem.quality_food.core.commands.QualityItemArgument;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -110,8 +109,8 @@ public class QFCommands {
         if (source.getEntity() instanceof LivingEntity livingSource) {
             ItemStack stack = livingSource.getMainHandItem();
 
-            if (stack.has(QFRegistries.QUALITY_DATA_COMPONENT)) {
-                stack.remove(QFRegistries.QUALITY_DATA_COMPONENT);
+            if (stack.has(QFComponents.QUALITY_DATA_COMPONENT)) {
+                stack.remove(QFComponents.QUALITY_DATA_COMPONENT);
                 return 1;
             } else {
                 source.sendFailure(Component.translatable("commands.quality_food.quality.failed.missing_quality", stack.getDisplayName()));

@@ -6,8 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
+import de.cadentem.quality_food.core.codecs.QualityType;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.Holder;
@@ -24,12 +24,12 @@ public class QualityTypeArgument implements ArgumentType<QualityType> {
     private final HolderLookup.RegistryLookup<QualityType> lookup;
 
     public QualityTypeArgument(final CommandBuildContext context) {
-        lookup = context.lookupOrThrow(QFRegistries.QUALITY_TYPE_REGISTRY);
+        lookup = context.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY);
     }
 
     @Override
     public QualityType parse(final StringReader reader) throws CommandSyntaxException {
-        Optional<Holder.Reference<QualityType>> reference = lookup.get(ResourceKey.create(QFRegistries.QUALITY_TYPE_REGISTRY, ResourceLocation.read(reader)));
+        Optional<Holder.Reference<QualityType>> reference = lookup.get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.read(reader)));
         return reference.map(Holder.Reference::value).orElse(QualityType.NONE);
     }
 

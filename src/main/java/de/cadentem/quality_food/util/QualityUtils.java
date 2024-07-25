@@ -1,11 +1,11 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
-import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.component.Quality;
-import de.cadentem.quality_food.component.QualityType;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
+import de.cadentem.quality_food.core.codecs.Quality;
+import de.cadentem.quality_food.core.codecs.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -36,7 +36,7 @@ public class QualityUtils {
             return false;
         }
 
-        de.cadentem.quality_food.component.Quality quality = stack.get(QFRegistries.QUALITY_DATA_COMPONENT);
+        Quality quality = stack.get(QFComponents.QUALITY_DATA_COMPONENT);
 
         if (quality == null) {
             return false;
@@ -128,7 +128,7 @@ public class QualityUtils {
             rolls = 0.1;
         }
 
-        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFRegistries.QUALITY_TYPE_REGISTRY);
+        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFComponents.QUALITY_TYPE_REGISTRY);
 
         if (lookup == null) {
             return;
@@ -181,7 +181,7 @@ public class QualityUtils {
             return false;
         }
 
-        stack.set(QFRegistries.QUALITY_DATA_COMPONENT, quality);
+        stack.set(QFComponents.QUALITY_DATA_COMPONENT, quality);
         return true;
     }
 
@@ -324,7 +324,7 @@ public class QualityUtils {
             return Quality.NONE;
         }
 
-        Quality quality = stack.get(QFRegistries.QUALITY_DATA_COMPONENT);
+        Quality quality = stack.get(QFComponents.QUALITY_DATA_COMPONENT);
 
         if (quality == null) {
             return Quality.NONE;
@@ -336,11 +336,6 @@ public class QualityUtils {
     /** Returns the corresponding {@link QualityType} to the {@link Quality} if possible, otherwise {@link QualityType#NONE} */
     public static QualityType getType(final ItemStack stack) {
         return QualityUtils.getQuality(stack).getType();
-    }
-
-    public static int getPlacementQuality(@Nullable final ItemStack stack) {
-        Quality quality = getQuality(stack);
-        return quality != null && quality.level() > 0 ? quality.level() : -1;
     }
 
     public static boolean isValidQuality(final Quality quality) {

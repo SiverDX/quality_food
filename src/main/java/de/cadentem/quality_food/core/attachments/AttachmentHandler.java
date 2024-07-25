@@ -1,4 +1,4 @@
-package de.cadentem.quality_food.attachments;
+package de.cadentem.quality_food.core.attachments;
 
 import de.cadentem.quality_food.QualityFood;
 import net.neoforged.neoforge.attachment.AttachmentType;

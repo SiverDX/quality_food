@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.mixin;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import de.cadentem.quality_food.attachments.AttachmentHandler;
-import de.cadentem.quality_food.attachments.BlockData;
+import de.cadentem.quality_food.core.attachments.AttachmentHandler;
+import de.cadentem.quality_food.core.attachments.BlockData;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.Container;

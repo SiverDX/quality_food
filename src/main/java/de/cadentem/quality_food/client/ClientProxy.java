@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.client;
 
-import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
+import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -36,7 +36,7 @@ public class ClientProxy {
         ClientLevel level = Minecraft.getInstance().level;
 
         if (level != null) {
-            return level.registryAccess().registry(QFRegistries.QUALITY_TYPE_REGISTRY).orElse(null);
+            return level.registryAccess().registry(QFComponents.QUALITY_TYPE_REGISTRY).orElse(null);
         }
 
         return null;

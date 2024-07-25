@@ -2,7 +2,7 @@ package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import de.cadentem.quality_food.attachments.LevelData;
+import de.cadentem.quality_food.core.attachments.LevelData;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;

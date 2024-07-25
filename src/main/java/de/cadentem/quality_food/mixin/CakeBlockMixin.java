@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.attachments.AttachmentHandler;
-import de.cadentem.quality_food.component.Quality;
+import de.cadentem.quality_food.core.attachments.AttachmentHandler;
+import de.cadentem.quality_food.core.codecs.Quality;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;

@@ -1,4 +1,4 @@
-package de.cadentem.quality_food.component;
+package de.cadentem.quality_food.core.codecs;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

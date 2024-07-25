@@ -1,10 +1,10 @@
 package de.cadentem.quality_food;
 
 import com.mojang.logging.LogUtils;
-import de.cadentem.quality_food.attachments.AttachmentHandler;
+import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.compat.appleskin.AppleSkinEvents;
-import de.cadentem.quality_food.component.QFRegistries;
+import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.events.ModEvents;
@@ -29,7 +29,7 @@ public class QualityFood {
     public QualityFood(final IEventBus bus, final ModContainer container) {
         bus.register(this);
 
-        QFRegistries.REGISTRAR.register(bus);
+        QFComponents.REGISTRAR.register(bus);
         AttachmentHandler.ATTACHMENT_TYPES.register(bus);
         QFLootModifiers.LOOT_MODIFIERS.register(bus);
         QFCommands.COMMAND_ARGUMENTS.register(bus);

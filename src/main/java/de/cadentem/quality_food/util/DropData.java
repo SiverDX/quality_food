@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.component.Quality;
+import de.cadentem.quality_food.core.codecs.Quality;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;

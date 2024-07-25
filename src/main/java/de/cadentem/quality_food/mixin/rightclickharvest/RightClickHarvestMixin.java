@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin.rightclickharvest;
 
-import de.cadentem.quality_food.attachments.LevelData;
+import de.cadentem.quality_food.core.attachments.LevelData;
 import de.cadentem.quality_food.util.DropData;
 import io.github.jamalam360.rightclickharvest.RightClickHarvest;
 import net.minecraft.core.BlockPos;

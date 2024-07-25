@@ -1,10 +1,10 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.attachments.AttachmentHandler;
-import de.cadentem.quality_food.attachments.BlockData;
+import de.cadentem.quality_food.core.attachments.AttachmentHandler;
+import de.cadentem.quality_food.core.attachments.BlockData;
 import de.cadentem.quality_food.client.ClientProxy;
-import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
+import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.CookingParticles;
@@ -108,7 +108,7 @@ public class Utils {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 
         if (server != null) {
-            return server.registryAccess().registry(QFRegistries.QUALITY_TYPE_REGISTRY).orElse(null);
+            return server.registryAccess().registry(QFComponents.QUALITY_TYPE_REGISTRY).orElse(null);
         } else if (FMLEnvironment.dist.isClient()) {
             return ClientProxy.getQualityRegistry();
         }

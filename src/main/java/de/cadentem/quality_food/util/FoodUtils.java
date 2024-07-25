@@ -1,7 +1,8 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.component.QFRegistries;
-import de.cadentem.quality_food.component.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
+import de.cadentem.quality_food.core.codecs.Quality;
+import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.data.QFEffectTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -91,7 +92,7 @@ public class FoodUtils {
             return Optional.empty();
         }
 
-        de.cadentem.quality_food.component.Quality quality = stack.get(QFRegistries.QUALITY_DATA_COMPONENT);
+        Quality quality = stack.get(QFComponents.QUALITY_DATA_COMPONENT);
 
         if (quality != null) {
             return quality.effects();

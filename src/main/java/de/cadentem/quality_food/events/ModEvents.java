@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.events;
 
-import de.cadentem.quality_food.attachments.LevelData;
+import de.cadentem.quality_food.core.attachments.LevelData;
 import de.cadentem.quality_food.util.QualityUtils;
 import it.crystalnest.harvest_with_ease.api.event.HarvestEvents;
 import net.minecraft.world.item.ItemStack;
