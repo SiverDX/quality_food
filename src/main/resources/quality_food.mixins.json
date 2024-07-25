@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "de.cadentem.quality_food.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "refmap": "quality_food.refmap.json",
   "plugin": "de.cadentem.quality_food.mixin.ApplyMixinPlugin",
   "mixins": [
@@ -11,6 +11,8 @@
     "BlockItemMixin",
     "BlockMixin",
     "CakeBlockMixin",
+    "CrafterBlockMixin",
+    "CrafterMenuMixin",
     "CraftingMenuMixin",
     "EntityMixin",
     "FurnaceResultSlotMixin",
