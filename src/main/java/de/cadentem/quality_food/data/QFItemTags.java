@@ -29,6 +29,7 @@ public class QFItemTags extends ItemTagsProvider {
     protected void addTags(@NotNull final HolderLookup.Provider provider) {
         tag(MATERIAL_WHITELIST)
                 .addTag(Tags.Items.MUSHROOMS)
+                .addTag(Tags.Items.FOODS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.EGGS)
@@ -38,8 +39,6 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.INK_SAC) // Farmer's Delight
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
-                .addOptionalTag(Compat.forge("dough"))
-                .addOptionalTag(Compat.forge("flour"))
                 .addOptionalTag(Compat.farmersdelight("wild_crops"))
                 .addOptional(Compat.farmersdelight("rice_panicle"))
                 /* Storage blocks */

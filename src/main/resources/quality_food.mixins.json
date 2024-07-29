@@ -24,6 +24,13 @@
     "SugarCaneBlockMixin",
     "SweetBerryBushBlockMixin",
     "ThrownEggMixin",
+    "farmersdelight.CookingPotBlockEntityMixin",
+    "farmersdelight.CookingPotMenuMixin",
+    "farmersdelight.CookingPotResultSlotMixin",
+    "farmersdelight.CuttingBoardBlockEntityMixin",
+    "farmersdelight.FeastBlockMixin",
+    "farmersdelight.RiceBlockMixin",
+    "farmersdelight.TomatoVineBlockMixin",
     "rightclickharvest.RightClickHarvestMixin",
     "toms_storage.CraftingTerminalBlockEntityMixin",
     "toms_storage.CraftingTerminalMenuMixin"

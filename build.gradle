@@ -66,14 +66,14 @@ dependencies {
     implementation "curse.maven:harvest-with-ease-602171:5545357" // 9.0.2
     implementation "curse.maven:cobweb-968456:5531713" // 1.1.2
 
-    implementation "curse.maven:toms-storage-378609:5548590" // 2.0.7
+    compileOnly "curse.maven:toms-storage-378609:5548590" // 2.0.7
 
-    implementation "curse.maven:rightclickharvest-452834:5492116" // 4.3.1
-    implementation "curse.maven:architectury-api-419699:5553800" // 13.0.6
-    implementation "curse.maven:jamlib-623764:5427400" // 1.0.9
+    compileOnly "curse.maven:rightclickharvest-452834:5492116" // 4.3.1
+    compileOnly "curse.maven:architectury-api-419699:5553800" // 13.0.6
+    compileOnly "curse.maven:jamlib-623764:5427400" // 1.0.9
 
-//    implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
-//
+    compileOnly "curse.maven:farmers-delight-398521:5566383" // 1.2.4
+
 //    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
 //
 //    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5326245") // 0.6.22.611

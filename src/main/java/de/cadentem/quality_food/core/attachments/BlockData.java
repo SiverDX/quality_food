@@ -5,13 +5,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class BlockData implements INBTSerializable<CompoundTag> {
     private double qualityBonus;
 
-    public double useQuality() {
+    public float useQuality() {
         double bonus = qualityBonus;
         qualityBonus = 0;
-        return bonus;
+        return (float) bonus;
     }
 
     public double getQuality() {
@@ -22,14 +25,16 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         qualityBonus += value;
     }
 
-    public CompoundTag serializeNBT(@NotNull final HolderLookup.Provider provider) {
+    @Override
+    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putDouble("quality_bonus", qualityBonus);
 
         return tag;
     }
 
-    public void deserializeNBT(@NotNull final HolderLookup.Provider provider, final CompoundTag tag) {
+    @Override
+    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
         qualityBonus = tag.getDouble("quality_bonus");
     }
 }

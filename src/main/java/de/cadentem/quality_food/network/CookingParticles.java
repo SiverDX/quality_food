@@ -14,7 +14,7 @@ public record CookingParticles(BlockPos position, double qualityBonus) implement
     public static final CustomPacketPayload.Type<CookingParticles> TYPE = new CustomPacketPayload.Type<>(QualityFood.location("cooking_particles"));
 
     public static final StreamCodec<ByteBuf, CookingParticles> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodec(BlockPos.CODEC),
+            BlockPos.STREAM_CODEC,
             CookingParticles::position,
             ByteBufCodecs.DOUBLE,
             CookingParticles::qualityBonus,

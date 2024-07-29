@@ -1,6 +1,7 @@
 {
   "values": [
     "#c:mushrooms",
+    "#c:foods",
     "#c:crops",
     "#c:seeds",
     "#c:eggs",
@@ -10,14 +11,6 @@
     "minecraft:ink_sac",
     "minecraft:hay_block",
     "minecraft:honey_block",
-    {
-      "id": "#forge:dough",
-      "required": false
-    },
-    {
-      "id": "#forge:flour",
-      "required": false
-    },
     {
       "id": "#farmersdelight:wild_crops",
       "required": false

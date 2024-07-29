@@ -11,16 +11,19 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 import java.util.Optional;
 
+@ParametersAreNonnullByDefault
 public class LevelData implements INBTSerializable<CompoundTag> {
     private final HashMap<Long, Quality> qualities = new HashMap<>();
 
-    private Quality lastRemoved;
+    private @Nullable Quality lastRemoved;
 
-    public Quality get(final BlockPos position) {
+    public @NotNull Quality get(final BlockPos position) {
         Quality quality = qualities.get(position.asLong());
 
         if (quality == null) {
@@ -31,6 +34,11 @@ public class LevelData implements INBTSerializable<CompoundTag> {
     }
 
     public void set(final BlockPos position, final Quality quality) {
+        if (quality == Quality.NONE) {
+            remove(position);
+            return;
+        }
+
         qualities.put(position.asLong(), quality);
     }
 
@@ -38,7 +46,8 @@ public class LevelData implements INBTSerializable<CompoundTag> {
         lastRemoved = qualities.remove(position.asLong());
     }
 
-    public CompoundTag serializeNBT(@NotNull final HolderLookup.Provider provider) {
+    @Override
+    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
 
         for (Long key : qualities.keySet()) {
@@ -49,7 +58,8 @@ public class LevelData implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    public void deserializeNBT(@NotNull final HolderLookup.Provider provider, final CompoundTag tag) {
+    @Override
+    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
         qualities.clear();
 
         tag.getAllKeys().forEach(key -> {
@@ -59,7 +69,7 @@ public class LevelData implements INBTSerializable<CompoundTag> {
     }
 
     /** @return The stored quality or the last removed quality (since {@link de.cadentem.quality_food.mixin.LevelMixin} happens before the loot drops) if the flag is set to true */
-    public static @NotNull Quality get(@NotNull final LevelAccessor level, @NotNull final BlockPos position, boolean queryLastRemoved) {
+    public static @NotNull Quality get(final LevelAccessor level, final BlockPos position, boolean queryLastRemoved) {
         Quality result = Quality.NONE;
 
         if (level instanceof ServerLevel serverLevel) {
@@ -75,7 +85,7 @@ public class LevelData implements INBTSerializable<CompoundTag> {
         return result;
     }
 
-    public static @NotNull Quality get(@NotNull final LevelAccessor level, @NotNull final BlockPos position) {
+    public static @NotNull Quality get(final LevelAccessor level, final BlockPos position) {
         return get(level, position, false);
     }
 }

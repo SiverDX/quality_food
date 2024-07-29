@@ -10,7 +10,7 @@ import java.util.Map;
 public class Compat {
     public static final String APPLESKIN = "appleskin";
     public static final String QUARK = "quark";
-    public static final String FORGE = "forge";
+    public static final String COMMON = "c";
     public static final String CREATE = "create";
     public static final String VINERY = "vinery";
     public static final String FARMERSDELIGHT = "farmersdelight";
@@ -47,8 +47,8 @@ public class Compat {
         return location(VINERY, path);
     }
 
-    public static ResourceLocation forge(final String path) {
-        return location(FORGE, path);
+    public static ResourceLocation common(final String path) {
+        return location(COMMON, path);
     }
 
     private static ResourceLocation location(final String namespace, final String path) {

@@ -14,6 +14,114 @@
     "minecraft:cake",
     "minecraft:hay_block",
     "minecraft:honey_block",
-    "minecraft:honeycomb_block"
+    "minecraft:honeycomb_block",
+    {
+      "id": "#farmersdelight:wild_crops",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:rice",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:potato_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:beetroot_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:cabbage_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:tomato_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:onion_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:chorus_crate",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:rice_bale",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:rice_bag",
+      "required": false
+    },
+    {
+      "id": "quark:apple_crate",
+      "required": false
+    },
+    {
+      "id": "quark:beetroot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:berry_sack",
+      "required": false
+    },
+    {
+      "id": "quark:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:chorus_fruit_block",
+      "required": false
+    },
+    {
+      "id": "quark:cocoa_beans_sack",
+      "required": false
+    },
+    {
+      "id": "quark:glowberry_sack",
+      "required": false
+    },
+    {
+      "id": "quark:golden_apple_crate",
+      "required": false
+    },
+    {
+      "id": "quark:golden_carrot_crate",
+      "required": false
+    },
+    {
+      "id": "quark:potato_crate",
+      "required": false
+    },
+    {
+      "id": "quark:sugar_cane_block",
+      "required": false
+    },
+    {
+      "id": "supplementaries:sugar_cube",
+      "required": false
+    },
+    {
+      "id": "vinery:white_grape_bag",
+      "required": false
+    },
+    {
+      "id": "vinery:red_grape_bag",
+      "required": false
+    },
+    {
+      "id": "vinery:cherry_bag",
+      "required": false
+    },
+    {
+      "id": "vinery:apple_bag",
+      "required": false
+    }
   ]
 }

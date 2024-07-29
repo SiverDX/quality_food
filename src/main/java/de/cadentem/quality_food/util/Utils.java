@@ -1,14 +1,17 @@
 package de.cadentem.quality_food.util;
 
+import de.cadentem.quality_food.client.ClientProxy;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.attachments.BlockData;
-import de.cadentem.quality_food.client.ClientProxy;
-import de.cadentem.quality_food.registry.QFComponents;
+import de.cadentem.quality_food.core.attachments.LevelData;
+import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.CookingParticles;
+import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +20,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -29,6 +33,10 @@ public class Utils {
     public static final ThreadLocal<BlockPos> BLOCK_ENTITY_POSITION = new ThreadLocal<>();
 
     public static boolean isValidItem(final ItemStack stack) {
+        return isValidItem(stack, true);
+    }
+
+    public static boolean isValidItem(final ItemStack stack, boolean checkBlock) {
         if (stack.isEmpty()) {
             return false;
         }
@@ -43,7 +51,7 @@ public class Utils {
             return true;
         }
 
-        if (isValidBlock(stack)) {
+        if (checkBlock && isValidBlock(stack)) {
             return true;
         }
 
@@ -58,8 +66,13 @@ public class Utils {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean isValidBlock(final Block block) {
-        return block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS);
+        if (block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS)) {
+            return true;
+        } else {
+            return isValidItem(block.asItem().getDefaultInstance(), false);
+        }
     }
 
     public static @Nullable BlockPos getBlockEntityPosition() {
@@ -84,6 +97,23 @@ public class Utils {
                 PacketDistributor.sendToPlayersNear(serverLevel, null, position.getX(), position.getY(), position.getZ(), 64, new CookingParticles(position, qualityBonus));
             }
         }
+    }
+
+    public static BlockState applyQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final Direction direction) {
+        return applyQuality(grown, level, position, position.relative(direction));
+    }
+
+    public static BlockState applyQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final BlockPos grownPosition) {
+        if (Utils.isValidBlock(grown.getBlock())) {
+            LevelData data = level.getData(AttachmentHandler.LEVEL_DATA);
+            Quality quality = data.get(position);
+
+            if (/* Don't apply PLAYER_PLACED */ quality.level() > 0) {
+                data.set(grownPosition, quality);
+            }
+        }
+
+        return grown;
     }
 
     public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack) {
