@@ -29,8 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public class Utils {
     /** Safety measure to avoid trying to apply quality multiple times to the same item */
     public static final ThreadLocal<ItemStack> LAST_STACK = new ThreadLocal<>();
-    /** Bonus from the block entity for menu usage */
-    public static final ThreadLocal<BlockPos> BLOCK_ENTITY_POSITION = new ThreadLocal<>();
 
     public static boolean isValidItem(final ItemStack stack) {
         return isValidItem(stack, true);
@@ -51,39 +49,26 @@ public class Utils {
             return true;
         }
 
-        if (checkBlock && isValidBlock(stack)) {
+        if (checkBlock && stack.getItem() instanceof BlockItem blockItem && isValidBlock(blockItem.getBlock(), false)) {
             return true;
         }
 
         return stack.is(QFItemTags.MATERIAL_WHITELIST);
     }
 
-    public static boolean isValidBlock(final ItemStack stack) {
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            return isValidBlock(blockItem.getBlock());
-        }
-
-        return false;
+    public static boolean isValidBlock(final Block block) {
+        return isValidBlock(block, true);
     }
 
     @SuppressWarnings("deprecation")
-    public static boolean isValidBlock(final Block block) {
+    public static boolean isValidBlock(final Block block, boolean checkItem) {
         if (block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS)) {
             return true;
-        } else {
+        } else if (checkItem) {
             return isValidItem(block.asItem().getDefaultInstance(), false);
         }
-    }
 
-    public static @Nullable BlockPos getBlockEntityPosition() {
-        BlockPos position = BLOCK_ENTITY_POSITION.get();
-
-        if (position != null) {
-            BLOCK_ENTITY_POSITION.remove();
-            return position;
-        }
-
-        return null;
+        return false;
     }
 
     public static void sendParticles(final ServerLevel serverLevel, final BlockEntity furnace, final BlockPos position) {

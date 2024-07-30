@@ -2,11 +2,9 @@ package de.cadentem.quality_food.events;
 
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.util.QualityUtils;
-import de.cadentem.quality_food.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,7 +19,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -29,15 +26,6 @@ import java.util.List;
 @EventBusSubscriber
 public class GameEvents {
     private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
-
-    @SubscribeEvent
-    public static void handleRightClick(final PlayerInteractEvent.RightClickBlock event) {
-        BlockPos position = event.getHitVec().getBlockPos();
-
-        if (event.getLevel().getBlockEntity(position) != null) {
-            Utils.BLOCK_ENTITY_POSITION.set(position);
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleFishing(final ItemFishedEvent event) {

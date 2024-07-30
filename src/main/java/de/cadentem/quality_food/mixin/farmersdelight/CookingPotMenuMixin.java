@@ -37,5 +37,6 @@ public abstract class CookingPotMenuMixin extends RecipeBookMenu<RecipeWrapper, 
 
         BlockData data = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
         QualityUtils.applyQuality(stack, player, Bonus.additive(data.useQuality()));
+        blockEntity.setChanged();
     }
 }
