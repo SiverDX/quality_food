@@ -75,11 +75,11 @@ dependencies {
     compileOnly "curse.maven:farmers-delight-398521:5566383" // 1.2.4
 
 //    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
-//
-//    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:5326245") // 0.6.22.611
-//    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:5296475") // 3.20.5.1044
-//    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:5327377") // 0.10.25.804
-//
+
+    implementation "curse.maven:sophisticated-core-618298:5623839" // 0.6.25.621
+    implementation "curse.maven:sophisticated-backpacks-422301:5621986" // 3.20.6.1055
+    implementation "curse.maven:sophisticated-storage-619320:5623033" // 0.10.24.812
+
 //    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
 //
 //    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7

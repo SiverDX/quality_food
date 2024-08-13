@@ -32,6 +32,10 @@
     "farmersdelight.RiceBlockMixin",
     "farmersdelight.TomatoVineBlockMixin",
     "rightclickharvest.RightClickHarvestMixin",
+    "sophisticatedcore.CompactingUpgradeWrapperMixin",
+    "sophisticatedcore.CraftingUpgradeContainerAccess",
+    "sophisticatedcore.CraftingUpgradeContainerMixin",
+    "sophisticatedcore.StorageContainerMenuBaseMixin",
     "toms_storage.CraftingTerminalBlockEntityMixin",
     "toms_storage.CraftingTerminalMenuMixin"
   ],
