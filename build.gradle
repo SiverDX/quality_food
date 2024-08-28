@@ -85,7 +85,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:toms-storage-378609:5211208") // 1.6.6
 
-    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
+    implementation fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5

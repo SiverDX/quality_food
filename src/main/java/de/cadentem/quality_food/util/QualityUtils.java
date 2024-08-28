@@ -332,15 +332,20 @@ public class QualityUtils {
         return result;
     }
 
-    public static float getCookingBonus(final ItemStack stack) {
+    public static float getCookingBonus(final ItemStack stack, boolean considerStackSize) {
         Quality quality = getQuality(stack);
+        int stackSize = considerStackSize ? stack.getCount() : 1;
 
         return switch (quality) {
-            case IRON -> 1 / 256f;
-            case GOLD -> 1 / 128f;
-            case DIAMOND -> 1 / 64f;
+            case IRON -> stackSize / 256f;
+            case GOLD -> stackSize / 128f;
+            case DIAMOND -> stackSize / 64f;
             default -> 0;
         };
+    }
+
+    public static float getCookingBonus(final ItemStack stack) {
+        return getCookingBonus(stack, false);
     }
 
     public static Quality getQuality(@Nullable final ItemStack stack) {

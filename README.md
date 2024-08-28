@@ -109,6 +109,8 @@ If you find some items having quality where it doesn't make much sense you can b
   - Apply quality when crafting
 - [Create](https://www.curseforge.com/minecraft/mc-mods/create)
   - Milling and Mechanical Mixer should apply the quality of the ingredients
+  - Quality gets retained when re-planted by Mechanical Harvester
+  - Mechanical Harvester and cooking with fan apply quality
   - Quality item attribute (for filters)
 - [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
   - Properly roll quality when auto harvesting
