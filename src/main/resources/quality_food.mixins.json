@@ -26,6 +26,7 @@
     "SugarCaneBlockMixin",
     "SweetBerryBushBlockMixin",
     "ThrownEggMixin",
+    "cratedelight.ModBlocksMixin",
     "create.BasinRecipeMixin",
     "create.HarvesterMovementBehaviourMixin",
     "create.MillstoneBlockEntityMixin",
