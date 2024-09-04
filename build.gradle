@@ -102,6 +102,9 @@ dependencies {
     compileOnly fg.deobf("curse.maven:supplementaries-412082:5458843") // 2.8.17
     compileOnly fg.deobf("curse.maven:selene-499980:5478857") // 2.12.6
 
+    compileOnly fg.deobf("curse.maven:fastworkbench-288885:5101229") // 8.0.4
+    compileOnly fg.deobf("curse.maven:placebo-283644:5414631") // 8.6.2
+
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")
 

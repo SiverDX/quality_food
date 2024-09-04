@@ -246,10 +246,10 @@ public class QualityUtils {
     }
 
     public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe) {
-        boolean isRecipe = ServerConfig.isRetainQualityRecipe(recipe);
+        boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe);
         boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
 
-        if (!isRecipe && !handleCompacting) {
+        if (!shouldRetainQuality && !handleCompacting) {
             return;
         }
 
@@ -265,7 +265,7 @@ public class QualityUtils {
 
         Quality quality = getQuality(data.getSecond(), relevantItemCount);
 
-        if (quality.level() > 0 && (isRecipe || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
+        if (quality.level() > 0 && (shouldRetainQuality || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
             QualityUtils.applyQuality(result, quality);
         }
     }

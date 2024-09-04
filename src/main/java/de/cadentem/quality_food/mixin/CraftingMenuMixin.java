@@ -36,8 +36,8 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
 
     /** Apply quality when items are converted from / to their storage variants */
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE"), ordinal = 1)
-    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final CraftingContainer container, @Local(argsOnly = true) final ResultContainer resultContainer) {
-        QualityUtils.handleConversion(result, container, resultContainer.getRecipeUsed());
+    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final CraftingContainer craftSlots, @Local(argsOnly = true) final ResultContainer resultContainer) {
+        QualityUtils.handleConversion(result, craftSlots, resultContainer.getRecipeUsed());
         return result;
     }
 }

@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(value = CraftingUpgradeContainer.class, remap = false)
 public interface CraftingUpgradeContainerAccess {
     @Accessor("lastRecipe")
-    @Nullable CraftingRecipe getLastRecipe();
+    @Nullable CraftingRecipe quality_food$getLastRecipe();
 }

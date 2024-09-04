@@ -40,7 +40,7 @@ public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMen
 
         getOpenContainer().ifPresent(container -> {
             if (container instanceof CraftingUpgradeContainer craftingContainer) {
-                if (ServerConfig.isNoQualityRecipe(((CraftingUpgradeContainerAccess) craftingContainer).getLastRecipe())) {
+                if (ServerConfig.isNoQualityRecipe(((CraftingUpgradeContainerAccess) craftingContainer).quality_food$getLastRecipe())) {
                     return;
                 }
 
