@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Allow material (with quality) to grant its bonus when manually taking out the result item */
 @Mixin(FurnaceResultSlot.class)
 public abstract class FurnaceResultSlotMixin extends Slot {
+    @Shadow @Final private Player player;
+
     public FurnaceResultSlotMixin(final Container container, int slot, int x, int y) {
         super(container, slot, x, y);
     }
@@ -30,12 +32,16 @@ public abstract class FurnaceResultSlotMixin extends Slot {
             return;
         }
 
-        if (container instanceof AbstractFurnaceBlockEntity blockEntity) {
+        if (container instanceof AbstractFurnaceBlockEntity furnace) {
             AtomicDouble bonus = new AtomicDouble(0);
-            BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality()));
+            BlockDataProvider.getCapability(furnace).ifPresent(data -> bonus.set(data.useQuality()));
             QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
         }
     }
 
-    @Shadow @Final private Player player;
+    /* TODO
+        add check for quality in canBurn + modify quality in burn (retain quality recipe)
+        problem: no quality recipe check -> furnace can have multiple recipes used how to check on item take out?
+            - on burn add count to list? or if any recipe is a no quality recipe just don't apply quality?
+    */
 }

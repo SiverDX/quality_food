@@ -124,6 +124,10 @@ If you find some items having quality where it doesn't make much sense you can b
   - `White Grape Bag`, `Red Grape Bag`, `Cherry Bag` and `Apple Bag` blocks retain quality when placed
 - [Supplementaries](https://www.curseforge.com/minecraft/mc-mods/supplementaries)
   - `Sugar Cube` block retains quality when placed
+- [FastWorkbench](https://www.curseforge.com/minecraft/mc-mods/fastworkbench)
+  - Quality gets properly handled when using the crafting bench
+- [Crate Delight](https://www.curseforge.com/minecraft/mc-mods/crate-delight-forge)
+  - Blocks retain quality when placed
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly

@@ -30,6 +30,7 @@ public class ServerConfig {
     public static final ForgeConfigSpec.BooleanValue HANDLE_COMPACTING;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
+    // public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES_COOKING;
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
     private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
@@ -51,6 +52,7 @@ public class ServerConfig {
         BUILDER.push("Crafting");
         NO_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should not result in quality being applied (e.g. when the items can be converted back and forth)").defineList("no_quality_recipes", NO_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
+        // RETAIN_QUALITY_RECIPES_COOKING = BUILDER.comment("Defines cooking (furnace etc.) recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes_cooking", List.of(), ServerConfig::validateRecipe);
         HANDLE_COMPACTING = BUILDER.comment("Defines whether (de)compacting should be handled automatically (in terms of retaining quality)").define("handle_compacting", true);
         BUILDER.pop();
 
