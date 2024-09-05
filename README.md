@@ -1,6 +1,8 @@
 # General
 This mod adds quality to food and certain food-related material (e.g. crops) through NBT data (meaning no new items)
 
+1.21 documentation is currently located [here](https://github.com/SiverDX/quality_food/tree/1.21)
+
 Quality can:
 - Increase nutrition and saturation
 - Improve positive effects and diminish (or outright remove) negative effects gained from eating food
@@ -128,6 +130,7 @@ If you find some items having quality where it doesn't make much sense you can b
   - Quality gets properly handled when using the crafting bench
 - [Crate Delight](https://www.curseforge.com/minecraft/mc-mods/crate-delight-forge)
   - Blocks retain quality when placed
+- [Fruitful Fun 🍊](https://www.curseforge.com/minecraft/mc-mods/fruit-trees)
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly

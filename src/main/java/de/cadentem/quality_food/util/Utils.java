@@ -19,6 +19,9 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraftforge.network.PacketDistributor;
 import net.satisfy.vinery.block.grape.GrapeVineBlock;
 import org.jetbrains.annotations.Nullable;
+import snownee.fruits.block.FruitLeavesBlock;
+import snownee.fruits.food.FoodBlock;
+import snownee.fruits.pomegranate.block.HangingFruitBlock;
 import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {
@@ -81,11 +84,19 @@ public class Utils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && (block instanceof FeastBlock)) {
+        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && block instanceof FeastBlock) {
             return true;
         }
 
         if (Compat.isModLoaded(Compat.SUPPLEMENTARIES) && block instanceof SugarBlock) {
+            return true;
+        }
+
+        if (Compat.isModLoaded(Compat.FRUITFUL_FUN) && (
+                block instanceof FruitLeavesBlock
+                        || block instanceof HangingFruitBlock
+                        || block instanceof FoodBlock
+        )) {
             return true;
         }
 

@@ -15,6 +15,7 @@ public class Compat {
     public static final String FARMERSDELIGHT = "farmersdelight";
     public static final String SUPPLEMENTARIES = "supplementaries";
     public static final String HARVEST_WITH_EASE = "harvestwithease";
+    public static final String FRUITFUL_FUN = "fruitfulfun";
 
     private static final Map<String, Boolean> MODS = new HashMap<>();
 
