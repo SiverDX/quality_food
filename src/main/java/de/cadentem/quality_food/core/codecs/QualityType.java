@@ -35,7 +35,7 @@ public record QualityType(int level, double chance, double durationMultiplier, d
             .apply(builder, QualityType::new));
 
     public QualityType {
-        level = Math.max(1, level);
+        level = Math.max(0, level);
         chance = Math.clamp(chance, 0, 1);
 
         durationMultiplier = Math.max(0, durationMultiplier);

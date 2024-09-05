@@ -13,6 +13,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -30,18 +31,8 @@ public class FoodUtils {
             return original;
         }
 
-        int nutrition = (int) (original.nutrition() * type.nutritionMultiplier());
-        float saturationModifier = (float) (original.saturation() * type.saturationMultiplier());
-
-        FoodProperties.Builder builder = new FoodProperties.Builder();
-        builder.nutrition(nutrition);
-        builder.saturationModifier(saturationModifier);
-
-        if (original.canAlwaysEat()) builder.alwaysEdible();
-        if (original.eatSeconds() == 0.8f) builder.fast();
-
+        FoodProperties.Builder builder = getBuilder(original, type);
         List<FoodProperties.PossibleEffect> originalEffects = original.effects();
-
         Optional<HolderSet.Named<MobEffect>> tag = BuiltInRegistries.MOB_EFFECT.getTag(QFEffectTags.BLACKLIST);
 
         originalEffects.forEach(originalData -> {
@@ -85,6 +76,21 @@ public class FoodUtils {
         effects.ifPresent(entries -> entries.forEach(entry -> builder.effect(entry::effect, entry.probability())));
 
         return builder.build();
+    }
+
+    private static @NotNull FoodProperties.Builder getBuilder(@NotNull final FoodProperties original, final QualityType type) {
+        int nutrition = (int) (original.nutrition() * type.nutritionMultiplier());
+        float originalSaturationModifier = (original.saturation() / original.nutrition()) / 2;
+        float saturationModifier = (float) (originalSaturationModifier * type.saturationMultiplier());
+
+        FoodProperties.Builder builder = new FoodProperties.Builder();
+        builder.nutrition(nutrition);
+        builder.saturationModifier(saturationModifier);
+
+        if (original.canAlwaysEat()) builder.alwaysEdible();
+        if (original.eatSeconds() == 0.8f) builder.fast();
+
+        return builder;
     }
 
     public static Optional<List<FoodProperties.PossibleEffect>> getEffects(@Nullable final ItemStack stack) {

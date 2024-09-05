@@ -150,6 +150,8 @@ Cooking quality items will store a quality bonus within the furnace / cooking po
   - Properly roll quality when auto harvesting
 - [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
   - Properly roll quality when auto harvesting
+- [FastWorkbench](https://www.curseforge.com/minecraft/mc-mods/fastworkbench)
+  - Quality gets properly handled when using the crafting bench
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly

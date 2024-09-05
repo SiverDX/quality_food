@@ -61,12 +61,12 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     /* --- Compatibility --- */
-    implementation "curse.maven:jade-324717:5529595" // 15.1.4
+    implementation "curse.maven:jade-324717:5655385" // 15.2.1
 
     implementation "curse.maven:harvest-with-ease-602171:5545357" // 9.0.2
     implementation "curse.maven:cobweb-968456:5531713" // 1.1.2
 
-    compileOnly "curse.maven:toms-storage-378609:5548590" // 2.0.7
+    compileOnly "curse.maven:toms-storage-378609:5647327" // 2.0.9
 
     compileOnly "curse.maven:rightclickharvest-452834:5492116" // 4.3.1
     compileOnly "curse.maven:architectury-api-419699:5553800" // 13.0.6
@@ -95,8 +95,11 @@ dependencies {
 //    compileOnly fg.deobf("curse.maven:supplementaries-412082:5458843") // 2.8.17
 //    compileOnly fg.deobf("curse.maven:selene-499980:5478857") // 2.12.6
 
+    implementation "curse.maven:fastworkbench-288885:5670423" // 9.1.2
+    implementation "curse.maven:placebo-283644:5687831" // 9.5.1
+
     /* --- Test --- */
-    implementation "curse.maven:appleskin-248787:5525729" // 3.0.4
+    implementation "curse.maven:appleskin-248787:5586600" // 3.0.5
 
 //    /* --- Mixin Configuration --- */
 //    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
