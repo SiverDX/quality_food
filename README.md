@@ -73,6 +73,11 @@ Non-food items can be made applicable to quality by adding them to the `quality_
 
 ---
 
+Only blocks within the block tag `quality_food:quality_blocks` will support (i.e. retain) quality
+- If a block is applicable to quality the item for said block will be too
+
+---
+
 For crafting (crafting table) there are three configs:
 - `retain_quality_recipes`: The result will retain the quality of the ingredients, examples:
   - If all items are `diamond` quality the result will be `diamond`
@@ -101,7 +106,7 @@ If you find some items having quality where it doesn't make much sense you can b
   - Apply quality when crafting
   - Handle quality block state for growing plants (rice and tomato)
   - Apply quality to served items (feast blocks)
-  - Certain storage blocks retain quality when placed
+  - Storage blocks are part of the default config
 - [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
   - Use stored quality bonus of the furnace
 - [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
@@ -111,26 +116,29 @@ If you find some items having quality where it doesn't make much sense you can b
   - Apply quality when crafting
 - [Create](https://www.curseforge.com/minecraft/mc-mods/create)
   - Milling and Mechanical Mixer should apply the quality of the ingredients
-  - Quality gets retained when re-planted by Mechanical Harvester
   - Mechanical Harvester and cooking with fan apply quality
   - Quality item attribute (for filters)
 - [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
   - Properly roll quality when auto harvesting
 - [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
-  - Auto harvesting & replanting
   - Quality gets properly rolled
-  - Certain storage blocks retain quality when placed
+  - Storage blocks are part of the default config
 - [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
   - Quality gets properly rolled
 - [[Let's Do] Vinery](https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery)
-  - `White Grape Bag`, `Red Grape Bag`, `Cherry Bag` and `Apple Bag` blocks retain quality when placed
-- [Supplementaries](https://www.curseforge.com/minecraft/mc-mods/supplementaries)
-  - `Sugar Cube` block retains quality when placed
+  - Storage blocks are part of the default config
 - [FastWorkbench](https://www.curseforge.com/minecraft/mc-mods/fastworkbench)
   - Quality gets properly handled when using the crafting bench
 - [Crate Delight](https://www.curseforge.com/minecraft/mc-mods/crate-delight-forge)
-  - Blocks retain quality when placed
+  - Storage blocks are part of the default config
 - [Fruitful Fun 🍊](https://www.curseforge.com/minecraft/mc-mods/fruit-trees)
+  - Roll quality for dropped items from fruit trees
+  - Apply quality to served items
+- [Collector's Reap](https://www.curseforge.com/minecraft/mc-mods/collectors-reap)
+  - Quality effect cake blocks grant improved effects
+  - Apply quality to growing fruit bushes
+  - Roll quality for dropped items from fruit bushes
+  - Storage blocks are part of the default config
 
 This is mostly about block interaction / quality application through crafting
 - If a mod adds a new crafting block then quality may not apply correctly

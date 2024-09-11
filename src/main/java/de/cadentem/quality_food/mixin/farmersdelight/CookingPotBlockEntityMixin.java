@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vectorwing.farmersdelight.common.block.entity.CookingPotBlockEntity;
 import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 
-@Mixin(value = CookingPotBlockEntity.class)
+@Mixin(value = CookingPotBlockEntity.class, remap = false)
 public abstract class CookingPotBlockEntityMixin {
     /** Display particles to show how much quality the block has stored */
-    @Inject(method = "cookingTick", at = @At("TAIL"), remap = false)
+    @Inject(method = "cookingTick", at = @At("TAIL"))
     private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final CookingPotBlockEntity blockEntity, final CallbackInfo callback) {
         if (level instanceof ServerLevel serverLevel) {
             Utils.sendParticles(serverLevel, blockEntity, position);
@@ -26,7 +26,7 @@ public abstract class CookingPotBlockEntityMixin {
     }
 
     /** Increment quality after cooking an item */
-    @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
+    @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE, remap = true))
     private void quality_food$incrementQuality(final CookingPotRecipe recipe, final CookingPotBlockEntity blockEntity, final CallbackInfoReturnable<Boolean> callback, @Local(ordinal = 2) final ItemStack stack) {
         Utils.incrementQuality(blockEntity, stack, recipe.getIngredients().size()); // TODO :: Consider max. stack size when taking out? Since it can keep cooking while you are only able to take out 16 e.g.
     }

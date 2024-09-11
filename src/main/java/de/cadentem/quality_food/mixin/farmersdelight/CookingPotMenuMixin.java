@@ -22,6 +22,8 @@ import vectorwing.farmersdelight.common.block.entity.container.CookingPotMenu;
 /** Allow material (with quality) to grant its bonus when shift-clicking the crafting result */
 @Mixin(CookingPotMenu.class)
 public abstract class CookingPotMenuMixin extends RecipeBookMenu<Container> {
+    @Shadow(remap = false) @Final public CookingPotBlockEntity blockEntity;
+
     public CookingPotMenuMixin(final MenuType<?> type, int containerId) {
         super(type, containerId);
     }
@@ -36,6 +38,4 @@ public abstract class CookingPotMenuMixin extends RecipeBookMenu<Container> {
         BlockDataProvider.getCapability(blockEntity).ifPresent(data -> bonus.set(data.useQuality()));
         QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
     }
-
-    @Shadow(remap = false) @Final public CookingPotBlockEntity blockEntity;
 }

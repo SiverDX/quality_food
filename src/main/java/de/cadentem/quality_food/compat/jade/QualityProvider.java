@@ -1,9 +1,9 @@
-package de.cadentem.quality_food.core.jade;
+package de.cadentem.quality_food.compat.jade;
 
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.OverlayUtils;
-import de.cadentem.quality_food.util.Utils;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
@@ -19,8 +19,10 @@ public class QualityProvider implements IBlockComponentProvider {
 
     @Override
     public void appendTooltip(final ITooltip toolTip, final BlockAccessor accessor, final IPluginConfig config) {
-        if (accessor.getBlockState().hasProperty(Utils.QUALITY_STATE)) {
-            Quality quality = Quality.get(accessor.getBlockState().getValue(Utils.QUALITY_STATE));
+        CompoundTag tag = accessor.getServerData();
+
+        if (tag.contains(QualityFood.concat("ordinal"))) {
+            Quality quality = Quality.get(tag.getInt(QualityFood.concat("ordinal")));
 
             if (quality.level() > 0) {
                 toolTip.add(Component.translatable("quality_food.quality"));

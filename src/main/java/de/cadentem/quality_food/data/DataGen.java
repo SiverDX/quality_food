@@ -13,7 +13,9 @@ public class DataGen {
         DataGenerator generator = event.getGenerator();
         ExistingFileHelper helper = event.getExistingFileHelper();
 
-        generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), helper));
+        QFBlockTags blockTags = new QFBlockTags(generator.getPackOutput(), event.getLookupProvider(), helper);
+        generator.addProvider(event.includeServer(), blockTags);
+        generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), blockTags.contentsGetter(), helper));
         generator.addProvider(event.includeServer(), new QFLootModifiers(generator.getPackOutput()));
         generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), event.getLookupProvider(), helper));
     }

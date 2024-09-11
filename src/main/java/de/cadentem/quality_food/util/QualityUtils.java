@@ -1,10 +1,13 @@
 package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
+import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.collectorsreap.FruitBushContext;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
+import net.brdle.collectorsreap.common.block.FruitBushBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
@@ -199,32 +202,30 @@ public class QualityUtils {
         tag.put(QUALITY_TAG, qualityTag);
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
+    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
         if (farmland == null) {
-            applyQuality(stack, state, player);
+            applyQuality(stack, quality, state, player);
             return;
         }
 
         double farmlandMultiplier = ServerConfig.getFarmlandMultiplier(state, farmland);
 
         if (farmlandMultiplier == -1) {
-            applyQuality(stack, state, player);
+            applyQuality(stack, quality, state, player);
         } else {
             Bonus farmlandBonus = Bonus.multiplicative((float) farmlandMultiplier);
             List<Bonus> bonusList = new ArrayList<>();
             bonusList.add(farmlandBonus);
-            applyQuality(stack, state, player, bonusList);
+            applyQuality(stack, quality, state, player, bonusList);
         }
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player) {
-        applyQuality(stack, state, player, new ArrayList<>());
+    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player) {
+        applyQuality(stack, quality, state, player, new ArrayList<>());
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
-        Quality quality = state.hasProperty(Utils.QUALITY_STATE) ? Quality.get(state.getValue(Utils.QUALITY_STATE), true) : Quality.NONE;
-
-        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
+    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
+        if (isMaxAge(state)) {
             float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
 
             if (stack.is(Tags.Items.SEEDS)) {
@@ -243,6 +244,18 @@ public class QualityUtils {
         } else if (quality != Quality.NONE_PLAYER_PLACED) {
             QualityUtils.applyQuality(stack, player);
         }
+    }
+
+    public static boolean isMaxAge(final BlockState state) {
+        if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
+            return true;
+        }
+
+        if (Compat.isModLoaded(Compat.COLLECTORS_REAP) && state.getBlock() instanceof FruitBushBlock && state.getValue(FruitBushBlock.AGE) == FruitBushBlock.MAX_AGE) {
+            return true;
+        }
+
+        return false;
     }
 
     public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe) {
@@ -361,11 +374,6 @@ public class QualityUtils {
         }
 
         return Quality.NONE;
-    }
-
-    public static int getPlacementQuality(@Nullable final ItemStack stack) {
-        Quality quality = getQuality(stack);
-        return quality != Quality.NONE ? quality.ordinal() : Quality.NONE_PLAYER_PLACED.ordinal();
     }
 
     public static boolean isValidQuality(final Quality quality) {

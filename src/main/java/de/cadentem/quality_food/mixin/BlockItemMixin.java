@@ -1,29 +1,27 @@
 package de.cadentem.quality_food.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import de.cadentem.quality_food.capability.LevelDataProvider;
+import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Apply quality from item to block when placed */
+/** Store quality for placed blocks */
 @Mixin(BlockItem.class)
 public abstract class BlockItemMixin {
-    @ModifyReturnValue(method = "getPlacementState", at = @At("RETURN"))
-    private BlockState quality_food$setQualityState(@Nullable final BlockState original, /* Method parameters: */ final BlockPlaceContext context) {
-        if (original != null) {
-            ItemStack itemInHand = context.getItemInHand();
-
-            if (original.hasProperty(Utils.QUALITY_STATE)) {
-                return original.setValue(Utils.QUALITY_STATE, QualityUtils.getPlacementQuality(itemInHand));
-            }
+    @Inject(method = "placeBlock", at = @At("RETURN"))
+    private void quality_food$storeQuality(final BlockPlaceContext context, final BlockState state, final CallbackInfoReturnable<Boolean> callback) {
+        if (callback.getReturnValue() && Utils.isValidBlock(state)) {
+            LevelDataProvider.getCapability(context.getLevel()).ifPresent(data -> {
+                Quality quality = QualityUtils.getQuality(context.getItemInHand());
+                data.set(context.getClickedPos(), quality != Quality.NONE ? quality : Quality.NONE_PLAYER_PLACED);
+            });
         }
-
-        return original;
     }
 }

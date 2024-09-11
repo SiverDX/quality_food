@@ -2,15 +2,17 @@ package de.cadentem.quality_food;
 
 import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.capability.BlockData;
+import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.create.QFItemAttributes;
+import de.cadentem.quality_food.compat.harvestwithease.ModEvents;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.compat.create.QFItemAttributes;
-import de.cadentem.quality_food.events.ModEvents;
 import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.registry.QFCommands;
 import de.cadentem.quality_food.registry.QFItems;
 import de.cadentem.quality_food.registry.QFLootModifiers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -56,5 +58,14 @@ public class QualityFood {
     @SubscribeEvent
     public void registerCapability(final RegisterCapabilitiesEvent event) {
         event.register(BlockData.class);
+        event.register(LevelData.class);
+    }
+
+    public static ResourceLocation location(final String path) {
+        return new ResourceLocation(QualityFood.MODID, path);
+    }
+
+    public static String concat(final String path) {
+        return QualityFood.MODID + "." + path;
     }
 }

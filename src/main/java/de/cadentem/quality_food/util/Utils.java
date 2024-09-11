@@ -1,37 +1,34 @@
 package de.cadentem.quality_food.util;
 
 import de.cadentem.quality_food.capability.BlockDataProvider;
-import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.compat.QualityBlock;
+import de.cadentem.quality_food.capability.LevelData;
+import de.cadentem.quality_food.capability.LevelDataProvider;
 import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.NetworkHandler;
 import de.cadentem.quality_food.network.SyncCookingParticle;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SugarBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
-import net.satisfy.vinery.block.grape.GrapeVineBlock;
-import org.jetbrains.annotations.Nullable;
-import snownee.fruits.block.FruitLeavesBlock;
-import snownee.fruits.food.FoodBlock;
-import snownee.fruits.pomegranate.block.HangingFruitBlock;
-import vectorwing.farmersdelight.common.block.FeastBlock;
 
 public class Utils {
     /** Safety measure to avoid trying to apply quality multiple times to the same item */
     public static final ThreadLocal<ItemStack> LAST_STACK = new ThreadLocal<>();
-    /** Bonus from the block entity for menu usage */
-    public static final ThreadLocal<BlockPos> BLOCK_ENTITY_POSITION = new ThreadLocal<>();
-    public static final IntegerProperty QUALITY_STATE = IntegerProperty.create(QualityUtils.QUALITY_TAG, 0, Quality.values().length - 1);
 
     public static boolean isValidItem(final ItemStack stack) {
+        return isValidItem(stack, true);
+    }
+
+    public static boolean isValidItem(final ItemStack stack, boolean checkBlock) {
         if (stack.isEmpty()) {
             return false;
         }
@@ -46,72 +43,40 @@ public class Utils {
             return true;
         }
 
-        if (isValidBlock(stack)) {
+        if (checkBlock && stack.getItem() instanceof BlockItem blockItem && isValidBlock(blockItem.getBlock())) {
             return true;
         }
 
         return stack.is(QFItemTags.MATERIAL_WHITELIST);
     }
 
-    public static boolean isValidBlock(final ItemStack stack) {
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            return isValidBlock(blockItem.getBlock());
+    public static boolean isValidBlock(final BlockState state) {
+        return isValidBlock(state, true);
+    }
+
+    public static boolean isValidBlock(final BlockState state, boolean checkItem) {
+        if (state.is(QFBlockTags.QUALITY_BLOCKS)) {
+            return true;
+        } else if (checkItem) {
+            return isValidItem(state.getBlock().asItem().getDefaultInstance(), false);
         }
 
         return false;
     }
 
     public static boolean isValidBlock(final Block block) {
-        // Tags are not loaded yet -> instanceof
-        if (block instanceof BushBlock // Crops / Mushrooms / Sea pickles / ...
-                || block instanceof StemGrownBlock // Pumpkin / Melon
-                || block instanceof CaveVinesBlock // Glow berries
-                || block instanceof CocoaBlock
-                || block instanceof SugarCaneBlock
-                || block instanceof CakeBlock
-                || block instanceof CandleCakeBlock
-                || block instanceof HayBlock
-                || block instanceof HoneyBlock
-        ) {
-            return true;
-        }
+        return isValidBlock(block, true);
+    }
 
-        if (block instanceof QualityBlock qualityBlock && qualityBlock.quality_food$isQualityBlock()) {
+    @SuppressWarnings("deprecation")
+    public static boolean isValidBlock(final Block block, boolean checkItem) {
+        if (block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS)) {
             return true;
-        }
-
-        if (Compat.isModLoaded(Compat.VINERY) && (block instanceof GrapeVineBlock)) {
-            return true;
-        }
-
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && block instanceof FeastBlock) {
-            return true;
-        }
-
-        if (Compat.isModLoaded(Compat.SUPPLEMENTARIES) && block instanceof SugarBlock) {
-            return true;
-        }
-
-        if (Compat.isModLoaded(Compat.FRUITFUL_FUN) && (
-                block instanceof FruitLeavesBlock
-                        || block instanceof HangingFruitBlock
-                        || block instanceof FoodBlock
-        )) {
-            return true;
+        } else if (checkItem) {
+            return isValidItem(block.asItem().getDefaultInstance(), false);
         }
 
         return false;
-    }
-
-    public static @Nullable BlockPos getBlockEntityPosition() {
-        BlockPos position = BLOCK_ENTITY_POSITION.get();
-
-        if (position != null) {
-            BLOCK_ENTITY_POSITION.remove();
-            return position;
-        }
-
-        return null;
     }
 
     public static void sendParticles(final ServerLevel serverLevel, final BlockEntity blockEntity, final BlockPos position) {
@@ -138,5 +103,25 @@ public class Utils {
         }
 
         BlockDataProvider.getCapability(blockEntity).ifPresent(data -> data.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount));
+    }
+
+    public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final Direction direction) {
+        storeQuality(grown, accessor, position, position.relative(direction));
+    }
+
+    public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final BlockPos grownPosition) {
+        if (Utils.isValidBlock(grown.getBlock())) {
+            LevelData data = LevelDataProvider.getOrNull(accessor);
+
+            if (data == null) {
+                return;
+            }
+
+            Quality quality = data.get(position);
+
+            if (quality.level() > 0) {
+                data.set(grownPosition, quality);
+            }
+        }
     }
 }

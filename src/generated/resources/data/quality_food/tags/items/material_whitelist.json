@@ -27,6 +27,10 @@
       "required": false
     },
     {
+      "id": "fruitfulfun:lemon_roast_chicken_block",
+      "required": false
+    },
+    {
       "id": "farmersdelight:carrot_crate",
       "required": false
     },

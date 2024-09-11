@@ -11,6 +11,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,8 @@ public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
     public static final TagKey<Item> BLACKLIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "blacklist"));
 
-    public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper helper) {
-        super(output, provider, CompletableFuture.completedFuture(null), QualityFood.MODID, helper);
+    public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, final CompletableFuture<TagLookup<Block>> blockTags, @Nullable final ExistingFileHelper helper) {
+        super(output, provider, blockTags, QualityFood.MODID, helper);
     }
 
     @Override
@@ -39,10 +40,12 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(Compat.forge("dough"))
-                .addOptionalTag(Compat.forge("flour"))
+                .addOptionalTag(Compat.forge("dough")) // Farmer's Delight
+                .addOptionalTag(Compat.forge("flour")) // Farmer's Delight
                 .addOptionalTag(Compat.farmersdelight("wild_crops"))
                 .addOptional(Compat.farmersdelight("rice_panicle"))
+                .addOptional(Compat.fruitfulfun("lemon_roast_chicken_block"))
+                .addOptional(Compat.collectorsreap("pomegranate"))
                 /* Storage blocks */
                 .addOptional(Compat.farmersdelight("carrot_crate"))
                 .addOptional(Compat.farmersdelight("potato_crate"))

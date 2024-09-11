@@ -20,6 +20,9 @@ import vectorwing.farmersdelight.common.block.entity.container.CookingPotResultS
 /** Allow material (with quality) to grant its bonus when manually taking out the result item */
 @Mixin(CookingPotResultSlot.class)
 public abstract class CookingPotResultSlotMixin extends SlotItemHandler {
+    @Shadow(remap = false) @Final private Player player;
+    @Shadow(remap = false) @Final public CookingPotBlockEntity tileEntity;
+
     public CookingPotResultSlotMixin(final IItemHandler handler, int slot, int x, int y) {
         super(handler, slot, x, y);
     }
@@ -34,7 +37,4 @@ public abstract class CookingPotResultSlotMixin extends SlotItemHandler {
         BlockDataProvider.getCapability(tileEntity).ifPresent(data -> bonus.set(data.useQuality()));
         QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
     }
-
-    @Shadow(remap = false) @Final private Player player;
-    @Shadow(remap = false) @Final public CookingPotBlockEntity tileEntity;
 }
