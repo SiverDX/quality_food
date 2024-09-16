@@ -34,11 +34,7 @@ public abstract class GuiGraphicsMixin {
             return;
         }
 
-        GuiGraphics instance = (GuiGraphics) (Object) this;
-        instance.pose().pushPose();
-        instance.pose().translate(0, 0, 100);
         renderItem(entity, level, OverlayUtils.getOverlay(stack), x, y, seed, guiOffset);
-        instance.pose().popPose();
     }
 
     @Shadow

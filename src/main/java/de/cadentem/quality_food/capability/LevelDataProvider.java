@@ -7,6 +7,9 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Mod.EventBusSubscriber
 public class LevelDataProvider implements ICapabilitySerializable<CompoundTag> {
     public static final Map<Level, LazyOptional<LevelData>> CACHE = new HashMap<>();
 
@@ -65,5 +69,12 @@ public class LevelDataProvider implements ICapabilitySerializable<CompoundTag> {
         }
 
         return null;
+    }
+
+    @SubscribeEvent
+    public static void removeCacheEntry(final LevelEvent.Unload event) {
+        if (event.getLevel() instanceof Level level) {
+            CACHE.remove(level);
+        }
     }
 }
