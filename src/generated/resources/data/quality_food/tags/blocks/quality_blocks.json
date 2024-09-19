@@ -20,6 +20,10 @@
       "required": false
     },
     {
+      "id": "#farm_and_charm:wild_crops",
+      "required": false
+    },
+    {
       "id": "farmersdelight:rice",
       "required": false
     },
@@ -245,6 +249,50 @@
     },
     {
       "id": "cratedelight:wheat_flour_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:lettuce_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:tomato_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:carrot_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:potato_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:onion_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:beetroot_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:corn_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:strawberry_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:flour_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:oat_bale",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:barley_ball",
       "required": false
     }
   ]

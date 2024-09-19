@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class FoodUtils {
     public static @Nullable FoodProperties handleFoodProperties(final ItemStack stack, @Nullable final FoodProperties original) {
@@ -44,36 +45,63 @@ public class FoodUtils {
         ITag<MobEffect> blacklist = tagManager.getTag(QFEffectTags.BLACKLIST);
 
         originalEffects.forEach(originalData -> {
-            MobEffectInstance originalInstance = originalData.getFirst();
-            MobEffect originalEffect = originalInstance.getEffect();
+            modifyEffect(originalData.getFirst(), quality, blacklist).ifPresent(instance -> {
+                MobEffect effect = instance.getEffect();
+                float probability = originalData.getSecond();
 
-            int duration = originalInstance.getDuration();
-            int amplifier = originalInstance.getAmplifier();
-            float probability = originalData.getSecond();
-
-            if (!blacklist.contains(originalEffect)) {
-                if (originalEffect.isBeneficial()) {
-                    duration = (int) (duration * QualityConfig.getDurationMultiplier(quality));
-                    amplifier = amplifier + QualityConfig.getAmplifierAddition(quality);
-                    probability = probability + QualityConfig.getProbabilityAddition(quality);
-                } else if (originalEffect.getCategory() == MobEffectCategory.HARMFUL) {
-                    duration = (int) (duration / QualityConfig.getDurationMultiplier(quality));
-                    amplifier = amplifier - QualityConfig.getAmplifierAddition(quality);
-                    probability = probability - QualityConfig.getProbabilityAddition(quality);
+                if (!blacklist.contains(effect)) {
+                    if (effect.isBeneficial()) {
+                        probability = probability + QualityConfig.getProbabilityAddition(quality);
+                    } else if (effect.getCategory() == MobEffectCategory.HARMFUL) {
+                        probability = probability - QualityConfig.getProbabilityAddition(quality);
+                    }
                 }
-            }
 
-            if (amplifier >= 0 && duration > 0) {
-                int finalDuration = duration;
-                int finalAmplifier = Math.min(255, amplifier);
-                builder.effect(() -> new MobEffectInstance(originalEffect, finalDuration, finalAmplifier), Mth.clamp(probability, 0, 1));
-            }
+                if (probability > 0) {
+                    builder.effect(() -> instance, Mth.clamp(probability, 0, 1));
+                }
+            });
         });
 
         List<Pair<Double, MobEffectInstance>> effects = FoodUtils.getEffects(stack);
         effects.forEach(data -> builder.effect(data::getSecond, data.getFirst().floatValue()));
 
         return builder.build();
+    }
+
+    public static Optional<MobEffectInstance> modifyEffect(final MobEffectInstance instance, final Quality quality) {
+        ITagManager<MobEffect> tagManager = Objects.requireNonNull(ForgeRegistries.MOB_EFFECTS.tags());
+        ITag<MobEffect> blacklist = tagManager.getTag(QFEffectTags.BLACKLIST);
+        return modifyEffect(instance, quality, blacklist);
+    }
+
+    public static Optional<MobEffectInstance> modifyEffect(final MobEffectInstance instance, final Quality quality, final ITag<MobEffect> blacklist) {
+        if (!QualityUtils.isValidQuality(quality)) {
+            return Optional.of(instance);
+        }
+
+        MobEffect effect = instance.getEffect();
+
+        int duration = instance.getDuration();
+        int amplifier = instance.getAmplifier();
+
+        if (blacklist.isEmpty() || !blacklist.contains(effect)) {
+            if (effect.isBeneficial()) {
+                duration = (int) (duration * QualityConfig.getDurationMultiplier(quality));
+                amplifier = amplifier + QualityConfig.getAmplifierAddition(quality);
+            } else if (effect.getCategory() == MobEffectCategory.HARMFUL) {
+                duration = (int) (duration / QualityConfig.getDurationMultiplier(quality));
+                amplifier = amplifier - QualityConfig.getAmplifierAddition(quality);
+            }
+
+            if (amplifier >= 0 && duration > 0) {
+                return Optional.of(new MobEffectInstance(effect, duration, Math.min(255, amplifier)));
+            }
+
+            return Optional.empty();
+        }
+
+        return Optional.of(instance);
     }
 
     public static List<Pair<Double, MobEffectInstance>> getEffects(@Nullable final ItemStack stack) {

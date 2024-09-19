@@ -106,10 +106,14 @@ public class Utils {
     }
 
     public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final Direction direction) {
-        storeQuality(grown, accessor, position, position.relative(direction));
+        storeQuality(grown, accessor, position, position.relative(direction), 1);
     }
 
     public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final BlockPos grownPosition) {
+        storeQuality(grown, accessor, position, grownPosition, 1);
+    }
+
+    public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final BlockPos grownPosition, double chance) {
         if (Utils.isValidBlock(grown.getBlock())) {
             LevelData data = LevelDataProvider.getOrNull(accessor);
 
@@ -118,6 +122,10 @@ public class Utils {
             }
 
             Quality quality = data.get(position);
+
+            if (Math.random() > chance) {
+                quality = Quality.get(quality.ordinal() - 1);
+            }
 
             if (quality.level() > 0) {
                 data.set(grownPosition, quality);

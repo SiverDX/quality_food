@@ -353,6 +353,29 @@ public class ServerConfig {
         NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "terrapin_egg").toString());
         NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("betterend", "end_fish_crate").toString());
         NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("betterend", "end_fish").toString());
+
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("lettuce_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("lettuce").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("carrot_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("carrot_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("potato_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("potato_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("onion_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("onion_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("beetroot_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("beetroot_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("corn_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("corn_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("strawberry_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("strawberry_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("flour_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("flour_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("oat_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("oat_from_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("barley_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("barley_from_ball").toString());
     }
 
     private static void fillRetainQualityRecipes() {

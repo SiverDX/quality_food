@@ -39,6 +39,7 @@ public class QFBlockTags extends BlockTagsProvider {
                 .remove(Blocks.TORCHFLOWER)
                 .remove(Blocks.PITCHER_CROP)
                 .addOptionalTag(Compat.farmersdelight("wild_crops"))
+                .addOptionalTag(Compat.farmandcharm("wild_crops"))
                 .addOptional(Compat.farmersdelight("rice"))
                 .addOptional(Compat.collectorsreap("lime_cake"))
                 .addOptional(Compat.collectorsreap("pomegranate_cake"))
@@ -97,6 +98,17 @@ public class QFBlockTags extends BlockTagsProvider {
                 .addOptional(Compat.cratedelight("cocoabeans_bag"))
                 .addOptional(Compat.cratedelight("sugar_bag"))
                 .addOptional(Compat.cratedelight("wheat_flour_bag"))
+                .addOptional(Compat.farmandcharm("lettuce_bag"))
+                .addOptional(Compat.farmandcharm("tomato_bag"))
+                .addOptional(Compat.farmandcharm("carrot_bag"))
+                .addOptional(Compat.farmandcharm("potato_bag"))
+                .addOptional(Compat.farmandcharm("onion_bag"))
+                .addOptional(Compat.farmandcharm("beetroot_bag"))
+                .addOptional(Compat.farmandcharm("corn_bag"))
+                .addOptional(Compat.farmandcharm("strawberry_bag"))
+                .addOptional(Compat.farmandcharm("flour_bag"))
+                .addOptional(Compat.farmandcharm("oat_bale"))
+                .addOptional(Compat.farmandcharm("barley_ball"))
         ;
     }
 }

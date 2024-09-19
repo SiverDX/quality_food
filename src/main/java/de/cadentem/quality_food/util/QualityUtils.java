@@ -2,14 +2,15 @@ package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.compat.collectorsreap.FruitBushContext;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import vectorwing.farmersdelight.common.block.WildCropBlock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -225,7 +227,7 @@ public class QualityUtils {
     }
 
     public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
-        if (isMaxAge(state)) {
+        if (isRelevantCrop(state)) {
             float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
 
             if (stack.is(Tags.Items.SEEDS)) {
@@ -246,12 +248,20 @@ public class QualityUtils {
         }
     }
 
-    public static boolean isMaxAge(final BlockState state) {
+    public static boolean isRelevantCrop(final BlockState state) {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             return true;
         }
 
+        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && state.getBlock() instanceof WildCropBlock) {
+            return true;
+        }
+
         if (Compat.isModLoaded(Compat.COLLECTORS_REAP) && state.getBlock() instanceof FruitBushBlock && state.getValue(FruitBushBlock.AGE) == FruitBushBlock.MAX_AGE) {
+            return true;
+        }
+
+        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.farmandcharm("wild_crops")))) {
             return true;
         }
 

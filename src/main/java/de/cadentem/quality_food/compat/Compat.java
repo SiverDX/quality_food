@@ -18,6 +18,7 @@ public class Compat {
     public static final String FRUITFUL_FUN = "fruitfulfun";
     public static final String CRATE_DELIGHT = "cratedelight";
     public static final String COLLECTORS_REAP = "collectorsreap";
+    public static final String FARM_AND_CHARM = "farm_and_charm";
 
     private static final Map<String, Boolean> MODS = new HashMap<>();
 
@@ -59,6 +60,10 @@ public class Compat {
 
     public static ResourceLocation collectorsreap(final String path) {
         return location(COLLECTORS_REAP, path);
+    }
+
+    public static ResourceLocation farmandcharm(final String path) {
+        return location(FARM_AND_CHARM, path);
     }
 
     public static ResourceLocation forge(final String path) {

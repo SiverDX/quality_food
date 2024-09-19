@@ -7,7 +7,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -46,50 +45,11 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.farmersdelight("rice_panicle"))
                 .addOptional(Compat.fruitfulfun("lemon_roast_chicken_block"))
                 .addOptional(Compat.collectorsreap("pomegranate"))
-                /* Storage blocks */
-                .addOptional(Compat.farmersdelight("carrot_crate"))
-                .addOptional(Compat.farmersdelight("potato_crate"))
-                .addOptional(Compat.farmersdelight("beetroot_crate"))
-                .addOptional(Compat.farmersdelight("cabbage_crate"))
-                .addOptional(Compat.farmersdelight("tomato_crate"))
-                .addOptional(Compat.farmersdelight("onion_crate"))
-                .addOptional(Compat.farmersdelight("chorus_crate"))
-                .addOptional(Compat.farmersdelight("rice_bale"))
-                .addOptional(Compat.farmersdelight("rice_bag"))
-                .addOptional(Compat.quark("apple_crate"))
-                .addOptional(Compat.quark("beetroot_crate"))
-                .addOptional(Compat.quark("berry_sack"))
-                .addOptional(Compat.quark("carrot_crate"))
-                .addOptional(Compat.quark("chorus_fruit_block"))
-                .addOptional(Compat.quark("cocoa_beans_sack"))
-                .addOptional(Compat.quark("glowberry_sack"))
-                .addOptional(Compat.quark("golden_apple_crate"))
-                .addOptional(Compat.quark("golden_carrot_crate"))
-                .addOptional(Compat.quark("potato_crate"))
-                .addOptional(Compat.quark("sugar_cane_block"))
-                .addOptional(Compat.supplementaries("sugar_cube"))
-                .addOptional(Compat.vinery("white_grape_bag"))
-                .addOptional(Compat.vinery("red_grape_bag"))
-                .addOptional(Compat.vinery("cherry_bag"))
-                .addOptional(Compat.vinery("apple_bag"));
+                .addOptional(Compat.farmandcharm("barley"))
+                .addOptional(Compat.farmandcharm("oat"))
+        ;
 
         tag(BLACKLIST)
-                .addTag(ItemTags.FLOWERS)
-                .addTag(ItemTags.SAPLINGS)
-                .add(Items.GRASS)
-                .add(Items.TALL_GRASS)
-                .add(Items.FERN)
-                .add(Items.LARGE_FERN)
-                .add(Items.SMALL_DRIPLEAF)
-                .add(Items.BIG_DRIPLEAF)
-                .add(Items.LILY_PAD)
-                .add(Items.DEAD_BUSH)
-                .add(Items.VINE)
-                .add(Items.NETHER_WART) // Forbidden & Arcanus
-                .add(Items.SEAGRASS) // Ocean's Delight | Aquaculture 2
-                .add(Items.WARPED_ROOTS) // Nether's Delight
-                .add(Items.CRIMSON_ROOTS) // Nether's Delight
-                .add(Items.NETHER_SPROUTS)
                 .addOptional(Compat.supplementaries("flax"))
                 .addOptional(Compat.supplementaries("flax_seeds"));
     }
