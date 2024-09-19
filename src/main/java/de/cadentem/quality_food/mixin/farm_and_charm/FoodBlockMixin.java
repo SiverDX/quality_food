@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 /** Modify food properties */
 @Mixin(FoodBlock.class)
 public abstract class FoodBlockMixin {
-    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), remap = false)
+    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private int quality_food$modifyNutrition(int nutrition, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
         return (int) (nutrition * LevelData.get(level, position).getType().nutritionMultiplier());
     }
 
-    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), remap = false)
+    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private float quality_food$modifyNutrition(float saturation, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
         return (float) (saturation * LevelData.get(level, position).getType().saturationMultiplier());
     }

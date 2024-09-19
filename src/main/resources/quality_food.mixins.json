@@ -37,6 +37,7 @@
     "farmersdelight.FeastBlockMixin",
     "farmersdelight.RiceBlockMixin",
     "farmersdelight.TomatoVineBlockMixin",
+    "farmersdelight.WildCropBlockMixin",
     "fastbench.CraftResultSlotExtMixin",
     "fastbench.FastBenchUtilMixin",
     "fastbench.ResultSlotAccess",

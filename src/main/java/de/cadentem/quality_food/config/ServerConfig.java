@@ -313,6 +313,29 @@ public class ServerConfig {
         NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "terrapin_egg").toString());
         NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("betterend", "end_fish_crate").toString());
         NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("betterend", "end_fish").toString());
+
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("lettuce_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("lettuce").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("tomato_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("tomato").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("carrot_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("carrot_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("potato_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("potato_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("onion_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("onion_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("beetroot_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("beetroot_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("corn_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("corn_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("strawberry_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("strawberry_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("flour_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("flour_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("oat_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("oat_from_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("barley_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("barley_from_ball").toString());
     }
 
     private static void fillRetainQualityRecipes() {

@@ -16,6 +16,7 @@ import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 public abstract class TomatoVineBlockMixin {
     @ModifyArg(method = "attemptRopeClimb", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private BlockState quality_food$keepQualityForTick(final BlockState grown, @Local(argsOnly = true) final ServerLevel level, @Local(argsOnly = true) final BlockPos position) {
-        return Utils.storeQuality(grown, level, position, Direction.UP);
+        Utils.storeQuality(grown, level, position, Direction.UP);
+        return grown;
     }
 }

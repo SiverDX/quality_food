@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class StemBlockMixin {
     @ModifyArg(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 0))
     private BlockState quality_food$keepQualityForGrow(final BlockState grown, @Local(argsOnly = true) final ServerLevel level, @Local(argsOnly = true) final BlockPos position, @Local(ordinal = 1) final BlockPos grownPosition) {
-        return Utils.storeQuality(grown, level, position, grownPosition);
+        Utils.storeQuality(grown, level, position, grownPosition);
+        return grown;
     }
 }

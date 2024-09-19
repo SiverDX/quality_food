@@ -84,25 +84,31 @@ public class Utils {
         }
     }
 
-    public static BlockState storeQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final Direction direction) {
-        return storeQuality(grown, level, position, position.relative(direction));
+    public static void storeQuality(final BlockState grown, final ServerLevel accessor, final BlockPos position, final Direction direction) {
+        storeQuality(grown, accessor, position, position.relative(direction), 1);
+    }
+
+    public static void storeQuality(final BlockState grown, final ServerLevel accessor, final BlockPos position, final BlockPos grownPosition) {
+        storeQuality(grown, accessor, position, grownPosition, 1);
     }
 
     /**
      * Used to store quality to a new position (based on the quality of the passed position) <br>
      * Usually used to store quality to a crop which has a higher height than 1 when growing
      */
-    public static BlockState storeQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final BlockPos grownPosition) {
+    public static void storeQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final BlockPos grownPosition, double chance) {
         if (Utils.isValidBlock(grown.getBlock())) {
             LevelData data = level.getData(AttachmentHandler.LEVEL_DATA);
             Quality quality = data.get(position);
+
+            if (Math.random() > chance) {
+                quality = Quality.getRandom(ItemStack.EMPTY, quality.level() - 1);
+            }
 
             if (/* Don't apply PLAYER_PLACED */ quality.level() > 0) {
                 data.set(grownPosition, quality);
             }
         }
-
-        return grown;
     }
 
     public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack) {

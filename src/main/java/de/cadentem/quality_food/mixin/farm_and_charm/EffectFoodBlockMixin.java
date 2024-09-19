@@ -19,17 +19,17 @@ import java.util.Optional;
 /** Modify food properties and effects */
 @Mixin(EffectFoodBlock.class)
 public abstract class EffectFoodBlockMixin {
-    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), remap = false)
+    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private int quality_food$modifyNutrition(int nutrition, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
         return (int) (nutrition * LevelData.get(level, position).getType().nutritionMultiplier());
     }
 
-    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"), remap = false)
+    @ModifyArg(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private float quality_food$modifyNutrition(float saturation, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
         return (float) (saturation * LevelData.get(level, position).getType().saturationMultiplier());
     }
 
-    @WrapOperation(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z"), remap = false)
+    @WrapOperation(method = "tryEat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z"))
     private boolean quality_food$modifyEffect(final Player player, final MobEffectInstance instance, final Operation<Boolean> original, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
         Optional<MobEffectInstance> optional = FoodUtils.modifyEffect(instance, LevelData.get(level, position).getType());
 
