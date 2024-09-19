@@ -15,6 +15,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class SugarCaneBlockMixin {
     @ModifyArg(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private BlockState quality_food$applyQuality(final BlockState grown, @Local(argsOnly = true) final ServerLevel level, @Local(argsOnly = true) final BlockPos position) {
-        return Utils.applyQuality(grown, level, position, Direction.UP);
+        return Utils.storeQuality(grown, level, position, Direction.UP);
     }
 }

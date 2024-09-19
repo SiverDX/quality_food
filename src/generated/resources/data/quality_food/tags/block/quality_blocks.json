@@ -122,6 +122,162 @@
     {
       "id": "vinery:apple_bag",
       "required": false
+    },
+    {
+      "id": "cratedelight:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:potato_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:beetroot_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:apple_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:berry_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:blueberry_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:glowberry_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:duck_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:emu_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:terrapin_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:crocodile_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:caiman_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:platypus_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:kiwi_egg_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:kiwifruit_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:banana_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:salmon_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:cod_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:catfish_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:bass_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:red_mushroom_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:brown_mushroom_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:golden_carrot_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:golden_apple_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:carrot_crate",
+      "required": false
+    },
+    {
+      "id": "cratedelight:cocoabeans_bag",
+      "required": false
+    },
+    {
+      "id": "cratedelight:sugar_bag",
+      "required": false
+    },
+    {
+      "id": "cratedelight:wheat_flour_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:lettuce_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:tomato_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:carrot_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:potato_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:onion_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:beetroot_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:corn_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:strawberry_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:flour_bag",
+      "required": false
+    },
+    {
+      "id": "farm_and_charm:lettuce_bag",
+      "required": false
     }
   ]
 }

@@ -84,11 +84,15 @@ public class Utils {
         }
     }
 
-    public static BlockState applyQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final Direction direction) {
-        return applyQuality(grown, level, position, position.relative(direction));
+    public static BlockState storeQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final Direction direction) {
+        return storeQuality(grown, level, position, position.relative(direction));
     }
 
-    public static BlockState applyQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final BlockPos grownPosition) {
+    /**
+     * Used to store quality to a new position (based on the quality of the passed position) <br>
+     * Usually used to store quality to a crop which has a higher height than 1 when growing
+     */
+    public static BlockState storeQuality(final BlockState grown, final ServerLevel level, final BlockPos position, final BlockPos grownPosition) {
         if (Utils.isValidBlock(grown.getBlock())) {
             LevelData data = level.getData(AttachmentHandler.LEVEL_DATA);
             Quality quality = data.get(position);

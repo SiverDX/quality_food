@@ -16,6 +16,8 @@ public class Compat {
     public static final String FARMERSDELIGHT = "farmersdelight";
     public static final String SUPPLEMENTARIES = "supplementaries";
     public static final String HARVEST_WITH_EASE = "harvestwithease";
+    public static final String CRATE_DELIGHT = "cratedelight";
+    public static final String FARM_AND_CHARM = "farm_and_charm";
 
     private static final Map<String, Boolean> MODS = new HashMap<>();
 
@@ -47,11 +49,19 @@ public class Compat {
         return location(VINERY, path);
     }
 
+    public static ResourceLocation cratedelight(final String path) {
+        return location(CRATE_DELIGHT, path);
+    }
+
+    public static ResourceLocation farmandcharm(final String path) {
+        return location(FARM_AND_CHARM, path);
+    }
+
     public static ResourceLocation common(final String path) {
         return location(COMMON, path);
     }
 
-    private static ResourceLocation location(final String namespace, final String path) {
+    public static ResourceLocation location(final String namespace, final String path) {
         return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 }

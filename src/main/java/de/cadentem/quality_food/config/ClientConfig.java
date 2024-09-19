@@ -11,8 +11,8 @@ public class ClientConfig {
     public static final ModConfigSpec.BooleanValue EFFECT_TOOLTIPS;
 
     static {
-        PARTICLES = BUILDER.comment("Enable / disable particles to indicate the quality level of certain blocks (e.g. furnace)").define("particles", true);
-        EFFECT_TOOLTIPS = BUILDER.comment("Enable / disable effect tooltips for food items").define("food_effects", true);
+        PARTICLES = BUILDER.comment("Enable / Disable particles which indicate the stored quality level of certain blocks (e.g. furnace)").define("particles", true);
+        EFFECT_TOOLTIPS = BUILDER.comment("Enable / Disable effect tooltips for food items").define("food_effects", true);
 
         SPEC = BUILDER.build();
     }

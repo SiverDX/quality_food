@@ -19,11 +19,17 @@
     "IItemExtensionMixin",
     "InventoryMenuMixin",
     "LevelMixin",
+    "RecipeHolderMixin",
     "ResultSlotMixin",
     "StemBlockMixin",
     "SugarCaneBlockMixin",
     "SweetBerryBushBlockMixin",
     "ThrownEggMixin",
+    "farm_and_charm.EffectFoodBlockMixin",
+    "farm_and_charm.FoodBlockMixin",
+    "farm_and_charm.StrawberryCropBlockMixin",
+    "farm_and_charm.TomatoCropBlockMixin",
+    "farm_and_charm.TomatoCropHeadBlockMixin",
     "farmersdelight.CookingPotBlockEntityMixin",
     "farmersdelight.CookingPotMenuMixin",
     "farmersdelight.CookingPotResultSlotMixin",
@@ -40,7 +46,9 @@
     "sophisticatedcore.CraftingUpgradeContainerMixin",
     "sophisticatedcore.StorageContainerMenuBaseMixin",
     "toms_storage.CraftingTerminalBlockEntityMixin",
-    "toms_storage.CraftingTerminalMenuMixin"
+    "toms_storage.CraftingTerminalMenuMixin",
+    "vinery.GrapeBushMixin",
+    "vinery.GrapeVineBlockMixin"
   ],
   "client": [
     "client.GuiGraphicsMixin"

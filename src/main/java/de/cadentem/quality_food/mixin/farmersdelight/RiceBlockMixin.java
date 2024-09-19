@@ -16,11 +16,11 @@ import vectorwing.farmersdelight.common.block.RiceBlock;
 public abstract class RiceBlockMixin {
     @ModifyArg(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private BlockState quality_food$keepQualityWhenGrowingUpward(final BlockState grown, @Local(argsOnly = true) final ServerLevel level, @Local(argsOnly = true) final BlockPos position) {
-        return Utils.applyQuality(grown, level, position, Direction.UP);
+        return Utils.storeQuality(grown, level, position, Direction.UP);
     }
 
     @ModifyArg(method = "performBonemeal", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     private BlockState quality_food$keepQualityOnBonemeal(final BlockState grown, @Local(argsOnly = true) final ServerLevel level, @Local(argsOnly = true) final BlockPos position) {
-        return Utils.applyQuality(grown, level, position, Direction.UP);
+        return Utils.storeQuality(grown, level, position, Direction.UP);
     }
 }
