@@ -85,10 +85,10 @@ dependencies {
 //    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
 //    compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
 
-    implementation "curse.maven:lets-do-farm-charm-1038103:5731181" // 1.2.0
-    implementation "curse.maven:lets-do-vinery-704465:5730909" // 1.5.0
-    implementation "curse.maven:do-api-864599:5730908" // 1.3.0
-    implementation "curse.maven:architectury-api-419699:5553800" // 13.0.6
+    compileOnly "curse.maven:lets-do-farm-charm-1038103:5731181" // 1.2.0
+    compileOnly "curse.maven:lets-do-vinery-704465:5730909" // 1.5.0
+    compileOnly "curse.maven:do-api-864599:5730908" // 1.3.0
+    compileOnly "curse.maven:architectury-api-419699:5553800" // 13.0.6
 
 //    compileOnly fg.deobf("curse.maven:quark-243121:5418252") // 4.0-458
 //    compileOnly fg.deobf("curse.maven:zeta-968868:5418213") // 1.0-19
