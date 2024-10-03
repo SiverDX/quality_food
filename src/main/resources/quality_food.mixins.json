@@ -42,6 +42,7 @@
     "fastbench.FastBenchUtilMixin",
     "fastbench.ResultSlotAccess",
     "rightclickharvest.RightClickHarvestMixin",
+    "smarterfarmers.SFHarvestFarmlandMixin",
     "sophisticatedcore.CompactingUpgradeWrapperMixin",
     "sophisticatedcore.CraftingUpgradeContainerAccess",
     "sophisticatedcore.CraftingUpgradeContainerMixin",

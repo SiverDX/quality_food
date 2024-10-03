@@ -99,7 +99,8 @@ dependencies {
     compileOnly "curse.maven:fastworkbench-288885:5670423" // 9.1.2
     compileOnly "curse.maven:placebo-283644:5687831" // 9.5.1
 
-    implementation "curse.maven:crate-delight-forge-958291:5691130" // 24.09.03
+    implementation "curse.maven:smarter-farmers-farmers-replant-491290:5706270" // 2.1.4
+    implementation "curse.maven:selene-499980:5764367" // 2.14.20
 
     /* --- Test --- */
     implementation "curse.maven:appleskin-248787:5586600" // 3.0.5
