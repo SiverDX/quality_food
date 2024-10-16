@@ -56,6 +56,12 @@ public class LevelData {
         });
     }
 
+    public static void set(final LevelAccessor level, final BlockPos position, final Quality quality) {
+        if (quality != Quality.NONE) {
+            LevelDataProvider.getCapability(level).ifPresent(data -> data.set(position, quality));
+        }
+    }
+
     /** @return The stored quality or the last removed quality (since {@link de.cadentem.quality_food.mixin.LevelMixin} happens before the loot drops) if the flag is set to true */
     public static @NotNull Quality get(final LevelAccessor level, @Nullable final BlockPos position, boolean queryLastRemoved) {
         LevelData data = LevelDataProvider.getOrNull(level);

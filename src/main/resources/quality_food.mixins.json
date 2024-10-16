@@ -54,6 +54,7 @@
     "majruszsenchantments.TelekinesisEnchantmentMixin",
     "quark.SimpleHarvestModuleMixin",
     "rightclickharvest.RightClickHarvestModInitMixin",
+    "smarterfarmers.SFHarvestFarmlandMixin",
     "sophisticatedcore.CompactingUpgradeWrapperMixin",
     "sophisticatedcore.CraftingUpgradeContainerAccess",
     "sophisticatedcore.CraftingUpgradeContainerMixin",

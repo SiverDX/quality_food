@@ -78,7 +78,7 @@ public class QFCommands {
         );
     }
 
-    private static int applyQuality(final CommandSourceStack source, final Quality quality, boolean canOverride) {
+    private static int applyQuality(final CommandSourceStack source, final Quality quality, boolean shouldOverride) {
         if (quality.level() == 0) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
@@ -92,12 +92,12 @@ public class QFCommands {
                 return 0;
             }
 
-            if (QualityUtils.hasQuality(stack) && !canOverride) {
+            if (QualityUtils.hasQuality(stack) && !shouldOverride) {
                 source.sendFailure(Component.translatable("commands.quality_food.quality.failed.already_has_quality", stack.getDisplayName()));
                 return 0;
             }
 
-            if (canOverride && stack.getTag() != null) {
+            if (shouldOverride && stack.getTag() != null) {
                 stack.getTag().remove(QualityUtils.QUALITY_TAG);
             }
 
