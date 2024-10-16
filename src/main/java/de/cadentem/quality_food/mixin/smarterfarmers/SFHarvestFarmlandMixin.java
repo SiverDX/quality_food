@@ -24,7 +24,7 @@ public abstract class SFHarvestFarmlandMixin {
     @Shadow public BlockPos aboveFarmlandPos;
 
     /** Planted crops retains quality of used seed */
-    @Inject(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
+    @Inject(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE), remap = true)
     private void quality_food$storeQuality(final ServerLevel level, final Villager villager, long tickCount, final CallbackInfo callback, @Local final ItemStack seed) {
         Quality quality = QualityUtils.getQuality(seed);
 
