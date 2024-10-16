@@ -61,6 +61,12 @@ public class ForgeEvents {
 
             for (Pair<MobEffectInstance, Float> data : effectData) {
                 MobEffectInstance effect = data.getFirst();
+
+                if (effect == null) {
+                    // This shouldn't happen but apparently it can
+                    continue;
+                }
+
                 MutableComponent effectTooltip = Component.translatable(effect.getDescriptionId());
 
                 if (effect.getAmplifier() > 0) {
