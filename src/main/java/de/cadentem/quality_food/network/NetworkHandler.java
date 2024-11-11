@@ -1,7 +1,5 @@
 package de.cadentem.quality_food.network;
 
-import de.cadentem.quality_food.QualityFood;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;

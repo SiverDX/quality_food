@@ -1,13 +1,14 @@
 package de.cadentem.quality_food.client;
 
-import de.cadentem.quality_food.registry.QFComponents;
-import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.config.ClientConfig;
+import de.cadentem.quality_food.core.codecs.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class ClientProxy {
@@ -40,5 +41,9 @@ public class ClientProxy {
         }
 
         return null;
+    }
+
+    public static @Nullable Player getLocalPlayer() {
+        return Minecraft.getInstance().player;
     }
 }

@@ -2,7 +2,6 @@ package de.cadentem.quality_food;
 
 import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.events.ModEvents;
@@ -14,9 +13,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
@@ -38,11 +34,6 @@ public class QualityFood {
         }
 
         container.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-        container.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
-
-        if (FMLLoader.getDist().isClient()) {
-            container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-        }
     }
 
     public static ResourceLocation location(final String path) {

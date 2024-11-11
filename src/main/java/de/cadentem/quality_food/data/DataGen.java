@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.data;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.core.codecs.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceKey;
