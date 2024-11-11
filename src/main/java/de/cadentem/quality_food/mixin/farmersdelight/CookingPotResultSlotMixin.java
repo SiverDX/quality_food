@@ -1,9 +1,6 @@
 package de.cadentem.quality_food.mixin.farmersdelight;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import de.cadentem.quality_food.capability.BlockDataProvider;
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -33,8 +30,6 @@ public abstract class CookingPotResultSlotMixin extends SlotItemHandler {
             return;
         }
 
-        AtomicDouble bonus = new AtomicDouble(0);
-        BlockDataProvider.getCapability(tileEntity).ifPresent(data -> bonus.set(data.useQuality()));
-        QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
+        Utils.useQuality(tileEntity, stack, player);
     }
 }

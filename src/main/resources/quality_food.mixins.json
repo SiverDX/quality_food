@@ -18,6 +18,7 @@
     "ItemMixin",
     "LevelMixin",
     "ResultSlotMixin",
+    "SidedInvWrapperMixin",
     "StemBlockMixin",
     "SugarCaneBlockMixin",
     "SweetBerryBushBlockMixin",

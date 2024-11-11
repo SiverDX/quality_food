@@ -11,6 +11,7 @@ import de.cadentem.quality_food.network.SyncCookingParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 public class Utils {
     /** Safety measure to avoid trying to apply quality multiple times to the same item */
@@ -102,7 +104,20 @@ public class Utils {
             return;
         }
 
-        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> data.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount));
+        if (!Utils.isValidItem(stack)) {
+            return;
+        }
+
+        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
+            Quality quality = QualityUtils.getQuality(stack);
+            data.addQualityType(quality);
+
+            if (quality.level() > 0) {
+                data.incrementQuality(QualityUtils.getCookingBonus(stack) / ingredientCount);
+            }
+        });
+
+        blockEntity.setChanged();
     }
 
     public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final Direction direction) {
@@ -131,5 +146,10 @@ public class Utils {
                 data.set(grownPosition, quality);
             }
         }
+    }
+
+    public static void useQuality(final BlockEntity block, final ItemStack stack, @Nullable final Player player) {
+        BlockDataProvider.getCapability(block).ifPresent(data -> data.useQuality(stack, player));
+        block.setChanged();
     }
 }

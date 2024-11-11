@@ -1,17 +1,14 @@
 package de.cadentem.quality_food.mixin;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.capability.BlockDataProvider;
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,12 +27,8 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<Container>
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractFurnaceMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        AtomicDouble bonus = new AtomicDouble(0);
-
-        if (container instanceof AbstractFurnaceBlockEntity furnace && !player.level().isClientSide()) {
-            BlockDataProvider.getCapability(furnace).ifPresent(data -> bonus.set(data.useQuality()));
+        if (container instanceof BlockEntity furnace && !player.level().isClientSide()) {
+            Utils.useQuality(furnace, stack, player);
         }
-
-        QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
     }
 }

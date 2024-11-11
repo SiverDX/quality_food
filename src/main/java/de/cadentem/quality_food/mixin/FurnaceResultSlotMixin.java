@@ -1,9 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import de.cadentem.quality_food.capability.BlockDataProvider;
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.FurnaceResultSlot;
@@ -33,15 +30,7 @@ public abstract class FurnaceResultSlotMixin extends Slot {
         }
 
         if (container instanceof AbstractFurnaceBlockEntity furnace) {
-            AtomicDouble bonus = new AtomicDouble(0);
-            BlockDataProvider.getCapability(furnace).ifPresent(data -> bonus.set(data.useQuality()));
-            QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
+            Utils.useQuality(furnace, stack, player);
         }
     }
-
-    /* TODO
-        add check for quality in canBurn + modify quality in burn (retain quality recipe)
-        problem: no quality recipe check -> furnace can have multiple recipes used how to check on item take out?
-            - on burn add count to list? or if any recipe is a no quality recipe just don't apply quality?
-    */
 }

@@ -78,7 +78,7 @@ public class QualityUtils {
 
         for (Slot slot : slots) {
             if (isSlotValid.test(slot)) {
-                bonus += QualityConfig.getCraftingBonus(QualityUtils.getQuality(slot.getItem())) / validIngredients;
+                bonus += QualityConfig.getCraftingBonus(getQuality(slot.getItem())) / validIngredients;
             }
         }
 
@@ -86,7 +86,7 @@ public class QualityUtils {
     }
 
     public static float getQualityBonus(final CraftingContainer container) {
-        int validIngredients = QualityUtils.countIngredients(container);
+        int validIngredients = countIngredients(container);
 
         if (validIngredients == 0) {
             return 0;
@@ -126,6 +126,11 @@ public class QualityUtils {
 
         Utils.LAST_STACK.set(stack);
 
+        applyQuality(stack, entity, bonusList, false);
+    }
+
+    /** If 'canUpgrade' is true the quality may be overridden by a higher level one */
+    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList, boolean canUpgrade) {
         RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
         double rolls = 1 + (entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 0);
 
@@ -133,18 +138,18 @@ public class QualityUtils {
             rolls = 0.1;
         }
 
-        if (checkAndRoll(stack, random, bonusList, Quality.DIAMOND, rolls)) {
+        if (checkAndRoll(stack, random, bonusList, Quality.DIAMOND, rolls, canUpgrade)) {
             return;
         }
 
-        if (checkAndRoll(stack, random, bonusList, Quality.GOLD, rolls)) {
+        if (checkAndRoll(stack, random, bonusList, Quality.GOLD, rolls, canUpgrade)) {
             return;
         }
 
-        checkAndRoll(stack, random, bonusList, Quality.IRON, rolls);
+        checkAndRoll(stack, random, bonusList, Quality.IRON, rolls, canUpgrade);
     }
 
-    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls) {
+    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls, boolean canUpgrade) {
         float chance = QualityConfig.getChance(quality);
 
         for (Bonus bonus : bonusList) {
@@ -158,13 +163,13 @@ public class QualityUtils {
 
         for (int i = 0; i < fullRolls; i++) {
             if (random.nextFloat() <= chance) {
-                applyQuality(stack, quality);
+                applyQuality(stack, quality, canUpgrade);
                 return true;
             }
         }
 
         if (random.nextDouble() <= (rolls - fullRolls) && random.nextFloat() <= chance) {
-            applyQuality(stack, quality);
+            applyQuality(stack, quality, canUpgrade);
             return true;
         }
 
@@ -176,7 +181,15 @@ public class QualityUtils {
      * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
      */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
-        if (!isValidQuality(quality) || isInvalidItem(stack)) {
+        applyQuality(stack, quality, false);
+    }
+
+    public static void applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
+        if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
+            return;
+        }
+
+        if (!canUpgrade && hasQuality(stack) || canUpgrade && getQuality(stack).level() > quality.level()) {
             return;
         }
 
@@ -237,14 +250,14 @@ public class QualityUtils {
             if (targetChance > 0 && quality.level() > 0) {
                 float multiplier = targetChance / QualityConfig.getChance(quality);
                 bonusList.add(Bonus.multiplicative(multiplier));
-                QualityUtils.applyQuality(stack, player, bonusList);
+                applyQuality(stack, player, bonusList);
             } else {
-                QualityUtils.applyQuality(stack, player, bonusList);
+                applyQuality(stack, player, bonusList);
             }
-        } else if (QualityUtils.isValidQuality(quality)) {
-            QualityUtils.applyQuality(stack, quality);
+        } else if (isValidQuality(quality)) {
+            applyQuality(stack, quality);
         } else if (quality != Quality.NONE_PLAYER_PLACED) {
-            QualityUtils.applyQuality(stack, player);
+            applyQuality(stack, player);
         }
     }
 
@@ -289,7 +302,7 @@ public class QualityUtils {
         Quality quality = getQuality(data.getSecond(), relevantItemCount);
 
         if (quality.level() > 0 && (shouldRetainQuality || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
-            QualityUtils.applyQuality(result, quality);
+            applyQuality(result, quality);
         }
     }
 
@@ -311,7 +324,7 @@ public class QualityUtils {
                 continue;
             }
 
-            qualities[QualityUtils.getQuality(containerStack).ordinal()]++;
+            qualities[getQuality(containerStack).ordinal()]++;
         }
 
         return Pair.of(items, qualities);
