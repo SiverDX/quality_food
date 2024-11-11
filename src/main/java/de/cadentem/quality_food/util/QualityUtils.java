@@ -183,7 +183,7 @@ public class QualityUtils {
                 }
 
                 if (roll <= chance) {
-                    boolean wasApplied = applyQuality(stack, type.createQuality(stack));
+                    boolean wasApplied = applyQuality(stack, type.createQuality(stack), canUpgrade);
 
                     if (wasApplied) {
                         break;
@@ -203,7 +203,21 @@ public class QualityUtils {
      * @return If the quality was successfully set true otherwise false
      */
     public static boolean applyQuality(final ItemStack stack, final Quality quality) {
-        if (!isValidQuality(quality) || isInvalidItem(stack)) {
+        return applyQuality(stack, quality, false);
+    }
+
+    /**
+     * @param stack   The item to apply quality to
+     * @param quality The quality to directly set
+     * @param canUpgrade Allows the quality to override the (potentially) existing quality
+     * @return If the quality was successfully set true otherwise false
+     */
+    public static boolean applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
+        if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
+            return false;
+        }
+
+        if (!canUpgrade && QualityUtils.hasQuality(stack) || getQuality(stack).level() > quality.level()) {
             return false;
         }
 
