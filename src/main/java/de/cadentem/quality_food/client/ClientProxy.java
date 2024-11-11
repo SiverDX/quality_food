@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class ClientProxy {
     public static void handleCookingParticles(final BlockPos position, double qualityBonus) {
@@ -26,5 +28,9 @@ public class ClientProxy {
 
             level.addParticle(ParticleTypes.GLOW, x, y, z, 0, 0, 0);
         }
+    }
+
+    public static @Nullable Player getLocalPlayer() {
+        return Minecraft.getInstance().player;
     }
 }
