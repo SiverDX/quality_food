@@ -140,6 +140,9 @@ Cooking quality items will store a quality bonus within the furnace / cooking po
   - A higher bonus results in more particles
   - This can be disabled through the client config
 - Once you take out the result the stored bonus will be used up and grant a higher chance to a quality result
+- The base quality of the cooked item is the lowest quality ingredient used when cooking
+  - 30x gold ingredients = 30x gold result (+ chance of upgrading to diamond)
+  - 25x gold + 5x iron = 30x iron result (+ chance of upgrading to gold or diamond)
 
 # Compatibility
 - [Jade](https://www.curseforge.com/minecraft/mc-mods/jade)
