@@ -1,0 +1,39 @@
+{
+  "potion.withProbability": "%s (%s)",
+
+  "quality_food.quality": "品质: ",
+
+  "quality_type.quality_food.iron": "铁",
+  "quality_type.quality_food.gold": "金",
+  "quality_type.quality_food.diamond": "钻石",
+
+  "config.jade.plugin_quality_food.quality": "品质",
+
+  "create.item_attributes.quality_food.quality": "具有 '%1$s' 品质",
+  "create.item_attributes.quality_food.quality.inverted": "没有 '%1$s' 品质",
+
+  "commands.quality_food.quality.failed.no_quality": "%s 不适用于品质",
+  "commands.quality_food.quality.failed.already_has_quality": "%s 已拥有品质",
+  "commands.quality_food.quality.failed.invalid_quality": "尝试应用无效的品质",
+  "commands.quality_food.quality.failed.missing_quality": "%s 没有任何品质可移除",
+
+  "quality_food.configuration.particles": "粒子",
+  "quality_food.configuration.particles.tooltip": "启用/禁用指示某些方块（如熔炉）存储品质等级的粒子",
+  "quality_food.configuration.food_effects": "食物效果",
+  "quality_food.configuration.food_effects.tooltip": "启用/禁用食物物品的效果提示",
+  "quality_food.configuration.luck_multiplier": "幸运倍增",
+  "quality_food.configuration.luck_multiplier.tooltip": "幸运将影响每种品质被尝试的次数\n（10 次幸运 * 0.25 倍数 -> 2.5 次 rolls，即 2 次 rolls 有 50% 的概率再 rolls 一次）",
+  "quality_food.configuration.crop_target_chance": "作物目标机率",
+  "quality_food.configuration.crop_target_chance.tooltip": "品质作物降低自身品质的机率（也会影响其他品质）\n以金为例（0.6 / 0.03 = 20），所有品质的机率将是 20 * 0.10 (铁) = 2 (100%) | 20 * 0.03 (金) = 0.6 (60%) | 20 * 0.005 = 0.1 (10%)",
+  "quality_food.configuration.seed_chance_multiplier": "种子机率乘数",
+  "quality_food.configuration.seed_chance_multiplier.tooltip": "作物目标机率之上的乘数（例如，在品质种子应该更稀有的情况下）",
+  "quality_food.configuration.farmland_config": "耕地配置",
+  "quality_food.configuration.farmland_config.tooltip": "定义每块耕地对作物应用的乘数 - 语法: <index>;<crop>;<farmland>;<multiplier>\n（索引决定检查顺序 - 应用第一个匹配的）（使用 # 指定标签）",
+  "quality_food.configuration.Crafting": "制作",
+  "quality_food.configuration.no_quality_recipes": "无品质合成表",
+  "quality_food.configuration.no_quality_recipes.tooltip": "定义不应导致应用品质的配方（名称空间：路径）（例如物品可以来回转换时）",
+  "quality_food.configuration.retain_quality_recipes": "保留品质合成表",
+  "quality_food.configuration.retain_quality_recipes.tooltip": "定义应导致品质应始终应用于结果的合成表（名称空间：路径）（仅当所有配料具有相同品质时）",
+  "quality_food.configuration.handle_compacting": "处理压缩",
+  "quality_food.configuration.handle_compacting.tooltip": "定义是否应自动处理（去）压缩（在保留品质方面）"
+}
