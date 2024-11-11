@@ -1,10 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import de.cadentem.quality_food.core.attachments.AttachmentHandler;
-import de.cadentem.quality_food.core.attachments.BlockData;
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.FurnaceResultSlot;
@@ -21,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** Allow material (with quality) to grant its bonus when manually taking out the result item */
 @Mixin(FurnaceResultSlot.class)
 public abstract class FurnaceResultSlotMixin extends Slot {
+    @Shadow @Final private Player player;
+
     public FurnaceResultSlotMixin(final Container container, int slot, int x, int y) {
         super(container, slot, x, y);
     }
@@ -32,15 +30,7 @@ public abstract class FurnaceResultSlotMixin extends Slot {
         }
 
         if (container instanceof AbstractFurnaceBlockEntity furnace) {
-            AtomicDouble bonus = new AtomicDouble(0);
-
-            BlockData blockData = furnace.getData(AttachmentHandler.BLOCK_DATA);
-            bonus.set(blockData.useQuality());
-            furnace.setChanged();
-
-            QualityUtils.applyQuality(stack, player, Bonus.additive(bonus.floatValue()));
+            Utils.useQuality(furnace, stack, player);
         }
     }
-
-    @Shadow @Final private Player player;
 }

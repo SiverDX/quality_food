@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -120,13 +121,19 @@ public class Utils {
             return;
         }
 
+        if (!Utils.isValidItem(stack)) {
+            return;
+        }
+
         QualityType type = QualityUtils.getType(stack);
+        BlockData data = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
+        data.addQualityType(type);
 
         if (type != QualityType.NONE) {
-            BlockData blockData = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
-            blockData.incrementQuality(type.cookingBonus() / ingredientCount);
-            blockEntity.setChanged();
+            data.incrementQuality(type.cookingBonus() / ingredientCount);
         }
+
+        blockEntity.setChanged();
     }
 
     public static @Nullable Registry<QualityType> getQualityRegistry() {
@@ -139,5 +146,11 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static void useQuality(final BlockEntity block, final ItemStack stack, @Nullable final Player player) {
+        BlockData data = block.getData(AttachmentHandler.BLOCK_DATA);
+        data.useQuality(stack, player);
+        block.setChanged();
     }
 }

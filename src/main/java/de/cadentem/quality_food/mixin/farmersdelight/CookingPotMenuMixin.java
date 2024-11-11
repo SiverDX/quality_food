@@ -1,10 +1,7 @@
 package de.cadentem.quality_food.mixin.farmersdelight;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.core.attachments.AttachmentHandler;
-import de.cadentem.quality_food.core.attachments.BlockData;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
@@ -35,8 +32,6 @@ public abstract class CookingPotMenuMixin extends RecipeBookMenu<RecipeWrapper, 
             return;
         }
 
-        BlockData data = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
-        QualityUtils.applyQuality(stack, player, Bonus.additive(data.useQuality()));
-        blockEntity.setChanged();
+        Utils.useQuality(blockEntity, stack, player);
     }
 }

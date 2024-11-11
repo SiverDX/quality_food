@@ -125,6 +125,11 @@ public class QualityUtils {
 
         Utils.LAST_STACK.set(stack);
 
+        applyQuality(stack, entity, bonusList, false);
+    }
+
+    /** If 'canUpgrade' is true the quality may be overridden by a higher level one */
+    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList, boolean canUpgrade) {
         RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
         double rolls = 1 + (entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 0);
 
@@ -139,7 +144,24 @@ public class QualityUtils {
         }
 
         List<QualityType> types = new ArrayList<>();
-        lookup.listElements().forEach(entry -> types.add(entry.value()));
+
+        if (canUpgrade) {
+            QualityType type = QualityUtils.getType(stack);
+
+            lookup.listElements().forEach(entry -> {
+                if (entry.value().level() > type.level()) {
+                    types.add(entry.value());
+                }
+            });
+        } else {
+            lookup.listElements().forEach(entry -> types.add(entry.value()));
+        }
+
+        if (types.isEmpty()) {
+            return;
+        }
+
+        // Try the highest level first
         types.sort(Comparator.comparingInt(QualityType::level).reversed());
 
         float roll = random.nextFloat();

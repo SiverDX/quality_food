@@ -1,10 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.core.attachments.AttachmentHandler;
-import de.cadentem.quality_food.core.attachments.BlockData;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
@@ -34,10 +31,8 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<SingleReci
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractFurnaceMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        if (container instanceof BlockEntity blockEntity && !level.isClientSide()) {
-            BlockData blockData = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
-            QualityUtils.applyQuality(stack, player, Bonus.additive(blockData.useQuality()));
-            blockEntity.setChanged();
+        if (container instanceof BlockEntity furnace && !level.isClientSide()) {
+            Utils.useQuality(furnace, stack, player);
         }
     }
 }

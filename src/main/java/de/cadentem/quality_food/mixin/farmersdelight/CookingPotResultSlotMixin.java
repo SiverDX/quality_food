@@ -1,9 +1,6 @@
 package de.cadentem.quality_food.mixin.farmersdelight;
 
-import de.cadentem.quality_food.core.Bonus;
-import de.cadentem.quality_food.core.attachments.AttachmentHandler;
-import de.cadentem.quality_food.core.attachments.BlockData;
-import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -33,7 +30,6 @@ public abstract class CookingPotResultSlotMixin extends SlotItemHandler {
             return;
         }
 
-        BlockData data = tileEntity.getData(AttachmentHandler.BLOCK_DATA);
-        QualityUtils.applyQuality(stack, player, Bonus.additive(data.useQuality()));
+        Utils.useQuality(tileEntity, stack, player);
     }
 }
