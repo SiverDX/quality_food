@@ -11,5 +11,5 @@
   "commands.quality_food.quality.failed.no_quality": "%s 不適用於品質",
   "commands.quality_food.quality.failed.already_has_quality": "%s 已擁有品質",
   "commands.quality_food.quality.failed.invalid_quality": "嘗試應用無效的品質",
-  "commands.quality_food.quality.failed.missing_quality": "%s 沒有任何品質可移除",
+  "commands.quality_food.quality.failed.missing_quality": "%s 沒有任何品質可移除"
 }
