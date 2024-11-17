@@ -9,6 +9,7 @@ import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -278,15 +279,15 @@ public class QualityUtils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.farmandcharm("wild_crops")))) {
+        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.location(Compat.FARM_AND_CHARM, "wild_crops")))) {
             return true;
         }
 
         return false;
     }
 
-    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final RecipeHolder<?> recipe) {
-        boolean isRecipe = ServerConfig.isRetainQualityRecipe(recipe);
+    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final RecipeHolder<?> recipe, @Nullable final RegistryAccess access) {
+        boolean isRecipe = ServerConfig.isRetainQualityRecipe(recipe, access);
         boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
 
         if (!isRecipe && !handleCompacting) {

@@ -71,10 +71,10 @@ public class Utils {
         int tickOffset = serverLevel.getRandom().nextInt(-3, 3);
 
         if (serverLevel.getGameTime() % (10 + tickOffset) == 0) {
-            BlockData blockData = furnace.getData(AttachmentHandler.BLOCK_DATA);
-            double qualityBonus = blockData.getQuality();
+            BlockData data = furnace.getData(AttachmentHandler.BLOCK_DATA);
+            double qualityBonus = data.getQuality();
 
-            if (qualityBonus > 0) {
+            if (qualityBonus > 0.1) {
                 PacketDistributor.sendToPlayersNear(serverLevel, null, position.getX(), position.getY(), position.getZ(), 64, new CookingParticles(position, qualityBonus));
             }
         }

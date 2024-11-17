@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,7 +30,7 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingInput, Cr
     /** Apply quality when crafting with shift-click */
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/CraftingMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed())) {
+        if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed(), player.registryAccess())) {
             return;
         }
 
@@ -38,8 +39,8 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingInput, Cr
 
     /** Apply quality when items are converted from / to their storage variants */
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE"), ordinal = 1)
-    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final CraftingContainer container, @Local(argsOnly = true) final ResultContainer resultContainer) {
-        QualityUtils.handleConversion(result, container, resultContainer.getRecipeUsed());
+    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingContainer container, @Local(argsOnly = true) final ResultContainer resultContainer) {
+        QualityUtils.handleConversion(result, container, resultContainer.getRecipeUsed(), level.registryAccess());
         return result;
     }
 }

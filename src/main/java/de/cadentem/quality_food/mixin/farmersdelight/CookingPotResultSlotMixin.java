@@ -3,8 +3,6 @@ package de.cadentem.quality_food.mixin.farmersdelight;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,13 +14,9 @@ import vectorwing.farmersdelight.common.block.entity.container.CookingPotResultS
 
 /** Allow material (with quality) to grant its bonus when manually taking out the result item */
 @Mixin(CookingPotResultSlot.class)
-public abstract class CookingPotResultSlotMixin extends SlotItemHandler {
+public abstract class CookingPotResultSlotMixin {
     @Shadow(remap = false) @Final private Player player;
     @Shadow(remap = false) @Final public CookingPotBlockEntity tileEntity;
-
-    public CookingPotResultSlotMixin(final IItemHandler handler, int slot, int x, int y) {
-        super(handler, slot, x, y);
-    }
 
     @Inject(method = "checkTakeAchievements", at = @At(value = "RETURN"))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {

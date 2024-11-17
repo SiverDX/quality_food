@@ -5,6 +5,7 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.p3pp3rf1y.sophisticatedcore.upgrades.crafting.CraftingUpgradeContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(CraftingUpgradeContainer.class)
 public abstract class CraftingUpgradeContainerMixin {
     @ModifyVariable(method = "updateCraftingResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultSlot;set(Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
-    private ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final CraftingContainer container, @Local(argsOnly = true) final ResultContainer resultContainer) {
-        QualityUtils.handleConversion(result, container, resultContainer.getRecipeUsed());
+    private ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingContainer container, @Local(argsOnly = true) final ResultContainer resultContainer) {
+        QualityUtils.handleConversion(result, container, resultContainer.getRecipeUsed(), level.registryAccess());
         return result;
     }
 }

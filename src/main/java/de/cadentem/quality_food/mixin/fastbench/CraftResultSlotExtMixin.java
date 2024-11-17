@@ -24,11 +24,12 @@ public abstract class CraftResultSlotExtMixin extends ResultSlot {
     @Inject(method = "checkTakeAchievements", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onCraftedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;I)V", shift = At.Shift.AFTER))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
         ResultSlotAccess access = (ResultSlotAccess) this;
+        Player player = access.quality_food$getPlayer();
 
-        if (access.quality_food$getPlayer().level().isClientSide() || container instanceof RecipeCraftingHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed())) {
+        if (player.level().isClientSide() || container instanceof RecipeCraftingHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed(), player.registryAccess())) {
             return;
         }
 
-        QualityUtils.applyQuality(stack, access.quality_food$getPlayer(), Bonus.additive(QualityUtils.getQualityBonus(access.quality_food$getCraftSlots())));
+        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(access.quality_food$getCraftSlots())));
     }
 }

@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
+import static de.cadentem.quality_food.compat.Compat.*;
+
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = ItemTags.create(QualityFood.location("material_whitelist"));
     public static final TagKey<Item> BLACKLIST = ItemTags.create(QualityFood.location("blacklist"));
@@ -39,13 +41,13 @@ public class QFItemTags extends ItemTagsProvider {
                 .add(Items.INK_SAC) // Farmer's Delight
                 .add(Items.HAY_BLOCK)
                 .add(Items.HONEY_BLOCK)
-                .addOptionalTag(Compat.farmersdelight("wild_crops"))
-                .addOptional(Compat.farmersdelight("rice_panicle"))
-                .addOptional(Compat.farmandcharm("barley"))
-                .addOptional(Compat.farmandcharm("oat"));
+                .addOptionalTag(location(FARMERSDELIGHT, "wild_crops"))
+                .addOptional(location(FARMERSDELIGHT, "rice_panicle"))
+                .addOptional(location(FARM_AND_CHARM, "barley"))
+                .addOptional(location(FARM_AND_CHARM, "oat"));
 
         tag(BLACKLIST)
-                .addOptional(Compat.supplementaries("flax"))
-                .addOptional(Compat.supplementaries("flax_seeds"));
+                .addOptional(location(SUPPLEMENTARIES, "flax"))
+                .addOptional(location(SUPPLEMENTARIES, "flax_seeds"));
     }
 }

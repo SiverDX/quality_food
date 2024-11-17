@@ -30,7 +30,7 @@ public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
 
     @Inject(method = "shiftClickItems", at = @At(value = "INVOKE", target = "Lcom/tom/storagemod/menu/CraftingTerminalMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int index, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        if (ServerConfig.isNoQualityRecipe(craftResult.getRecipeUsed())) {
+        if (ServerConfig.isNoQualityRecipe(craftResult.getRecipeUsed(), player.registryAccess())) {
             return;
         }
 

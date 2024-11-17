@@ -20,7 +20,7 @@ public abstract class CrafterMenuMixin {
 
     @ModifyArg(method = "refreshRecipeResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
     private ItemStack quality_food$handleConversion(final ItemStack result, @Local final Level level, @Local final CraftingInput input) {
-        QualityUtils.handleConversion(result, container, CrafterBlock.getPotentialResults(level, input).orElse(null));
+        QualityUtils.handleConversion(result, container, CrafterBlock.getPotentialResults(level, input).orElse(null), level.registryAccess());
         return result;
     }
 }
