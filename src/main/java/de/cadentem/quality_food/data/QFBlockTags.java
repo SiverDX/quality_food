@@ -121,6 +121,8 @@ public class QFBlockTags extends BlockTagsProvider {
                 .addOptional(location(FARM_AND_CHARM, "flour_bag"))
                 .addOptional(location(FARM_AND_CHARM, "oat_bale"))
                 .addOptional(location(FARM_AND_CHARM, "barley_ball"))
+
+                .addOptional(location("miners_delight", "cave_carrot_crate"))
         ;
     }
 }

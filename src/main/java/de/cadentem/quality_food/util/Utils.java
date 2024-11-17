@@ -88,7 +88,7 @@ public class Utils {
             BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
                 double qualityBonus = data.getQuality();
 
-                if (qualityBonus > 0) {
+                if (qualityBonus >= 0.1) {
                     NetworkHandler.CHANNEL.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(position.getX(), position.getY(), position.getZ(), 64, serverLevel.dimension())), new SyncCookingParticle(position, qualityBonus));
                 }
             });

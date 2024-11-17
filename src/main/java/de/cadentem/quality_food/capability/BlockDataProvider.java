@@ -1,5 +1,7 @@
 package de.cadentem.quality_food.capability;
 
+import com.sammy.minersdelight.setup.MDBlockEntities;
+import com.sammy.minersdelight.setup.MDBlocks;
 import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -60,8 +62,12 @@ public class BlockDataProvider implements ICapabilitySerializable<CompoundTag> {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT)) {
-            return entity.getType() == ModBlockEntityTypes.COOKING_POT.get();
+        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && entity.getType() == ModBlockEntityTypes.COOKING_POT.get()) {
+            return true;
+        }
+
+        if (Compat.isModLoaded(Compat.MINERS_DELIGHT) && entity.getType() == MDBlockEntities.COPPER_POT.get()) {
+            return true;
         }
 
         return false;

@@ -15,10 +15,21 @@ public class ClientProxy {
         }
 
         ClientLevel level = Minecraft.getInstance().level;
-        int amount = (int) (qualityBonus * 5);
 
-        if (level == null || amount < 1) {
+        if (level == null) {
             return;
+        }
+
+        int amount = 1;
+
+        if (qualityBonus == 1) {
+            amount = 5;
+        } else if (qualityBonus >= 0.75) {
+            amount = 4;
+        } else if (qualityBonus >= 0.5) {
+            amount = 3;
+        } else if (qualityBonus >= 0.25) {
+            amount = 2;
         }
 
         for (int i = 0; i < amount; i++) {
