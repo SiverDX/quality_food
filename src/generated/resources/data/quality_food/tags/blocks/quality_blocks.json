@@ -312,6 +312,10 @@
     {
       "id": "farm_and_charm:barley_ball",
       "required": false
+    },
+    {
+      "id": "miners_delight:cave_carrot_crate",
+      "required": false
     }
   ]
 }
