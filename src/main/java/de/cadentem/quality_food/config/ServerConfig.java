@@ -4,16 +4,21 @@ import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import static de.cadentem.quality_food.compat.Compat.*;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ServerConfig {
@@ -28,6 +33,7 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
     public static final ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
     public static final ForgeConfigSpec.BooleanValue HANDLE_COMPACTING;
+    public static final ForgeConfigSpec.BooleanValue HANDLE_SEED_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
     // public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES_COOKING;
@@ -54,6 +60,7 @@ public class ServerConfig {
         RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         // RETAIN_QUALITY_RECIPES_COOKING = BUILDER.comment("Defines cooking (furnace etc.) recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes_cooking", List.of(), ServerConfig::validateRecipe);
         HANDLE_COMPACTING = BUILDER.comment("Defines whether (de)compacting should be handled automatically (in terms of retaining quality)").define("handle_compacting", true);
+        HANDLE_SEED_RECIPES = BUILDER.comment("Attempt to handle recipes involving seed items automatically (to avoid having to add all of them to the retain_quality_recipes config)").define("handle_seed_recipes", true);
         BUILDER.pop();
 
         for (Quality quality : Quality.values()) {
@@ -107,9 +114,19 @@ public class ServerConfig {
         return NO_QUALITY_RECIPES.get().contains(recipe.getId().toString());
     }
 
-    public static boolean isRetainQualityRecipe(@Nullable final Recipe<?> recipe) {
+    public static boolean isRetainQualityRecipe(@Nullable final Recipe<?> recipe, @Nullable RegistryAccess access) {
         if (recipe == null) {
             return false;
+        }
+
+        if (ServerConfig.HANDLE_SEED_RECIPES.get()) {
+            if (access == null && ServerLifecycleHooks.getCurrentServer() != null) {
+                access = ServerLifecycleHooks.getCurrentServer().registryAccess();
+            }
+
+            if (access != null && recipe.getResultItem(access).is(Tags.Items.SEEDS)) {
+                return true;
+            }
         }
 
         return RETAIN_QUALITY_RECIPES.get().contains(recipe.getId().toString());
@@ -242,156 +259,167 @@ public class ServerConfig {
         NO_QUALITY_RECIPES_DEFAULT.add("minecraft:hay_block");
         NO_QUALITY_RECIPES_DEFAULT.add("minecraft:wheat");
 
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/apple_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/apple_crate_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/beetroot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/beetroot_crate_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/berry_sack").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/berry_sack_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/carrot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/carrot_crate_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/chorus_fruit_block").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/chorus_fruit_block_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/cocoa_bean_sack").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/cocoa_bean_sack_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/glowberry_sack").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/glowberry_sack_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_apple_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_apple_crate_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_carrot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/golden_carrot_crate_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/potato_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/potato_crate_uncompress").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/sugar_cane_block").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.quark("building/crafting/compressed/sugar_cane_block_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/apple_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/beetroot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/beetroot_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/berry_sack").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/berry_sack_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/carrot_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/chorus_fruit_block").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/chorus_fruit_block_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/cocoa_bean_sack").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/cocoa_bean_sack_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/glowberry_sack").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/glowberry_sack_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/golden_apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/golden_apple_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/golden_carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/golden_carrot_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/potato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/potato_crate_uncompress").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/sugar_cane_block").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(QUARK, "building/crafting/compressed/sugar_cane_block_uncompress").toString());
 
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("carrot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("carrot_from_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("potato_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("potato_from_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("beetroot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("beetroot_from_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("cabbage_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("cabbage").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("onion_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("onion").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_bale").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_panicle").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "carrot_from_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "potato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "potato_from_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "beetroot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "beetroot_from_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "cabbage_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "cabbage").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "tomato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "tomato").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "onion_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "onion").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "rice_bale").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "rice_panicle").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "rice_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "rice_from_bag").toString());
 
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("white_grape_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("white_grape").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("red_grape_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("red_grape").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("cherry_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("cherries").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("apple_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("apples").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "white_grape_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "white_grape").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "red_grape_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "red_grape").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "cherry_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "cherries").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(VINERY, "apples").toString());
 
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.supplementaries("sugar_cube").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.supplementaries("sugar_cube_uncrafting").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(SUPPLEMENTARIES, "sugar_cube").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(SUPPLEMENTARIES, "sugar_cube_uncrafting").toString());
 
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("apple_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("apples").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("beetroot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("beetroots").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("berry_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("berries").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("brown_mushroom_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("brown_mushroom").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("carrot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("carrots").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("cocoabeans_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("cocoabeans").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("cod_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("cod").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("eggs").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("glowberry_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("glowberries").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("golden_apple_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("golden_apple").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("golden_carrot_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("golden_carrot").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("potato_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("potatoes").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("red_mushroom_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("red_mushroom").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("salmon_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("salmon").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("sugar_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.cratedelight("sugar").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "apples").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "beetroot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "beetroots").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "berry_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "berries").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "brown_mushroom_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "brown_mushroom").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "carrots").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "cocoabeans_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "cocoabeans").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "cod_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "cod").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "eggs").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "glowberry_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "glowberries").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "golden_apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "golden_apple").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "golden_carrot_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "golden_carrot").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "potato_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "potatoes").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "red_mushroom_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "red_mushroom").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "salmon_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "salmon").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "stacked_melons").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "melons").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "stacked_pumpkins").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "pumpkins").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "sugar_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "sugar").toString());
         // Still Crate Delight
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("create", "wheat_flour_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("create", "wheat_flour").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("jagmkiwis", "kiwi_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("jagmkiwis", "kiwi_egg").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("jagmkiwis", "kiwi_fruit_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("jagmkiwis", "kiwi_fruit").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("nutritious_feast", "blueberry_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("nutritious_feast", "blueberries").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("naturalist", "bass_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("naturalist", "bass").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("naturalist", "catfish_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("naturalist", "catfish").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("naturalist", "duck_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("naturalist", "duck_eggs").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "banana_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "bananas").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "caiman_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "caiman_egg").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "crocodile_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "crocodile_egg").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "emu_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "emu_egg").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "platypus_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "platypus_egg").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "terrapin_egg_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("alexsmobs", "terrapin_egg").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("betterend", "end_fish_crate").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.location("betterend", "end_fish").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "banana_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "bananas").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "caiman_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "caiman_egg").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "crocodile_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "crocodile_egg").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "emu_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "emu_egg").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "platypus_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "platypus_egg").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "terrapin_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("alexsmobs", "terrapin_egg").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("betterend", "end_fish_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("betterend", "end_fish").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("create", "wheat_flour_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("create", "wheat_flour").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("diamond_apples", "diamond_apple_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("diamond_apples", "diamond_apples").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("farmersdelight", "stacked_melons").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("farmersdelight", "stacked_pumpkins").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("jagmkiwis", "kiwi_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("jagmkiwis", "kiwi_egg").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("jagmkiwis", "kiwi_fruit_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("jagmkiwis", "kiwi_fruit").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("naturalist", "bass_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("naturalist", "bass").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("naturalist", "catfish_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("naturalist", "catfish").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("naturalist", "duck_egg_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("naturalist", "duck_eggs").toString());
+        // Still Crate Delight
+        NO_QUALITY_RECIPES_DEFAULT.add(location("nutritious_feast", "blueberry_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location("nutritious_feast", "blueberries").toString());
 
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("lettuce_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("lettuce").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("tomato_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("tomato").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("carrot_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("carrot_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("potato_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("potato_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("onion_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("onion_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("beetroot_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("beetroot_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("corn_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("corn_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("strawberry_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("strawberry_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("flour_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("flour_from_bag").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("oat_ball").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("oat_from_ball").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("barley_ball").toString());
-        NO_QUALITY_RECIPES_DEFAULT.add(Compat.farmandcharm("barley_from_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "lettuce_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "lettuce").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "tomato_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "tomato").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "carrot_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "carrot_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "potato_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "potato_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "onion_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "onion_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "beetroot_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "beetroot_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "corn_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "corn_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "strawberry_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "strawberry_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "flour_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "flour_from_bag").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "oat_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "oat_from_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "barley_ball").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM, "barley_from_ball").toString());
     }
 
     private static void fillRetainQualityRecipes() {
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:pumpkin_seeds");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:melon_seeds");
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_sugar_cane");
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_honey_bottle");
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("tomato_seeds").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.farmersdelight("rice").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_savanna_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_savanna_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_taiga_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_taiga_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_red_jungle_grape").toString());
-        RETAIN_QUALITY_RECIPES_DEFAULT.add(Compat.vinery("seed_from_white_jungle_grape").toString());
+
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "stacked_melons").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "melons").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "stacked_pumpkins").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT, "pumpkins").toString());
+        // Still Crate Delight
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "stacked_melons").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT, "stacked_pumpkins").toString());
     }
 }

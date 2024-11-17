@@ -10,6 +10,7 @@ import dev.shadowsoffire.fastbench.util.FastBenchUtil;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -27,8 +28,8 @@ public abstract class FastBenchUtilMixin {
     }
 
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE", ordinal = 1))
-    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
-        QualityUtils.handleConversion(result, craftSlots, resultSlots.getRecipeUsed());
+    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
+        QualityUtils.handleConversion(result, craftSlots, resultSlots.getRecipeUsed(), level.registryAccess());
         return result;
     }
 }

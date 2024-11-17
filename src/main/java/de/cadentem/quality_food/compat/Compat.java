@@ -34,38 +34,6 @@ public class Compat {
         });
     }
 
-    public static ResourceLocation quark(final String path) {
-        return location(QUARK, path);
-    }
-
-    public static ResourceLocation farmersdelight(final String path) {
-        return location(FARMERSDELIGHT, path);
-    }
-
-    public static ResourceLocation supplementaries(final String path) {
-        return location(SUPPLEMENTARIES, path);
-    }
-
-    public static ResourceLocation vinery(final String path) {
-        return location(VINERY, path);
-    }
-
-    public static ResourceLocation fruitfulfun(final String path) {
-        return location(FRUITFUL_FUN, path);
-    }
-
-    public static ResourceLocation cratedelight(final String path) {
-        return location(CRATE_DELIGHT, path);
-    }
-
-    public static ResourceLocation collectorsreap(final String path) {
-        return location(COLLECTORS_REAP, path);
-    }
-
-    public static ResourceLocation farmandcharm(final String path) {
-        return location(FARM_AND_CHARM, path);
-    }
-
     public static ResourceLocation forge(final String path) {
         return location(FORGE, path);
     }

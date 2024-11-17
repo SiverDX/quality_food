@@ -7,6 +7,7 @@ import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.Quality;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -274,15 +275,15 @@ public class QualityUtils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.farmandcharm("wild_crops")))) {
+        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.location(Compat.FARM_AND_CHARM, "wild_crops")))) {
             return true;
         }
 
         return false;
     }
 
-    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe) {
-        boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe);
+    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe, @Nullable final RegistryAccess access) {
+        boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe, access);
         boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
 
         if (!shouldRetainQuality && !handleCompacting) {

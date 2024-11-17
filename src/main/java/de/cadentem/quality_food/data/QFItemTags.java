@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.data;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -17,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
+
+import static de.cadentem.quality_food.compat.Compat.*;
 
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
@@ -39,18 +40,18 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(Compat.forge("dough")) // Farmer's Delight
-                .addOptionalTag(Compat.forge("flour")) // Farmer's Delight
-                .addOptionalTag(Compat.farmersdelight("wild_crops"))
-                .addOptional(Compat.farmersdelight("rice_panicle"))
-                .addOptional(Compat.fruitfulfun("lemon_roast_chicken_block"))
-                .addOptional(Compat.collectorsreap("pomegranate"))
-                .addOptional(Compat.farmandcharm("barley"))
-                .addOptional(Compat.farmandcharm("oat"))
+                .addOptionalTag(forge("dough")) // Farmer's Delight
+                .addOptionalTag(forge("flour")) // Farmer's Delight
+                .addOptionalTag(location(FARMERSDELIGHT, "wild_crops"))
+                .addOptional(location(FARMERSDELIGHT, "rice_panicle"))
+                .addOptional(location(FRUITFUL_FUN, "lemon_roast_chicken_block"))
+                .addOptional(location(COLLECTORS_REAP, "pomegranate"))
+                .addOptional(location(FARM_AND_CHARM, "barley"))
+                .addOptional(location(FARM_AND_CHARM, "oat"))
         ;
 
         tag(BLACKLIST)
-                .addOptional(Compat.supplementaries("flax"))
-                .addOptional(Compat.supplementaries("flax_seeds"));
+                .addOptional(location(SUPPLEMENTARIES, "flax"))
+                .addOptional(location(SUPPLEMENTARIES, "flax_seeds"));
     }
 }
