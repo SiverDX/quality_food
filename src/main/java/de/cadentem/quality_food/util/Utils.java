@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.client.ClientProxy;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.attachments.BlockData;
 import de.cadentem.quality_food.core.attachments.LevelData;
@@ -9,11 +8,9 @@ import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
 import de.cadentem.quality_food.network.CookingParticles;
-import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -22,9 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class Utils {
@@ -125,27 +120,15 @@ public class Utils {
             return;
         }
 
-        QualityType type = QualityUtils.getType(stack);
+        Holder<QualityType> type = QualityUtils.getType(stack);
         BlockData data = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
         data.addQualityType(type);
 
-        if (type != QualityType.NONE) {
-            data.incrementQuality(type.cookingBonus() / ingredientCount);
+        if (type.value() != QualityType.NONE) {
+            data.incrementQuality(type.value().cookingBonus() / ingredientCount);
         }
 
         blockEntity.setChanged();
-    }
-
-    public static @Nullable Registry<QualityType> getQualityRegistry() {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-
-        if (server != null) {
-            return server.registryAccess().registry(QFComponents.QUALITY_TYPE_REGISTRY).orElse(null);
-        } else if (FMLEnvironment.dist.isClient()) {
-            return ClientProxy.getQualityRegistry();
-        }
-
-        return null;
     }
 
     public static void useQuality(final BlockEntity block, final ItemStack stack, @Nullable final Player player) {

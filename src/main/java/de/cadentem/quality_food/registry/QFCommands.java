@@ -19,6 +19,7 @@ import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.commands.GiveCommand;
@@ -41,9 +42,7 @@ public class QFCommands {
         COMMAND_ARGUMENTS.register("item", () -> ArgumentTypeInfos.registerByClass(QualityItemArgument.class, SingletonArgumentInfo.contextAware(QualityItemArgument::item)));
     }
 
-    /**
-     * Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#register(CommandDispatcher, CommandBuildContext)}
-     */
+    /** Mostly a copy of {@link net.minecraft.server.commands.GiveCommand#register(CommandDispatcher, CommandBuildContext)} */
     public static void registerCommands(final RegisterCommandsEvent event) {
         event.getDispatcher().register(
                 Commands.literal(QualityFood.MODID)
@@ -79,8 +78,8 @@ public class QFCommands {
         );
     }
 
-    private static int applyQuality(final CommandSourceStack source, final QualityType type, boolean shouldOverride) {
-        if (type.level() <= 0) {
+    private static int applyQuality(final CommandSourceStack source, final Holder<QualityType> type, boolean shouldOverride) {
+        if (type.value().level() <= 0) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
         }
@@ -125,11 +124,9 @@ public class QFCommands {
         return 0;
     }
 
-    /**
-     * Mostly a copy from {@link net.minecraft.server.commands.GiveCommand}
-     */
-    private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final QualityType type) throws CommandSyntaxException {
-        if (type.level() <= 0) {
+    /** Mostly a copy from {@link net.minecraft.server.commands.GiveCommand} */
+    private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final Holder<QualityType> type) throws CommandSyntaxException {
+        if (type.value().level() <= 0) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
             return 0;
         }

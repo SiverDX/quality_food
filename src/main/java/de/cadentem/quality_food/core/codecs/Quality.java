@@ -4,17 +4,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.registry.QFComponents;
-import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.CommonHooks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public record Quality(ResourceLocation type, int level, Optional<List<FoodProperties.PossibleEffect>> effects) {
     public static final Quality NONE = new Quality(QualityFood.location("none"), 0, Optional.empty());
@@ -26,33 +26,37 @@ public record Quality(ResourceLocation type, int level, Optional<List<FoodProper
                     FoodProperties.PossibleEffect.CODEC.listOf().optionalFieldOf("effects").forGetter(Quality::effects))
             .apply(builder, Quality::new));
 
-    public QualityType getType() {
+    public Holder<QualityType> getType() {
         if (this == NONE) {
-            return QualityType.NONE;
+            return Holder.direct(QualityType.NONE);
         }
 
         HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFComponents.QUALITY_TYPE_REGISTRY);
 
         if (lookup == null) {
-            return QualityType.NONE;
+            return Holder.direct(QualityType.NONE);
         }
 
-        return lookup.get(QFComponents.key(type)).map(Holder.Reference::value).orElse(QualityType.NONE);
+        Optional<Holder.Reference<QualityType>> optional = lookup.get(QFComponents.key(type));
+
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            return Holder.direct(QualityType.NONE);
+        }
     }
 
     public static Quality getRandom(final ItemStack stack, int level) {
-        Registry<QualityType> registry = Utils.getQualityRegistry();
+        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFComponents.QUALITY_TYPE_REGISTRY);
 
-        if (registry == null) {
+        if (lookup == null) {
             return Quality.NONE;
         }
 
-        List<QualityType> types = new ArrayList<>();
+        List<Holder<QualityType>> types = new ArrayList<>();
 
-        for (Map.Entry<ResourceKey<QualityType>, QualityType> entry : registry.entrySet()) {
-            QualityType type = entry.getValue();
-
-            if (type.level() == level) {
+        for (Holder.Reference<QualityType> type : lookup.listElements().toList()) {
+            if (type.value().level() == level) {
                 types.add(type);
             }
         }
@@ -62,6 +66,6 @@ public record Quality(ResourceLocation type, int level, Optional<List<FoodProper
         }
 
         Collections.shuffle(types);
-        return types.getFirst().createQuality(stack);
+        return QualityType.createQuality(types.getFirst(), stack);
     }
 }

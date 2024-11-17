@@ -2,11 +2,12 @@ package de.cadentem.quality_food.core.attachments;
 
 import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.codecs.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.QualityUtils;
-import de.cadentem.quality_food.util.Utils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,18 +18,19 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @ParametersAreNonnullByDefault
 public class BlockData implements INBTSerializable<CompoundTag> {
-    private final Set<QualityType> cookedQualities = new HashSet<>();
+    private final Set<Holder<QualityType>> cookedQualities = new HashSet<>();
     private double qualityBonus;
 
     public void useQuality(final ItemStack stack, @Nullable final Player player) {
-        QualityType chosenType = null;
+        Holder<QualityType> chosenType = null;
 
-        for (QualityType type : cookedQualities) {
-            if (chosenType == null || type.level() < chosenType.level()) {
+        for (Holder<QualityType> type : cookedQualities) {
+            if (chosenType == null || type.value().level() < chosenType.value().level()) {
                 chosenType = type;
             }
         }
@@ -51,7 +53,7 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         qualityBonus += value;
     }
 
-    public void addQualityType(final QualityType type) {
+    public void addQualityType(final Holder<QualityType> type) {
         cookedQualities.add(type);
     }
 
@@ -59,15 +61,12 @@ public class BlockData implements INBTSerializable<CompoundTag> {
     public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putDouble("quality_bonus", qualityBonus);
-
-        Registry<QualityType> registry = Utils.getQualityRegistry();
         CompoundTag types = new CompoundTag();
 
-        for (QualityType type : cookedQualities) {
-            //noinspection DataFlowIssue -> registry should be present
-            ResourceLocation key = registry.getKey(type);
-            //noinspection DataFlowIssue -> location should exist
-            types.putBoolean(key.toString(), true); // doesn't matter what the actual value is
+        for (Holder<QualityType> type : cookedQualities) {
+            Optional<ResourceKey<QualityType>> optional = type.unwrapKey();
+            // doesn't matter what the actual value is
+            optional.ifPresent(qualityTypeResourceKey -> types.putBoolean(qualityTypeResourceKey.location().toString(), true));
         }
 
         tag.put("types", types);
@@ -80,15 +79,10 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         cookedQualities.clear();
 
         CompoundTag types = tag.getCompound("types");
-        Registry<QualityType> registry = Utils.getQualityRegistry();
 
         for (String location : types.getAllKeys()) {
-            //noinspection DataFlowIssue -> registry should be present
-            QualityType type = registry.get(ResourceLocation.parse(location));
-
-            if (type != null) {
-                cookedQualities.add(type);
-            }
+            Optional<Holder.Reference<QualityType>> optional = provider.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.parse(location)));
+            optional.ifPresent(cookedQualities::add);
         }
     }
 }

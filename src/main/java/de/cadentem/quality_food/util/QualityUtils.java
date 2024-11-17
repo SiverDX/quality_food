@@ -7,6 +7,7 @@ import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -69,10 +70,10 @@ public class QualityUtils {
 
         for (Slot slot : slots) {
             if (isSlotValid.test(slot)) {
-                QualityType type = QualityUtils.getType(slot.getItem());
+                Holder<QualityType> type = QualityUtils.getType(slot.getItem());
 
-                if (type != QualityType.NONE) {
-                    bonus += (float) (type.craftingBonus() / validIngredients);
+                if (type.value() != QualityType.NONE) {
+                    bonus += (float) (type.value().craftingBonus() / validIngredients);
                 }
             }
         }
@@ -90,10 +91,10 @@ public class QualityUtils {
         float bonus = 0;
 
         for (ItemStack ingredient : container.getItems()) {
-            QualityType type = QualityUtils.getType(ingredient);
+            Holder<QualityType> type = QualityUtils.getType(ingredient);
 
-            if (type != QualityType.NONE) {
-                bonus += (float) (type.craftingBonus() / validIngredients);
+            if (type.value() != QualityType.NONE) {
+                bonus += (float) (type.value().craftingBonus() / validIngredients);
             }
         }
 
@@ -143,18 +144,18 @@ public class QualityUtils {
             return;
         }
 
-        List<QualityType> types = new ArrayList<>();
+        List<Holder<QualityType>> types = new ArrayList<>();
 
         if (canUpgrade) {
-            QualityType type = QualityUtils.getType(stack);
+            Holder<QualityType> type = QualityUtils.getType(stack);
 
             lookup.listElements().forEach(entry -> {
-                if (entry.value().level() > type.level()) {
-                    types.add(entry.value());
+                if (entry.value().level() > type.value().level()) {
+                    types.add(entry);
                 }
             });
         } else {
-            lookup.listElements().forEach(entry -> types.add(entry.value()));
+            lookup.listElements().forEach(types::add);
         }
 
         if (types.isEmpty()) {
@@ -162,7 +163,8 @@ public class QualityUtils {
         }
 
         // Try the highest level first
-        types.sort(Comparator.comparingInt(QualityType::level).reversed());
+        //noinspection unchecked -> type is valid
+        types.sort(Comparator.comparingInt(type -> ((Holder<QualityType>) type).value().level()).reversed());
 
         float roll = random.nextFloat();
         int fullRolls = (int) rolls;
@@ -172,8 +174,8 @@ public class QualityUtils {
         }
 
         for (int i = 0; i < fullRolls; i++) {
-            for (QualityType type : types) {
-                double chance = type.chance();
+            for (Holder<QualityType> type : types) {
+                double chance = type.value().chance();
 
                 for (Bonus bonus : bonusList) {
                     chance = switch (bonus.type()) {
@@ -183,7 +185,7 @@ public class QualityUtils {
                 }
 
                 if (roll <= chance) {
-                    boolean wasApplied = applyQuality(stack, type.createQuality(stack), canUpgrade);
+                    boolean wasApplied = applyQuality(stack, QualityType.createQuality(type, stack), canUpgrade);
 
                     if (wasApplied) {
                         break;
@@ -193,8 +195,8 @@ public class QualityUtils {
         }
     }
 
-    public static boolean applyQuality(final ItemStack stack, final QualityType type) {
-        return applyQuality(stack, type.createQuality(stack));
+    public static boolean applyQuality(final ItemStack stack, final Holder<QualityType> type) {
+        return applyQuality(stack, QualityType.createQuality(type, stack));
     }
 
     /**
@@ -256,7 +258,7 @@ public class QualityUtils {
             }
 
             if (targetChance > 0 && quality.level() > 0) {
-                bonusList.add(Bonus.multiplicative((float) (targetChance / quality.getType().chance())));
+                bonusList.add(Bonus.multiplicative((float) (targetChance / quality.getType().value().chance())));
             }
 
             QualityUtils.applyQuality(stack, player, bonusList);
@@ -390,7 +392,7 @@ public class QualityUtils {
     }
 
     /** Returns the corresponding {@link QualityType} to the {@link Quality} if possible, otherwise {@link QualityType#NONE} */
-    public static QualityType getType(final ItemStack stack) {
+    public static Holder<QualityType> getType(final ItemStack stack) {
         return QualityUtils.getQuality(stack).getType();
     }
 

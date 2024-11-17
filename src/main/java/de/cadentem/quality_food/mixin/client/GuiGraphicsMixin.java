@@ -26,7 +26,7 @@ public abstract class GuiGraphicsMixin {
         GuiGraphics instance = (GuiGraphics) (Object) this;
         instance.pose().pushPose();
         instance.pose().translate(0, 0, 200 + (model.isGui3d() ? guiOffset : 0));
-        instance.blitSprite(quality.getType().icon(), x, y, 16, 16);
+        instance.blitSprite(quality.getType().value().icon(), x, y, 16, 16);
         instance.pose().popPose();
     }
 }

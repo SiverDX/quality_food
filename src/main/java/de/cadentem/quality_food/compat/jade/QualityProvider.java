@@ -4,11 +4,13 @@ import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import snownee.jade.api.BlockAccessor;
@@ -17,6 +19,8 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.impl.ui.ElementHelper;
+
+import java.util.Optional;
 
 public class QualityProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
     private static final ResourceLocation ID = QualityFood.location("quality");
@@ -38,15 +42,8 @@ public class QualityProvider implements IBlockComponentProvider, IServerDataProv
             toolTip.add(Component.translatable(QualityFood.concat("quality")));
             toolTip.append(Component.literal(I18n.get("quality_type." + location.toLanguageKey())));
 
-            Registry<QualityType> registry = Utils.getQualityRegistry();
-
-            if (registry != null) {
-                QualityType type = registry.get(location);
-
-                if (type != null) {
-                    toolTip.append(ElementHelper.INSTANCE.sprite(type.icon(), 10, 10).translate(TRANSLATE));
-                }
-            }
+            Optional<Holder.Reference<QualityType>> optional = accessor.getLevel().holderLookup(QFComponents.QUALITY_TYPE_REGISTRY).get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, location));
+            optional.ifPresent(qualityTypeReference -> toolTip.append(ElementHelper.INSTANCE.sprite(qualityTypeReference.value().icon(), 10, 10).translate(TRANSLATE)));
         }
     }
 

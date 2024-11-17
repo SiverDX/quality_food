@@ -3,13 +3,12 @@ package de.cadentem.quality_food.core.codecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.util.Utils;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,17 +48,14 @@ public record QualityType(int level, double chance, double durationMultiplier, d
         cookingBonus = Math.clamp(cookingBonus, 0, 1);
     }
 
-    public @Nullable Quality createQuality(final ItemStack stack) {
-        Registry<QualityType> registry = Utils.getQualityRegistry();
+    public static Quality createQuality(final Holder<QualityType> holder, final ItemStack stack) {
+        List<FoodProperties.PossibleEffect> effectsToApply = null;
+        QualityType type = holder.value();
 
-        if (registry == null) {
-            return null;
-        }
+        if (type.effects.isPresent()) {
+            effectsToApply = new ArrayList<>();
 
-        if (effects.isPresent()) {
-            List<FoodProperties.PossibleEffect> effectsToApply = new ArrayList<>();
-
-            for (Effect configuration : effects.get()) {
+            for (Effect configuration : type.effects.get()) {
                 if (configuration.test(stack)) {
                     for (ChanceEffect chanceEffect : configuration.effects()) {
                         if (chanceEffect.chance() > 0 && RANDOM.nextDouble() < chanceEffect.chance()) {
@@ -69,11 +65,17 @@ public record QualityType(int level, double chance, double durationMultiplier, d
                 }
             }
 
-            if (!effectsToApply.isEmpty()) {
-                return new Quality(registry.getKey(this), level, Optional.of(effectsToApply));
+            if (effectsToApply.isEmpty()) {
+                effectsToApply = null;
             }
         }
 
-        return new Quality(registry.getKey(this), level, Optional.empty());
+        Optional<ResourceKey<QualityType>> optional = holder.unwrapKey();
+
+        if (optional.isPresent()) {
+            return new Quality(optional.get().location(), type.level, Optional.ofNullable(effectsToApply));
+        } else {
+            return Quality.NONE;
+        }
     }
 }

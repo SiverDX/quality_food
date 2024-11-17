@@ -25,7 +25,8 @@ public class FoodUtils {
             return original;
         }
 
-        QualityType type = QualityUtils.getType(stack);
+        Holder<QualityType> holder = QualityUtils.getType(stack);
+        QualityType type = holder.value();
 
         if (type == QualityType.NONE) {
             return original;

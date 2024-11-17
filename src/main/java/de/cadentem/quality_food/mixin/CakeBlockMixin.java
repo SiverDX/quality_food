@@ -14,11 +14,11 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class CakeBlockMixin {
     @ModifyArg(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private static int quality_food$modifyNutrition(int nutrition, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
-        return (int) (nutrition * LevelData.get(level, position).getType().nutritionMultiplier());
+        return (int) (nutrition * LevelData.get(level, position).getType().value().nutritionMultiplier());
     }
 
     @ModifyArg(method = "eat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;eat(IF)V"))
     private static float quality_food$modifySaturation(float saturation, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
-        return (float) (saturation * LevelData.get(level, position).getType().saturationMultiplier());
+        return (float) (saturation * LevelData.get(level, position).getType().value().saturationMultiplier());
     }
 }

@@ -14,13 +14,14 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class QualityTypeArgument implements ArgumentType<QualityType> {
+public class QualityTypeArgument implements ArgumentType<Holder<QualityType>> {
     private final HolderLookup.RegistryLookup<QualityType> lookup;
 
     public QualityTypeArgument(final CommandBuildContext context) {
@@ -28,13 +29,19 @@ public class QualityTypeArgument implements ArgumentType<QualityType> {
     }
 
     @Override
-    public QualityType parse(final StringReader reader) throws CommandSyntaxException {
-        Optional<Holder.Reference<QualityType>> reference = lookup.get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.read(reader)));
-        return reference.map(Holder.Reference::value).orElse(QualityType.NONE);
+    public @Nullable Holder<QualityType> parse(final StringReader reader) throws CommandSyntaxException {
+        Optional<Holder.Reference<QualityType>> optional = lookup.get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.read(reader)));
+
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            return Holder.direct(QualityType.NONE);
+        }
     }
 
-    public static QualityType get(final CommandContext<?> context) {
-        return context.getArgument("quality_type", QualityType.class);
+    public static Holder<QualityType> get(final CommandContext<?> context) {
+        //noinspection unchecked -> type is valid
+        return (Holder<QualityType>) context.getArgument("quality_type", Holder.class);
     }
 
     @Override
