@@ -26,7 +26,7 @@ public class QualityProvider implements IBlockComponentProvider {
 
             if (quality.level() > 0) {
                 toolTip.add(Component.translatable("quality_food.quality"));
-                toolTip.append(Component.literal(quality.getName()));
+                toolTip.append(quality.getTranslation());
                 toolTip.append(toolTip.getElementHelper().item(OverlayUtils.getOverlay(quality), 0.5f).size(SIZE).translate(TRANSLATE));
             }
         }

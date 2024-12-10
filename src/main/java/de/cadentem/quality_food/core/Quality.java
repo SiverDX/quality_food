@@ -1,14 +1,26 @@
 package de.cadentem.quality_food.core;
 
+import de.cadentem.quality_food.QualityFood;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public enum Quality {
-    NONE,
-    IRON,
-    GOLD,
-    DIAMOND,
-    UNDEFINED, // For potential later use
-    NONE_PLAYER_PLACED;
+    NONE("none"),
+    IRON("iron"),
+    GOLD("gold"),
+    DIAMOND("diamond"),
+    UNDEFINED("none"),
+    NONE_PLAYER_PLACED("none");
+
+    private final Component translation;
+
+    Quality(final String name) {
+        this.translation = Component.translatable("quality_type." + QualityFood.MODID + "." + name);
+    }
+
+    public Component getTranslation() {
+        return translation;
+    }
 
     /** Returns an implemented quality for the ordinal */
     public static @NotNull Quality get(int ordinal) {
