@@ -270,6 +270,7 @@ public class QualityUtils {
         }
     }
 
+    @SuppressWarnings("RedundantIfStatement") // ignore for clarity
     private static boolean isRelevantCrop(final BlockState state) {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             return true;

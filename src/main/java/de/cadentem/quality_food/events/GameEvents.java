@@ -21,12 +21,8 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemFishedEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
-import java.text.DecimalFormat;
-
 @EventBusSubscriber
 public class GameEvents {
-    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleFishing(final ItemFishedEvent event) {
         if (event.getEntity().level().isClientSide()) {

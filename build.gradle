@@ -76,9 +76,9 @@ dependencies {
 
 //    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
 
-    compileOnly "curse.maven:sophisticated-backpacks-422301:5871979" // 3.20.18.1122
-    compileOnly "curse.maven:sophisticated-storage-619320:5871955" // 0.10.46.922
-    compileOnly "curse.maven:sophisticated-core-618298:5869813" // 0.6.47.728
+    implementation "curse.maven:sophisticated-backpacks-422301:6157673" // 3.23.3.1191
+    implementation "curse.maven:sophisticated-storage-619320:6160803" // 1.3.4.1059
+    implementation "curse.maven:sophisticated-core-618298:6160815" // 1.2.7.857
 
 //    compileOnly fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
 

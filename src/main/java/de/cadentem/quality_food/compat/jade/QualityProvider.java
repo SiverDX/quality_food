@@ -40,9 +40,9 @@ public class QualityProvider implements IBlockComponentProvider, IServerDataProv
             ResourceLocation location = ResourceLocation.parse(tag.getString(QualityFood.concat("type")));
 
             toolTip.add(Component.translatable(QualityFood.concat("quality")));
-            toolTip.append(Component.literal(I18n.get("quality_type." + location.toLanguageKey())));
+            toolTip.append(Component.translatable("quality_type." + location.toLanguageKey()));
 
-            Optional<Holder.Reference<QualityType>> optional = accessor.getLevel().holderLookup(QFComponents.QUALITY_TYPE_REGISTRY).get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, location));
+            Optional<Holder.Reference<QualityType>> optional = accessor.getLevel().holder(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, location));
             optional.ifPresent(qualityTypeReference -> toolTip.append(ElementHelper.INSTANCE.sprite(qualityTypeReference.value().icon(), 10, 10).translate(TRANSLATE)));
         }
     }
