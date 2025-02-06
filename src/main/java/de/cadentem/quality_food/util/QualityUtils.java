@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
+import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.Quality;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
 import net.minecraft.core.RegistryAccess;
@@ -15,27 +15,20 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.WildCropBlock;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class QualityUtils {
     public static final String QUALITY_TAG = "quality_food";
@@ -45,146 +38,103 @@ public class QualityUtils {
 
     private static final RandomSource RANDOM = RandomSource.create();
 
-    public static boolean hasQuality(final ItemStack stack) {
-        if (stack == null || stack.isEmpty()) {
-            return false;
-        }
-
-        boolean hasTag = stack.getTag() != null && stack.getTag().get(QUALITY_TAG) != null;
-
-        if (!hasTag) {
-            return false;
-        }
-
-        return stack.getTag().getCompound(QUALITY_TAG).getInt(QUALITY_KEY) != 0;
-    }
-
     /**
-     * @param slots       Slots which may contain crafting materials with quality (will apply a bonus)
-     * @param isSlotValid To test whether the slot is relevant or not (since the list usually contains the inventory as well)
+     * Used for crafting <br>
+     * Quality depends on the average weight of the quality from the ingredients
      */
-    public static float getQualityBonus(final List<Slot> slots, final Predicate<Slot> isSlotValid) {
+    public static void applyQuality(final ItemStack stack, final Collection<ItemStack> ingredients, @Nullable final Player player) {
+        double totalWeight = 0;
         int validIngredients = 0;
-        float bonus = 0;
 
-        for (Slot slot : slots) {
-            if (isSlotValid.test(slot) && Utils.isValidItem(slot.getItem())) {
-                validIngredients++;
+        for (ItemStack ingredient : ingredients) {
+            if (!Utils.isValidItem(ingredient)) {
+                continue;
             }
+
+            totalWeight += QualityConfig.getWeight(getQuality(ingredient));
+            validIngredients++;
         }
 
         if (validIngredients == 0) {
-            return 0;
+            applyQuality(stack, player);
+            return;
         }
 
-        for (Slot slot : slots) {
-            if (isSlotValid.test(slot)) {
-                bonus += QualityConfig.getCraftingBonus(getQuality(slot.getItem())) / validIngredients;
+        Quality selected = Quality.NONE;
+        double averageWeight = totalWeight / validIngredients;
+
+        for (Quality quality : Quality.values()) {
+            if (quality.level() == 0) {
+                continue;
+            }
+
+            double chance = QualityConfig.calculateChance(quality, averageWeight);
+            chance = Modification.luck(player).apply(chance);
+
+            if (chance > 0 && chance >= RANDOM.nextDouble()) {
+                selected = quality;
             }
         }
 
-        return bonus;
+        QualityUtils.applyQuality(stack, selected);
     }
 
-    public static float getQualityBonus(final CraftingContainer container) {
-        int validIngredients = countIngredients(container);
+    /** Used for block drops */
+    public static void applyQuality(final ItemStack stack, final BlockState state, final Quality blockQuality, @Nullable final Player player, @Nullable final BlockState farmland) {
+        if (isRelevantCrop(state)) {
+            Quality selected = Quality.NONE;
 
-        if (validIngredients == 0) {
-            return 0;
+            for (Quality quality : Quality.values()) {
+                if (quality.level() == 0) {
+                    continue;
+                }
+
+                double chance = QualityConfig.calculateChance(quality, QualityConfig.getWeight(quality));
+                chance = Modification.harvestOrSeedMultiplier(quality, stack).apply(chance);
+                chance = Modification.luck(player).apply(chance);
+                chance = Modification.farmland(state, farmland).apply(chance);
+
+                if (chance > 0 && chance >= RANDOM.nextDouble()) {
+                    selected = quality;
+                }
+            }
+
+            QualityUtils.applyQuality(stack, selected);
+        } else if (isValidQuality(blockQuality)) {
+            // The block itself if it has quality
+            applyQuality(stack, blockQuality);
+        } else if (blockQuality != Quality.NONE_PLAYER_PLACED) {
+            // The block itself or harvested items when the crop has no quality
+            applyQuality(stack, player);
         }
-
-        float bonus = 0;
-
-        for (ItemStack ingredient : container.getItems()) {
-            bonus += QualityConfig.getCraftingBonus(getQuality(ingredient)) / validIngredients;
-        }
-
-        return bonus;
     }
 
-    public static void applyQuality(final ItemStack stack) {
-        applyQuality(stack, null, Bonus.DEFAULT);
-    }
+    /** Generic if no further context is present */
+    public static void applyQuality(final ItemStack stack, @Nullable final Player player) {
+        Quality selected = Quality.NONE;
 
-    public static void applyQuality(final ItemStack stack, @NotNull final Bonus bonus) {
-        applyQuality(stack, null, bonus);
-    }
+        for (Quality quality : Quality.values()) {
+            if (quality.level() == 0) {
+                continue;
+            }
 
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity) {
-        applyQuality(stack, entity, Bonus.DEFAULT);
-    }
+            double chance = RANDOM.nextDouble();
+            chance = Modification.luck(player).apply(chance);
 
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final Bonus bonus) {
-        List<Bonus> bonusList = new ArrayList<>();
-        bonusList.add(bonus);
-        applyQuality(stack, entity, bonusList);
-    }
-
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList) {
-        if (Utils.LAST_STACK.get() == stack) {
-            return;
-        }
-
-        Utils.LAST_STACK.set(stack);
-
-        applyQuality(stack, entity, bonusList, false);
-    }
-
-    /** If 'canUpgrade' is true the quality may be overridden by a higher level one */
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList, boolean canUpgrade) {
-        RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
-        double rolls = 1 + (entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 0);
-
-        if (rolls < 0) {
-            rolls = 0.1;
-        }
-
-        if (checkAndRoll(stack, random, bonusList, Quality.DIAMOND, rolls, canUpgrade)) {
-            return;
-        }
-
-        if (checkAndRoll(stack, random, bonusList, Quality.GOLD, rolls, canUpgrade)) {
-            return;
-        }
-
-        checkAndRoll(stack, random, bonusList, Quality.IRON, rolls, canUpgrade);
-    }
-
-    private static boolean checkAndRoll(final ItemStack stack, @NotNull final RandomSource random, @NotNull final List<Bonus> bonusList, final Quality quality, double rolls, boolean canUpgrade) {
-        float chance = QualityConfig.getChance(quality);
-
-        for (Bonus bonus : bonusList) {
-            chance = switch (bonus.type()) {
-                case ADDITIVE -> chance + bonus.amount();
-                case MULTIPLICATIVE -> chance * bonus.amount();
-            };
-        }
-
-        int fullRolls = (int) rolls;
-
-        for (int i = 0; i < fullRolls; i++) {
-            if (random.nextFloat() <= chance) {
-                applyQuality(stack, quality, canUpgrade);
-                return true;
+            if (chance >= 1 - QualityConfig.getChance(quality)) {
+                selected = quality;
             }
         }
 
-        if (random.nextDouble() <= (rolls - fullRolls) && random.nextFloat() <= chance) {
-            applyQuality(stack, quality, canUpgrade);
-            return true;
-        }
-
-        return false;
+        QualityUtils.applyQuality(stack, selected);
     }
 
-    /**
-     * @param stack   The item to apply quality to
-     * @param quality The quality to directly set ({@link Quality#NONE} is not valid)
-     */
+    /** Applies the quality if its valid and the item has no existing quality */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
         applyQuality(stack, quality, false);
     }
 
+    /** Applies the quality if its valid (if 'canUpgrade' is set to 'true' it can override the quality if its of a higher level */
     public static void applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
         if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
             return;
@@ -218,50 +168,7 @@ public class QualityUtils {
         tag.put(QUALITY_TAG, qualityTag);
     }
 
-    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
-        if (farmland == null) {
-            applyQuality(stack, quality, state, player);
-            return;
-        }
-
-        double farmlandMultiplier = ServerConfig.getFarmlandMultiplier(state, farmland);
-
-        if (farmlandMultiplier == -1) {
-            applyQuality(stack, quality, state, player);
-        } else {
-            Bonus farmlandBonus = Bonus.multiplicative((float) farmlandMultiplier);
-            List<Bonus> bonusList = new ArrayList<>();
-            bonusList.add(farmlandBonus);
-            applyQuality(stack, quality, state, player, bonusList);
-        }
-    }
-
-    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player) {
-        applyQuality(stack, quality, state, player, new ArrayList<>());
-    }
-
-    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
-        if (isRelevantCrop(state)) {
-            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
-
-            if (stack.is(Tags.Items.SEEDS)) {
-                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
-            }
-
-            if (targetChance > 0 && quality.level() > 0) {
-                float multiplier = targetChance / QualityConfig.getChance(quality);
-                bonusList.add(Bonus.multiplicative(multiplier));
-                applyQuality(stack, player, bonusList);
-            } else {
-                applyQuality(stack, player, bonusList);
-            }
-        } else if (isValidQuality(quality)) {
-            applyQuality(stack, quality);
-        } else if (quality != Quality.NONE_PLAYER_PLACED) {
-            applyQuality(stack, player);
-        }
-    }
-
+    @SuppressWarnings("RedundantIfStatement") // ignore for clarity
     public static boolean isRelevantCrop(final BlockState state) {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             return true;
@@ -305,10 +212,6 @@ public class QualityUtils {
         if (quality.level() > 0 && (shouldRetainQuality || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
             applyQuality(result, quality);
         }
-    }
-
-    public static boolean isInvalidItem(final ItemStack stack) {
-        return hasQuality(stack) || !Utils.isValidItem(stack);
     }
 
     private static Pair<HashMap<Item, Integer>, int[]> getContainerData(final Container container) {
@@ -385,6 +288,20 @@ public class QualityUtils {
         return getCookingBonus(stack, false);
     }
 
+    public static boolean hasQuality(final ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return false;
+        }
+
+        boolean hasTag = stack.getTag() != null && stack.getTag().get(QUALITY_TAG) != null;
+
+        if (!hasTag) {
+            return false;
+        }
+
+        return stack.getTag().getCompound(QUALITY_TAG).getInt(QUALITY_KEY) != 0;
+    }
+
     public static Quality getQuality(@Nullable final ItemStack stack) {
         if (stack == null) {
             return Quality.NONE;
@@ -402,17 +319,5 @@ public class QualityUtils {
 
     public static boolean isValidQuality(final Quality quality) {
         return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
-    }
-
-    public static int countIngredients(final CraftingContainer container) {
-        int count = 0;
-
-        for (ItemStack stack : container.getItems()) {
-            if (Utils.isValidItem(stack)) {
-                count++;
-            }
-        }
-
-        return count;
     }
 }

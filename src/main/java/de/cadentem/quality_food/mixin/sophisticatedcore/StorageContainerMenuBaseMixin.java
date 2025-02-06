@@ -2,7 +2,7 @@ package de.cadentem.quality_food.mixin.sophisticatedcore;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
+import de.cadentem.quality_food.util.ContainerUtils;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /** Apply quality when crafting with shift-click */
@@ -44,7 +45,8 @@ public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMen
                     return;
                 }
 
-                QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftingContainer.getSlots(), slotToCheck -> !(slotToCheck instanceof ResultSlot))));
+                Collection<ItemStack> ingredients = ContainerUtils.getIngredients(craftingContainer.getSlots(), slotToCheck -> !(slotToCheck instanceof ResultSlot));
+                QualityUtils.applyQuality(stack, ingredients, player);
             }
         });
 

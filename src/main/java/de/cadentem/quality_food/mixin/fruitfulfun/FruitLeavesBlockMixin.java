@@ -25,7 +25,7 @@ public abstract class FruitLeavesBlockMixin {
         if (quality.level() > 0) {
             QualityUtils.applyQuality(fruit, quality);
         } else {
-            QualityUtils.applyQuality(fruit);
+            QualityUtils.applyQuality(fruit, (Player) null);
         }
 
         return fruit;

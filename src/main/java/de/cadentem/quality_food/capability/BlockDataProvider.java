@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.capability;
 
 import com.sammy.minersdelight.setup.MDBlockEntities;
-import com.sammy.minersdelight.setup.MDBlocks;
 import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

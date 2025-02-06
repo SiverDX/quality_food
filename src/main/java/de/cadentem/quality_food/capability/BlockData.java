@@ -1,35 +1,54 @@
 package de.cadentem.quality_food.capability;
 
-import de.cadentem.quality_food.core.Bonus;
+import de.cadentem.quality_food.config.QualityConfig;
+import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class BlockData {
+    private static final RandomSource RANDOM = RandomSource.create();
+
     private final Set<Quality> cookedQualities = new HashSet<>();
     private double qualityBonus;
 
     public void useQuality(final ItemStack stack, @Nullable final Player player) {
-        Quality chosenQuality = null;
+        Quality selected = null;
 
         for (Quality quality : cookedQualities) {
-            if (chosenQuality == null || quality.level() < chosenQuality.level()) {
-                chosenQuality = quality;
+            if (selected == null || quality.level() < selected.level()) {
+                selected = quality;
             }
         }
 
-        if (chosenQuality != null) {
-            QualityUtils.applyQuality(stack, chosenQuality);
+        if (selected != null) {
+            QualityUtils.applyQuality(stack, selected);
+        } else {
+            selected = Quality.NONE;
         }
 
-        QualityUtils.applyQuality(stack, player, List.of(Bonus.additive((float) qualityBonus)), true);
+        for (Quality quality : Quality.values()) {
+            if (quality.level() == 0) {
+                return;
+            }
+
+            double chance = RANDOM.nextDouble();
+            chance = Modification.luck(player).apply(chance);
+            chance = Modification.additive((float) qualityBonus).apply(chance);
+
+            if (chance >= 1 - QualityConfig.getChance(quality)) {
+                selected = quality;
+            }
+        }
+
+        QualityUtils.applyQuality(stack, selected, true);
 
         qualityBonus = 0;
         cookedQualities.clear();

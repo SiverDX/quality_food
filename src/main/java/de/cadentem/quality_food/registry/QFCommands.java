@@ -124,9 +124,7 @@ public class QFCommands {
         return 0;
     }
 
-    /**
-     * Mostly a copy from {@link net.minecraft.server.commands.GiveCommand}
-     */
+    /** Mostly a copy from {@link net.minecraft.server.commands.GiveCommand} */
     private static int giveItem(final CommandSourceStack source, final ItemInput input, final Collection<ServerPlayer> players, int count, final Quality quality) throws CommandSyntaxException {
         if (quality.level() == 0) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.invalid_quality"));
@@ -137,7 +135,7 @@ public class QFCommands {
         int maxCount = maxStackSize * /* MAX_ALLOWED_ITEMSTACKS */ 100;
         ItemStack tempStack = input.createItemStack(1, false);
 
-        if (QualityUtils.isInvalidItem(tempStack)) {
+        if (QualityUtils.hasQuality(tempStack) || !Utils.isValidItem(tempStack)) {
             source.sendFailure(Component.translatable("commands.quality_food.quality.failed.no_quality", tempStack.getDisplayName()));
             return 0;
         }

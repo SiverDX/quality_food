@@ -2,6 +2,7 @@ package de.cadentem.quality_food.mixin.collectorsreap;
 
 import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.compat.collectorsreap.FruitBushContext;
+import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
@@ -48,7 +49,8 @@ public abstract class FruitBushBlockMixin {
     @ModifyVariable(method = "dropFruit", at = @At("STORE"), remap = false)
     private ItemStack quality_food$applyQuality(final ItemStack fruit) {
         if (quality_food$context != null) {
-            QualityUtils.applyQuality(fruit, LevelData.get(quality_food$context.level(), quality_food$context.position()), quality_food$context.state(), null, quality_food$context.level().getBlockState(quality_food$context.position().below()));
+            Quality blockQuality = LevelData.get(quality_food$context.level(), quality_food$context.position());
+            QualityUtils.applyQuality(fruit, quality_food$context.state(), blockQuality, null, quality_food$context.level().getBlockState(quality_food$context.position().below()));
         }
 
         return fruit;

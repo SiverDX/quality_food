@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.config;
 
 import de.cadentem.quality_food.core.Quality;
+import net.minecraft.util.Mth;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +11,12 @@ import java.util.List;
 public class QualityConfig {
     private final List<EffectConfig> effects = new ArrayList<>();
 
+    public ForgeConfigSpec.DoubleValue weight;
+    public ForgeConfigSpec.DoubleValue minWeight;
+
     public ForgeConfigSpec.DoubleValue chance;
+    public ForgeConfigSpec.DoubleValue cropMultiplier;
+    public ForgeConfigSpec.DoubleValue seedMultiplier;
 
     public ForgeConfigSpec.DoubleValue durationMultiplier;
     public ForgeConfigSpec.DoubleValue probabilityAddition;
@@ -18,8 +24,6 @@ public class QualityConfig {
 
     public ForgeConfigSpec.DoubleValue nutritionMultiplier;
     public ForgeConfigSpec.DoubleValue saturationMultiplier;
-
-    public ForgeConfigSpec.DoubleValue craftingBonus;
 
     public ForgeConfigSpec.ConfigValue<List<? extends String>> effect_list_internal;
 
@@ -36,6 +40,76 @@ public class QualityConfig {
             case DIAMOND -> 0.005f;
             default -> 0;
         };
+    }
+
+    public static double getWeight(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
+
+        if (config != null) {
+            return config.weight.get();
+        }
+
+        return switch (quality) {
+            case IRON -> 1;
+            case GOLD -> 2;
+            case DIAMOND -> 3;
+            default -> 0;
+        };
+    }
+
+    @SuppressWarnings("DuplicateBranchesInSwitch") // ignore
+    public static double getMinWeight(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
+
+        if (config != null) {
+            return config.minWeight.get();
+        }
+
+        return switch (quality) {
+            case IRON -> 0;
+            case GOLD -> 1;
+            case DIAMOND -> 1.75;
+            default -> 0;
+        };
+    }
+
+    public static float getCropMultiplier(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
+
+        if (config != null) {
+            return config.cropMultiplier.get().floatValue();
+        }
+
+        return switch (quality) {
+            case IRON -> 1;
+            case GOLD -> 0.9f;
+            case DIAMOND -> 0.75f;
+            default -> 0;
+        };
+    }
+
+    public static float getSeedMultiplier(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
+
+        if (config != null) {
+            return config.seedMultiplier.get().floatValue();
+        }
+
+        return switch (quality) {
+            case IRON -> 1;
+            case GOLD -> 0.9f;
+            case DIAMOND -> 0.75f;
+            default -> 0;
+        };
+    }
+
+    /**
+     * A value of '0' means the threshold has not been reached to get that quality <br>
+     * A value of '1' means that the quality is guaranteed
+     */
+    public static double calculateChance(final Quality quality, double averageWeight) {
+        double minWeight = getMinWeight(quality);
+        return Mth.clamp((  averageWeight - minWeight) / (getWeight(quality) - minWeight), 0, 1);
     }
 
     public static double getDurationMultiplier(@NotNull final Quality quality) {
@@ -90,21 +164,6 @@ public class QualityConfig {
         }
 
         return 1 + quality.level() * 0.25f;
-    }
-
-    public static float getCraftingBonus(@NotNull final Quality quality) {
-        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
-
-        if (config != null) {
-            return config.craftingBonus.get().floatValue();
-        }
-
-        return switch (quality) {
-            case IRON -> 0.15f;
-            case GOLD -> 0.4f;
-            case DIAMOND -> 0.7f;
-            default -> 0;
-        };
     }
 
     public void initializeEffects() {

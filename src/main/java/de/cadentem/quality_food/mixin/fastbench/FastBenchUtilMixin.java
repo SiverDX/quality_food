@@ -3,7 +3,6 @@ package de.cadentem.quality_food.mixin.fastbench;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import dev.shadowsoffire.fastbench.util.CraftingInventoryExt;
 import dev.shadowsoffire.fastbench.util.FastBenchUtil;
@@ -23,7 +22,7 @@ public abstract class FastBenchUtilMixin {
             return result;
         }
 
-        QualityUtils.applyQuality(result, player, Bonus.additive(QualityUtils.getQualityBonus(craftSlots)));
+        QualityUtils.applyQuality(result, craftSlots.getItems(), player);
         return result;
     }
 

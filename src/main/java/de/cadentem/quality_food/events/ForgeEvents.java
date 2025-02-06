@@ -10,8 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -40,15 +38,12 @@ public class ForgeEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleLoot(final LivingDropsEvent event) {
-        Entity attacker = event.getSource().getEntity();
-
-        if (attacker == null || /* Player death should not grant quality */ event.getEntity() instanceof Player) {
+        if (event.getEntity() instanceof Player) {
+            // Player death should not grant quality
             return;
         }
 
-        if (attacker instanceof LivingEntity livingAttacker) {
-            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker));
-        }
+        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), event.getSource().getEntity() instanceof Player player ? player : null));
     }
 
     @SubscribeEvent // remove existing effect tooltips

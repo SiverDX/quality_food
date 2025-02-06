@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.mixin.fastbench;
 
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import dev.shadowsoffire.fastbench.util.CraftResultSlotExt;
 import net.minecraft.world.Container;
@@ -29,6 +28,6 @@ public abstract class CraftResultSlotExtMixin extends ResultSlot {
             return;
         }
 
-        QualityUtils.applyQuality(stack, access.quality_food$getPlayer(), Bonus.additive(QualityUtils.getQualityBonus(access.quality_food$getCraftSlots())));
+        QualityUtils.applyQuality(stack, access.quality_food$getCraftSlots().getItems(), access.quality_food$getPlayer());
     }
 }

@@ -4,9 +4,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +27,10 @@ public class QualityItemArgument extends ItemArgument {
     @SuppressWarnings("DataFlowIssue") // Registry default value is 'Items.AIR'
     public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(@NotNull final CommandContext<S> context, @NotNull final SuggestionsBuilder builder) {
         return super.listSuggestions(context, builder).thenApply(suggestions -> {
-            suggestions.getList().removeIf(entry -> QualityUtils.isInvalidItem(ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.getText())).getDefaultInstance()));
+            suggestions.getList().removeIf(entry -> {
+                ItemStack stack = ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry.getText())).getDefaultInstance();
+                return QualityUtils.hasQuality(stack) || !Utils.isValidItem(stack);
+            });
             return suggestions;
         });
     }

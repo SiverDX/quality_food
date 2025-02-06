@@ -8,6 +8,7 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -100,9 +101,9 @@ public abstract class BlockMixin {
         DropData dropData = DropData.current.get();
 
         if (dropData == null) {
-            QualityUtils.applyQuality(stack);
+            QualityUtils.applyQuality(stack, (Player) null);
         } else {
-            QualityUtils.applyQuality(stack, dropData.quality(), dropData.state(), dropData.player(), dropData.farmland());
+            QualityUtils.applyQuality(stack, dropData.state(), dropData.quality(), dropData.player(), dropData.farmland());
         }
 
         return stack;

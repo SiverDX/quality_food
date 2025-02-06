@@ -12,18 +12,17 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(MillstoneBlockEntity.class)
 public abstract class MillstoneBlockEntityMixin {
-    @Unique
-    private static final ThreadLocal<Quality> quality_food$INPUT = new ThreadLocal<>();
+    @Unique private Quality quality_food$quality = Quality.NONE;
 
     @ModifyVariable(method = "process", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
     private ItemStack quality_food$storeInput(final ItemStack stack) {
-        quality_food$INPUT.set(QualityUtils.getQuality(stack));
+        quality_food$quality = QualityUtils.getQuality(stack);
         return stack;
     }
 
     @ModifyArg(method = "lambda$process$1", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemHandlerHelper;insertItemStacked(Lnet/minecraftforge/items/IItemHandler;Lnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;"), remap = false)
     private ItemStack quality_food$applyQuality(final ItemStack stack) {
-        QualityUtils.applyQuality(stack, quality_food$INPUT.get());
+        QualityUtils.applyQuality(stack, quality_food$quality);
         return stack;
     }
 }

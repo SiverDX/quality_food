@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.config;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.RegistryAccess;
@@ -36,7 +35,6 @@ public class ServerConfig {
     public static final ForgeConfigSpec.BooleanValue HANDLE_SEED_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
-    // public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES_COOKING;
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FARMLAND_CONFIG_INTERNAL;
     private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
@@ -46,7 +44,7 @@ public class ServerConfig {
         fillNoQualityRecipes();
         fillRetainQualityRecipes();
 
-        LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.25 multiplier -> 2.5 rolls, meaning 2 rolls and 50% chance for another)").defineInRange("luck_multiplier", 0.25d, 0f, 10);
+        LUCK_MULTIPLIER = BUILDER.comment("Luck will affect how often each quality will be tried for (10 luck * 0.1 multiplier -> + 0.75 rolls, resulting in 1 guaranteed (baseline) and 75% chance for another)").defineInRange("luck_multiplier", 0.075d, 0f, 10);
         String cropTargetChanceComment1 = "The chance of quality crops dropping its own quality (also affects other qualities) - It affects a multiplier which is calculated as: <crop_target_chance> / <quality.chance>";
         String cropTargetChanceComment2 = "Meaning for Gold it would result in a multiplier of 20 (0.6 / 0.03) -> The chances for all qualities would then be: 20 * 0.10 (iron) = 2 (100%) | 20 * 0.03 (gold) = 0.6 (60%) | 20 * 0.005 = 0.1 (10%)";
         CROP_TARGET_CHANCE = BUILDER.comment(cropTargetChanceComment1 + cropTargetChanceComment2).defineInRange("crop_target_chance", 0.6d, 0, 1);
@@ -58,7 +56,6 @@ public class ServerConfig {
         BUILDER.push("Crafting");
         NO_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should not result in quality being applied (e.g. when the items can be converted back and forth)").defineList("no_quality_recipes", NO_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
-        // RETAIN_QUALITY_RECIPES_COOKING = BUILDER.comment("Defines cooking (furnace etc.) recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes_cooking", List.of(), ServerConfig::validateRecipe);
         HANDLE_COMPACTING = BUILDER.comment("Defines whether (de)compacting should be handled automatically (in terms of retaining quality)").define("handle_compacting", true);
         HANDLE_SEED_RECIPES = BUILDER.comment("Attempt to handle recipes involving seed items automatically (to avoid having to add all of them to the retain_quality_recipes config)").define("handle_seed_recipes", true);
         BUILDER.pop();
@@ -71,15 +68,16 @@ public class ServerConfig {
             BUILDER.push(quality.name());
 
             QualityConfig config = new QualityConfig();
+            config.weight = BUILDER.comment("The weight of the quality (relevant for crafting - average weight from the quality of the ingredients determine affect the resulting quality)").defineInRange("weight", QualityConfig.getWeight(quality), 0, 100);
+            config.minWeight = BUILDER.comment("The min. weight of the quality (chance for quality when crafting: (average_weight - min_weight) / (weight / min_weight)").defineInRange("min_weight", QualityConfig.getMinWeight(quality), 0, 100);
             config.chance = BUILDER.comment("The chance for a quality to occur (with no luck or other bonus)").defineInRange("chance", QualityConfig.getChance(quality), 0, 1);
+            config.cropMultiplier = BUILDER.comment("A chance multiplier for dropped crops (from a fully grown crop)").defineInRange("crop_multiplier", QualityConfig.getCropMultiplier(quality), 0, 5);
+            config.seedMultiplier = BUILDER.comment("A chance multiplier for dropped seeds (from a fully grown crop)").defineInRange("seed_multiplier", QualityConfig.getCropMultiplier(quality), 0, 5);
             config.durationMultiplier = BUILDER.comment("By how much the duration of the effect will get multiplied (beneficial) or divided (harmful) for").defineInRange("duration_multiplier", QualityConfig.getDurationMultiplier(quality), 1, 100);
             config.probabilityAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the probability (chance for the effect to apply)").defineInRange("probability_addition", QualityConfig.getProbabilityAddition(quality), 0, 1);
             config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
             config.nutritionMultiplier = BUILDER.comment("By how much the nutrition will get multiplied for").defineInRange("nutrition_multiplier", QualityConfig.getNutritionMultiplier(quality), 1, 100);
             config.saturationMultiplier = BUILDER.comment("By how much the saturation will get multiplied for").defineInRange("saturation_multiplier", QualityConfig.getSaturationMultiplier(quality), 1, 100);
-            String craftingBonusComment1 = "Additive bonus to the chance an ingredient gives (when crafting through a crafting table)";
-            String craftingBonusComment2 = "\nThis value is divided by the amount of ingredient types (which can have quality) (i.e. 1x diamond & 1x no quality -> total bonus of 0.35 (if diamond provides a bonus of 0.7))";
-            config.craftingBonus = BUILDER.comment(craftingBonusComment1 + craftingBonusComment2).defineInRange("crating_bonus", QualityConfig.getCraftingBonus(quality), 0, 1);
             config.effect_list_internal = BUILDER.comment("List of effects this rarity can grant (the item can be a tag) (<item>;<effect>;<chance>;<duration>;<amplifier>;<probability>)").defineList("effect_list", List.of(), ServerConfig::isEffectListValid);
             QUALITY_CONFIG.put(quality, config);
             BUILDER.pop();
@@ -132,16 +130,16 @@ public class ServerConfig {
         return RETAIN_QUALITY_RECIPES.get().contains(recipe.getId().toString());
     }
 
-    public static double getFarmlandMultiplier(final BlockState crop, final BlockState farmland) {
+    public static float getFarmlandMultiplier(final BlockState crop, final BlockState farmland) {
         if (crop != null && farmland != null) {
             for (FarmlandConfig farmlandConfig : FARMLAND_CONFIG) {
                 if (farmlandConfig.predicate.test(crop, farmland)) {
-                    return farmlandConfig.multiplier;
+                    return (float) farmlandConfig.multiplier;
                 }
             }
         }
 
-        return -1;
+        return 1;
     }
 
     private static boolean validateRecipe(final Object object) {
