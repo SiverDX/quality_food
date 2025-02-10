@@ -96,8 +96,6 @@ public class QualityUtils {
 
                 if (chance > 0 && chance >= RANDOM.nextDouble()) {
                     selected = quality;
-                } else {
-                    break;
                 }
             }
 
