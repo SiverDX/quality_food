@@ -89,13 +89,15 @@ public class QualityUtils {
                     continue;
                 }
 
-                double chance = QualityConfig.calculateChance(quality, QualityConfig.getWeight(quality));
+                double chance = QualityConfig.calculateChance(quality, QualityConfig.getWeight(blockQuality));
                 chance = Modification.harvestOrSeedMultiplier(quality, stack).apply(chance);
                 chance = Modification.luck(player).apply(chance);
                 chance = Modification.farmland(state, farmland).apply(chance);
 
                 if (chance > 0 && chance >= RANDOM.nextDouble()) {
                     selected = quality;
+                } else {
+                    break;
                 }
             }
 

@@ -162,15 +162,11 @@ public class ServerConfig {
                 return false;
             }
 
-            String crop = data[FarmlandConfig.CROP];
-
-            if (!ResourceLocation.isValidResourceLocation(crop.startsWith("#") ? crop.substring(1) : crop)) {
+            if (isInvalidResource(data[FarmlandConfig.CROP], true)) {
                 return false;
             }
 
-            String farmland = data[FarmlandConfig.FARMLAND];
-
-            if (!ResourceLocation.isValidResourceLocation(farmland.startsWith("#") ? farmland.substring(1) : farmland)) {
+            if (isInvalidResource(data[FarmlandConfig.FARMLAND], true)) {
                 return false;
             }
 
@@ -198,11 +194,11 @@ public class ServerConfig {
                 return false;
             }
 
-            if (!ResourceLocation.isValidResourceLocation(data[EffectConfig.ITEM])) {
+            if (isInvalidResource(data[EffectConfig.ITEM], true)) {
                 return false;
             }
 
-            if (!ResourceLocation.isValidResourceLocation(data[EffectConfig.EFFECT])) {
+            if (isInvalidResource(data[EffectConfig.EFFECT], false)) {
                 return false;
             }
 
@@ -222,6 +218,18 @@ public class ServerConfig {
         }
 
         return false;
+    }
+
+    private static boolean isInvalidResource(final String resource, final boolean allowTags) {
+        if (resource == null) {
+            return true;
+        }
+
+        if (allowTags && resource.startsWith("#")) {
+            return !ResourceLocation.isValidResourceLocation(resource.substring(1));
+        }
+
+        return !ResourceLocation.isValidResourceLocation(resource);
     }
 
     private static boolean isInvalidChance(final String value) {

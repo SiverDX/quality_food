@@ -109,7 +109,7 @@ public class QualityConfig {
      */
     public static double calculateChance(final Quality quality, double averageWeight) {
         double minWeight = getMinWeight(quality);
-        return Mth.clamp((  averageWeight - minWeight) / (getWeight(quality) - minWeight), 0, 1);
+        return Mth.clamp((averageWeight - minWeight) / (getWeight(quality) - minWeight), 0, 1);
     }
 
     public static double getDurationMultiplier(@NotNull final Quality quality) {
