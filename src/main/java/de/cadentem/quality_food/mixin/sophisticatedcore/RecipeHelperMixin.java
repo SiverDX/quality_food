@@ -28,7 +28,7 @@ public abstract class RecipeHelperMixin {
         QualityUtils.applyQuality(result, QualityUtils.getQuality(((CompactedItemAccess) compactedItem).quality_food$getItem()));
     }
 
-    @ModifyReturnValue(method = "lambda$getUncompactResultItems$8", at = @At("RETURN"))
+    @ModifyReturnValue(method = "lambda$getUncompactResultItems$9", at = @At("RETURN"))
     private static ItemStack quality_food$applyQualityUncompacting(final ItemStack result, @Local(argsOnly = true) final CraftingContainer container) {
         QualityUtils.applyQuality(result, QualityUtils.getQuality(container.asCraftInput().getItem(0)));
         return result;
