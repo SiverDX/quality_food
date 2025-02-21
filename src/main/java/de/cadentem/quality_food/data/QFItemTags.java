@@ -17,7 +17,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static de.cadentem.quality_food.compat.Compat.*;
+import static de.cadentem.quality_food.compat.Compat.COLLECTORS_REAP;
+import static de.cadentem.quality_food.compat.Compat.FARMERSDELIGHT;
+import static de.cadentem.quality_food.compat.Compat.FARM_AND_CHARM;
+import static de.cadentem.quality_food.compat.Compat.FRUITFUL_FUN;
+import static de.cadentem.quality_food.compat.Compat.SUPPLEMENTARIES;
+import static de.cadentem.quality_food.compat.Compat.forge;
+import static de.cadentem.quality_food.compat.Compat.location;
 
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));

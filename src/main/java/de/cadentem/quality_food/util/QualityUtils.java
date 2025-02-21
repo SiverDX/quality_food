@@ -236,6 +236,10 @@ public class QualityUtils {
 
     /** Get the most fitting quality (if all items are diamond -> diamond / if 3 are diamond and 6 are gold -> gold) */
     private static Quality getQuality(final int[] qualities, int itemCount) {
+        if (itemCount == 0) {
+            return Quality.NONE;
+        }
+
         for (int ordinal = Quality.DIAMOND.ordinal(); ordinal > 0; ordinal--) {
             itemCount -= qualities[ordinal];
 
