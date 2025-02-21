@@ -339,6 +339,10 @@ public class QualityUtils {
 
     /** Get the most fitting quality (if all items are diamond -> diamond / if 3 are diamond and 6 are gold -> gold) */
     private static Quality getQuality(final HashMap<Integer, Integer> qualities, int itemCount, final ItemStack result) {
+        if (itemCount == 0) {
+            return Quality.NONE;
+        }
+
         List<Integer> levels = qualities.keySet().stream().sorted(Comparator.comparingInt(Integer::intValue).reversed()).toList();
 
         for (Integer level : levels) {
