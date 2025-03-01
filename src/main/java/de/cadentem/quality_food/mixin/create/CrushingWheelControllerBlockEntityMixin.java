@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class CrushingWheelControllerBlockEntityMixin {
     @Shadow private RecipeWrapper wrapper;
 
-    @Inject(method = "applyRecipe", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/recipe/ProcessingInventory;clear()V", shift = At.Shift.BEFORE))
+    @Inject(method = "applyRecipe", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/recipe/ProcessingInventory;clear()V", shift = At.Shift.BEFORE, ordinal = 0))
     private void quality_food$storeInput(final CallbackInfo callback, @Share("input") final LocalRef<ItemStack> input) {
         input.set(wrapper.getItem(0));
     }

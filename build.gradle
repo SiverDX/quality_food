@@ -83,7 +83,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:toms-storage-378609:6093707") // 1.7.0
 
-    implementation fg.deobf("curse.maven:create-328085:4835191") // 0.5.1f
+    implementation fg.deobf("curse.maven:create-328085:6247663") // 6.0.0
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
@@ -128,7 +128,7 @@ dependencies {
 
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")
-    implementation fg.deobf("curse.maven:jei-238222:5705580") // 15.18.0.79
+    implementation fg.deobf("curse.maven:jei-238222:6075247") // 15.20.0.106
 
     /* --- Mixin Configuration --- */
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))

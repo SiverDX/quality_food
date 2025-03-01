@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.capability.BlockData;
 import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.compat.create.QFItemAttributes;
+import de.cadentem.quality_food.compat.create.QualityItemAttributeType;
 import de.cadentem.quality_food.compat.harvestwithease.ModEvents;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.config.ServerConfig;
@@ -42,6 +42,10 @@ public class QualityFood {
             MinecraftForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);
         }
 
+        if (Compat.isModLoaded(Compat.CREATE)) {
+            QualityItemAttributeType.REGISTRY.register(modEventBus);
+        }
+
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
     }
@@ -49,10 +53,6 @@ public class QualityFood {
     @SubscribeEvent
     public void commonSetup(final FMLCommonSetupEvent event) {
         NetworkHandler.register();
-
-        if (Compat.isModLoaded(Compat.CREATE)) {
-            event.enqueueWork(QFItemAttributes::register);
-        }
     }
 
     @SubscribeEvent
