@@ -89,7 +89,15 @@ public class QualityUtils {
                     continue;
                 }
 
-                double chance = QualityConfig.calculateChance(quality, QualityConfig.getWeight(blockQuality));
+                double chance;
+
+                if (blockQuality.level() == 0) {
+                    // Weight would be 0, meaning no quality can be calculated
+                    chance = QualityConfig.getChance(quality);
+                } else {
+                    chance = QualityConfig.calculateChance(quality, QualityConfig.getWeight(blockQuality));
+                }
+
                 chance = Modification.harvestOrSeedMultiplier(quality, stack).apply(chance);
                 chance = Modification.luck(player).apply(chance);
                 chance = Modification.farmland(state, farmland).apply(chance);
