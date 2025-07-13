@@ -54,6 +54,14 @@ public record Modification(Type type, float amount) {
         return Modification.multiplicative(ServerConfig.getFarmlandMultiplier(crop, farmland));
     }
 
+    public static Modification farmland(final ItemStack crop, @Nullable final ItemStack farmland) {
+        if (farmland == null) {
+            return NONE;
+        }
+
+        return Modification.multiplicative(ServerConfig.getFarmlandMultiplier(crop, farmland));
+    }
+
     public enum Type {
         ADDITIVE,
         MULTIPLICATIVE

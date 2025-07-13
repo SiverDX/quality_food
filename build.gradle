@@ -118,6 +118,10 @@ dependencies {
     implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
     implementation fg.deobf("curse.maven:miners-delight-plus-689630:5038950") // 1.2.3
 
+    /* --- Compatibility (Botany Pots + addons) */
+    implementation fg.deobf("curse.maven:bookshelf-228525:5423987")
+    implementation fg.deobf("curse.maven:botany-pots-353928:6348581")
+
     /* --- Compatibility Test --- */
     implementation fg.deobf("curse.maven:croptopia-415438:4997459") // 3.0.4
     implementation fg.deobf("curse.maven:epherolib-885449:4889101") // 1.2.0
