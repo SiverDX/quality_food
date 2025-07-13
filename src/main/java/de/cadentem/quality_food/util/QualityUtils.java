@@ -79,7 +79,9 @@ public class QualityUtils {
         QualityUtils.applyQuality(stack, selected);
     }
 
-    /** Used for block drops */
+    /**
+     * Used for block drops
+     */
     public static void applyQuality(final ItemStack stack, final BlockState state, final Quality blockQuality, @Nullable final Player player, @Nullable final BlockState farmland) {
         if (isRelevantCrop(state)) {
             Quality selected = Quality.NONE;
@@ -117,7 +119,9 @@ public class QualityUtils {
         }
     }
 
-    /** Used when both the seed and the farmland are items (E.G. Botany Pots) */
+    /**
+     * Used when both the seed and the farmland are items (E.G. Botany Pots)
+     */
     public static void applyQuality(final ItemStack stack, final ItemStack seed, final ItemStack soil) {
         Quality selected = Quality.NONE;
 
@@ -126,7 +130,8 @@ public class QualityUtils {
                 continue;
             }
 
-            double chance = QualityConfig.getChance(quality);
+            Quality cropQuality = QualityUtils.getQuality(seed);
+            double chance = QualityConfig.calculateChance(quality, QualityConfig.getWeight(cropQuality));
 
             chance = Modification.harvestOrSeedMultiplier(quality, stack).apply(chance);
             chance = Modification.farmland(seed, soil).apply(chance);
@@ -139,7 +144,9 @@ public class QualityUtils {
         QualityUtils.applyQuality(stack, selected);
     }
 
-    /** Generic if no further context is present */
+    /**
+     * Generic if no further context is present
+     */
     public static void applyQuality(final ItemStack stack, @Nullable final Player player) {
         Quality selected = Quality.NONE;
 
@@ -159,12 +166,16 @@ public class QualityUtils {
         QualityUtils.applyQuality(stack, selected);
     }
 
-    /** Applies the quality if its valid and the item has no existing quality */
+    /**
+     * Applies the quality if its valid and the item has no existing quality
+     */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
         applyQuality(stack, quality, false);
     }
 
-    /** Applies the quality if its valid (if 'canUpgrade' is set to 'true' it can override the quality if its of a higher level */
+    /**
+     * Applies the quality if its valid (if 'canUpgrade' is set to 'true' it can override the quality if its of a higher level
+     */
     public static void applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
         if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
             return;
@@ -264,7 +275,9 @@ public class QualityUtils {
         return Pair.of(items, qualities);
     }
 
-    /** Get the most fitting quality (if all items are diamond -> diamond / if 3 are diamond and 6 are gold -> gold) */
+    /**
+     * Get the most fitting quality (if all items are diamond -> diamond / if 3 are diamond and 6 are gold -> gold)
+     */
     private static Quality getQuality(final int[] qualities, int itemCount) {
         if (itemCount == 0) {
             return Quality.NONE;
