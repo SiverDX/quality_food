@@ -117,6 +117,28 @@ public class QualityUtils {
         }
     }
 
+    /** Used when both the seed and the farmland are items (E.G. Botany Pots) */
+    public static void applyQuality(final ItemStack stack, final ItemStack seed, final ItemStack soil) {
+        Quality selected = Quality.NONE;
+
+        for (Quality quality : Quality.values()) {
+            if (quality.level() == 0) {
+                continue;
+            }
+
+            double chance = QualityConfig.getChance(quality);
+
+            chance = Modification.harvestOrSeedMultiplier(quality, stack).apply(chance);
+            chance = Modification.farmland(seed, soil).apply(chance);
+
+            if (chance > 0 && chance >= RANDOM.nextDouble()) {
+                selected = quality;
+            }
+        }
+
+        QualityUtils.applyQuality(stack, selected);
+    }
+
     /** Generic if no further context is present */
     public static void applyQuality(final ItemStack stack, @Nullable final Player player) {
         Quality selected = Quality.NONE;

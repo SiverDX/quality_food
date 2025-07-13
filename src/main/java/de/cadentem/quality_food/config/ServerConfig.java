@@ -5,6 +5,8 @@ import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -140,6 +142,12 @@ public class ServerConfig {
         }
 
         return 1;
+    }
+
+    public static float getFarmlandMultiplier(final ItemStack cropItem, final ItemStack farmlandItem) {
+        if(!(cropItem.getItem() instanceof BlockItem crop) || !(farmlandItem.getItem() instanceof BlockItem farmland)) return 1;
+
+        return getFarmlandMultiplier(crop.getBlock().defaultBlockState(), farmland.getBlock().defaultBlockState());
     }
 
     private static boolean validateRecipe(final Object object) {
