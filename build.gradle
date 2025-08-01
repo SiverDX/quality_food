@@ -83,7 +83,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:toms-storage-378609:6093707") // 1.7.0
 
-    compileOnly fg.deobf("curse.maven:create-328085:6323270") // 6.0.4
+    implementation fg.deobf("curse.maven:create-328085:6641603") // 6.0.6
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
@@ -113,6 +113,10 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:smarter-farmers-farmers-replant-491290:5699535") // 2.1.0
     compileOnly fg.deobf("curse.maven:selene-499980:5811604") // 2.13.10
+
+    // TODO
+    implementation fg.deobf("curse.maven:visual-workbench-500273:6798189") // 8.0.1
+    implementation fg.deobf("curse.maven:puzzles-lib-495476:6387081") // 8.1.32
 
     /* --- Compatibility (Farmer's Delight addons) --- */
     implementation fg.deobf("curse.maven:farmers-delight-398521:5051242") // 1.2.4
