@@ -52,6 +52,10 @@ public class ForgeEvents {
             return;
         }
 
+        if (event.getItemStack().isEmpty() || event.getItemStack().getFoodProperties(ClientProxy.getLocalPlayer()) == null) {
+            return;
+        }
+
         for (Component component : event.getToolTip()) {
             if (component instanceof MutableComponent mutable && mutable.getContents() instanceof TranslatableContents contents && contents.getKey().equals("potion.withDuration")) {
                 event.getToolTip().remove(component);
