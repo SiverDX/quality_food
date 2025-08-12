@@ -65,6 +65,7 @@ repositories {
     flatDir { dirs 'dev' }
     maven { url = "https://jitpack.io" } // Mixin Squared
     maven { url = "https://www.cursemaven.com" } // CurseForge
+    maven { url = "https://maven.createmod.net" } // Create
 }
 
 dependencies {
@@ -84,6 +85,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:toms-storage-378609:6093707") // 1.7.0
 
     implementation fg.deobf("curse.maven:create-328085:6641603") // 6.0.6
+    implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
     compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
@@ -114,7 +116,6 @@ dependencies {
     compileOnly fg.deobf("curse.maven:smarter-farmers-farmers-replant-491290:5699535") // 2.1.0
     compileOnly fg.deobf("curse.maven:selene-499980:5811604") // 2.13.10
 
-    // TODO
     implementation fg.deobf("curse.maven:visual-workbench-500273:6798189") // 8.0.1
     implementation fg.deobf("curse.maven:puzzles-lib-495476:6387081") // 8.1.32
 

@@ -2,6 +2,7 @@ package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.SpecialContainer;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Modification;
@@ -230,13 +231,22 @@ public class QualityUtils {
         for (int i = 0; i < container.getContainerSize(); i++) {
             ItemStack containerStack = container.getItem(i);
             Item item = containerStack.getItem();
-            items.put(item, items.getOrDefault(item, 0) + 1);
+
+            if (container instanceof SpecialContainer) {
+                items.put(item, items.getOrDefault(item, 0) + containerStack.getCount());
+            } else {
+                items.put(item, items.getOrDefault(item, 0) + 1);
+            }
 
             if (!Utils.isValidItem(containerStack)) {
                 continue;
             }
 
-            qualities[getQuality(containerStack).ordinal()]++;
+            if (container instanceof SpecialContainer) {
+                qualities[getQuality(containerStack).ordinal()] += containerStack.getCount();
+            } else {
+                qualities[getQuality(containerStack).ordinal()]++;
+            }
         }
 
         return Pair.of(items, qualities);
@@ -268,20 +278,32 @@ public class QualityUtils {
         }
 
         int containerSize = container.getContainerSize();
-        int result = -1;
 
         for (Item key : keys) {
             int itemCount = items.get(key);
 
-            if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
-                // If the other slots (besides 2x2 / 3x3) are not empty then it's not a valid compacting recipe
-                return -1;
-            } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
-                result = itemCount;
+            if (container instanceof SpecialContainer) {
+                if (key == Items.AIR) {
+                    continue;
+                }
+
+                // There is probably a better way to check this but not worth the effort at the moment
+                if (itemCount == 4 || itemCount == 9) {
+                    return itemCount;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
+                    // If the other slots (besides 2x2 / 3x3) are not empty then it's not a valid compacting recipe
+                    return -1;
+                } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
+                    return itemCount;
+                }
             }
         }
 
-        return result;
+        return -1;
     }
 
     public static float getCookingBonus(final ItemStack stack, boolean considerStackSize) {
