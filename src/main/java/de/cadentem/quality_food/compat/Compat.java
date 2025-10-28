@@ -20,6 +20,7 @@ public class Compat {
     public static final String COLLECTORS_REAP = "collectorsreap";
     public static final String FARM_AND_CHARM = "farm_and_charm";
     public static final String MINERS_DELIGHT = "miners_delight";
+    public static final String TOOLTIPOVERHAUL = "tooltipoverhaul";
 
     private static final Map<String, Boolean> MODS = new HashMap<>();
 

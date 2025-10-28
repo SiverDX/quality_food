@@ -2,6 +2,7 @@ package de.cadentem.quality_food.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.util.OverlayUtils;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,7 +28,15 @@ public abstract class GuiGraphicsMixin {
             return;
         }
 
-        int offset = 50 + (model.isGui3d() ? guiOffset : 0);
+        int offset;
+
+        if (Compat.isModLoaded(Compat.TOOLTIPOVERHAUL)) {
+            // Need to reduce the offset since it will render the item in 3d at times
+            // Having a too high offset will make it look like: | A         * | instead of | A * |
+            offset = 3 + (model.isGui3d() ? 7 : 0);
+        } else {
+            offset = 50 + (model.isGui3d() ? guiOffset : 0);
+        }
 
         pose.pushPose();
         pose.translate(0, 0, offset);
