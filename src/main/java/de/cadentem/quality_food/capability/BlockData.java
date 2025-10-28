@@ -36,7 +36,7 @@ public class BlockData {
 
         for (Quality quality : Quality.values()) {
             if (quality.level() == 0) {
-                return;
+                continue;
             }
 
             double chance = RANDOM.nextDouble();
