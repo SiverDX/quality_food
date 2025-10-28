@@ -84,7 +84,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:toms-storage-378609:6093707") // 1.7.0
 
-    implementation fg.deobf("curse.maven:create-328085:6641603") // 6.0.6
+    implementation fg.deobf("curse.maven:create-328085:7149905") // 6.0.7
     implementation(fg.deobf("net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"))
 
     compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
