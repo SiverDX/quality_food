@@ -38,11 +38,11 @@ public class QualityFood {
         QFCommands.COMMAND_ARGUMENTS.register(modEventBus);
         MinecraftForge.EVENT_BUS.addListener(QFCommands::registerCommands);
 
-        if (Compat.isModLoaded(Compat.HARVEST_WITH_EASE)) {
+        if (Compat.Mod.HARVEST_WITH_EASE.isLoaded()) {
             MinecraftForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);
         }
 
-        if (Compat.isModLoaded(Compat.CREATE)) {
+        if (Compat.Mod.CREATE.isLoaded()) {
             QualityItemAttributeType.REGISTRY.register(modEventBus);
         }
 

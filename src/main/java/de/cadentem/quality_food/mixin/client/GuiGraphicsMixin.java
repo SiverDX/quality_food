@@ -30,7 +30,7 @@ public abstract class GuiGraphicsMixin {
 
         int offset;
 
-        if (Compat.isModLoaded(Compat.TOOLTIPOVERHAUL)) {
+        if (Compat.Mod.TOOLTIPOVERHAUL.isLoaded()) {
             // Need to reduce the offset since it will render the item in 3d at times
             // Having a too high offset will make it look like: | A         * | instead of | A * |
             offset = 3 + (model.isGui3d() ? 7 : 0);

@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.satisfy.herbalbrews.core.registry.EntityTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.registry.ModBlockEntityTypes;
@@ -56,16 +57,21 @@ public class BlockDataProvider implements ICapabilitySerializable<CompoundTag> {
         return capability;
     }
 
+    @SuppressWarnings("RedundantIfStatement") // ignore for clarity
     public static boolean isValid(final BlockEntity entity) {
         if (entity instanceof AbstractFurnaceBlockEntity) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && entity.getType() == ModBlockEntityTypes.COOKING_POT.get()) {
+        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && entity.getType() == ModBlockEntityTypes.COOKING_POT.get()) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.MINERS_DELIGHT) && entity.getType() == MDBlockEntities.COPPER_POT.get()) {
+        if (Compat.Mod.MINERS_DELIGHT.isLoaded() && entity.getType() == MDBlockEntities.COPPER_POT.get()) {
+            return true;
+        }
+
+        if (Compat.Mod.HERALBREWS.isLoaded() && entity.getType() == EntityTypeRegistry.TEA_KETTLE_BLOCK_ENTITY.get()) {
             return true;
         }
 

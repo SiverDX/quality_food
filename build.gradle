@@ -111,6 +111,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:lets-do-farm-charm-1038103:7088013") // 1.0.14
     implementation fg.deobf("curse.maven:lets-do-vinery-704465:6965751") // 1.4.41
+    implementation fg.deobf("curse.maven:lets-do-herbal-brews-951221:6458889") // 1.0.12
     implementation fg.deobf("curse.maven:do-api-864599:5468182") // 1.2.15
     implementation fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
 

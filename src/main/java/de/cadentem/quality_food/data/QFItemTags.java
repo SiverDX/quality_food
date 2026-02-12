@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.data;
 
 import de.cadentem.quality_food.QualityFood;
+import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -16,14 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
-
-import static de.cadentem.quality_food.compat.Compat.COLLECTORS_REAP;
-import static de.cadentem.quality_food.compat.Compat.FARMERSDELIGHT;
-import static de.cadentem.quality_food.compat.Compat.FARM_AND_CHARM;
-import static de.cadentem.quality_food.compat.Compat.FRUITFUL_FUN;
-import static de.cadentem.quality_food.compat.Compat.SUPPLEMENTARIES;
-import static de.cadentem.quality_food.compat.Compat.forge;
-import static de.cadentem.quality_food.compat.Compat.location;
 
 public class QFItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MATERIAL_WHITELIST = TagKey.create(Registries.ITEM, new ResourceLocation(QualityFood.MODID, "material_whitelist"));
@@ -46,18 +39,18 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.SEEDS)
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(forge("dough")) // Farmer's Delight
-                .addOptionalTag(forge("flour")) // Farmer's Delight
-                .addOptionalTag(location(FARMERSDELIGHT, "wild_crops"))
-                .addOptional(location(FARMERSDELIGHT, "rice_panicle"))
-                .addOptional(location(FRUITFUL_FUN, "lemon_roast_chicken_block"))
-                .addOptional(location(COLLECTORS_REAP, "pomegranate"))
-                .addOptional(location(FARM_AND_CHARM, "barley"))
-                .addOptional(location(FARM_AND_CHARM, "oat"))
+                .addOptionalTag(Compat.forge("dough")) // Farmer's Delight
+                .addOptionalTag(Compat.forge("flour")) // Farmer's Delight
+                .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops"))
+                .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "rice_panicle"))
+                .addOptional(Compat.location(Compat.Mod.FRUITFUL_FUN.modid(), "lemon_roast_chicken_block"))
+                .addOptional(Compat.location(Compat.Mod.COLLECTORS_REAP.modid(), "pomegranate"))
+                .addOptional(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "barley"))
+                .addOptional(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "oat"))
         ;
 
         tag(BLACKLIST)
-                .addOptional(location(SUPPLEMENTARIES, "flax"))
-                .addOptional(location(SUPPLEMENTARIES, "flax_seeds"));
+                .addOptional(Compat.location(Compat.Mod.SUPPLEMENTARIES.modid(), "flax"))
+                .addOptional(Compat.location(Compat.Mod.SUPPLEMENTARIES.modid(), "flax_seeds"));
     }
 }

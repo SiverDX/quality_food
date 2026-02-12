@@ -20,11 +20,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class TomatoCropBlockMixin {
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/satisfy/farm_and_charm/core/block/crops/TomatoCropBlock;dropTomatoes(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.BEFORE, remap = false))
     private void quality_food$setContext(final BlockState state, final Level level, final BlockPos position, final Player player, final InteractionHand hand, final BlockHitResult result, final CallbackInfoReturnable<InteractionResult> callback) {
-        DropData.current.set(DropData.create(LevelData.get(level, position), state, player, level.getBlockState(position.below())));
+        DropData.CURRENT.set(DropData.create(LevelData.get(level, position), state, player, level.getBlockState(position.below())));
     }
 
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/satisfy/farm_and_charm/core/block/crops/TomatoCropBlock;dropTomatoes(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.AFTER, remap = false))
     private void quality_food$clearContext(final BlockState state, final Level level, final BlockPos position, final Player player, final InteractionHand hand, final BlockHitResult result, final CallbackInfoReturnable<InteractionResult> callback) {
-        DropData.current.remove();
+        DropData.CURRENT.remove();
     }
 }

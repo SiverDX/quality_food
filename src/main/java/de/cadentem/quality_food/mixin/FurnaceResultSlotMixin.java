@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,8 +30,8 @@ public abstract class FurnaceResultSlotMixin extends Slot {
             return;
         }
 
-        if (container instanceof AbstractFurnaceBlockEntity furnace) {
-            Utils.useQuality(furnace, stack, player);
+        if (container instanceof BlockEntity blockEntity) {
+            Utils.useQuality(blockEntity, stack, player);
         }
     }
 }

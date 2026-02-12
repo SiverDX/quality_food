@@ -183,17 +183,19 @@ public class QualityUtils {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && state.getBlock() instanceof WildCropBlock) {
+        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && state.getBlock() instanceof WildCropBlock) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.COLLECTORS_REAP) && state.getBlock() instanceof FruitBushBlock && state.getValue(FruitBushBlock.AGE) == FruitBushBlock.MAX_AGE) {
+        if (Compat.Mod.COLLECTORS_REAP.isLoaded() && state.getBlock() instanceof FruitBushBlock && state.getValue(FruitBushBlock.AGE) == FruitBushBlock.MAX_AGE) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.location(Compat.FARM_AND_CHARM, "wild_crops")))) {
+        if (Compat.Mod.FARM_AND_CHARM.isLoaded() && state.is(TagKey.create(Registries.BLOCK, Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "wild_crops")))) {
             return true;
         }
+
+        // TODO :: check
 
         return false;
     }
@@ -306,20 +308,15 @@ public class QualityUtils {
         return -1;
     }
 
-    public static float getCookingBonus(final ItemStack stack, boolean considerStackSize) {
+    public static float getCookingBonus(final ItemStack stack, int resultStackSize) {
         Quality quality = getQuality(stack);
-        int stackSize = considerStackSize ? stack.getCount() : 1;
 
         return switch (quality) {
-            case IRON -> stackSize / 256f;
-            case GOLD -> stackSize / 128f;
-            case DIAMOND -> stackSize / 64f;
+            case IRON -> 1f / (resultStackSize * 3);
+            case GOLD -> 1f / (resultStackSize * 2);
+            case DIAMOND -> 1f / resultStackSize;
             default -> 0;
         };
-    }
-
-    public static float getCookingBonus(final ItemStack stack) {
-        return getCookingBonus(stack, false);
     }
 
     public static boolean hasQuality(final ItemStack stack) {

@@ -27,7 +27,13 @@ public abstract class CopperPotBlockEntityMixin {
 
     /** Increment quality after cooking an item */
     @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE, remap = true))
-    private void quality_food$incrementQuality(final CookingPotRecipe recipe, final CopperPotBlockEntity blockEntity, final CallbackInfoReturnable<Boolean> callback, @Local(ordinal = 2) final ItemStack stack) {
-        Utils.incrementQuality(blockEntity, stack, recipe.getIngredients().size());
+    private void quality_food$incrementQuality(final CookingPotRecipe recipe, final CopperPotBlockEntity blockEntity, final CallbackInfoReturnable<Boolean> callback, @Local(name = "slotStack") final ItemStack stack) {
+        int resultStackSize = 64;
+
+        if (blockEntity.getLevel() != null) {
+            resultStackSize = recipe.getResultItem(blockEntity.getLevel().registryAccess()).getMaxStackSize();
+        }
+
+        Utils.incrementQuality(blockEntity, stack, recipe.getIngredients().size(), resultStackSize);
     }
 }
