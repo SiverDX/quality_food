@@ -14,7 +14,7 @@ import java.util.List;
 
 @Mixin(value = FanProcessing.class, remap = false)
 public abstract class FanProcessingMixin {
-    @ModifyVariable(method = "applyProcessing(Lnet/minecraft/world/entity/item/ItemEntity;Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;)Z", at = @At(value = "STORE"))
+    @ModifyVariable(method = "applyProcessing(Lnet/minecraft/world/entity/item/ItemEntity;Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;)Z", at = @At(value = "STORE"), name = "stacks")
     private static List<ItemStack> quality_food$applyQuality(final List<ItemStack> result, @Local(argsOnly = true) final ItemEntity input) {
         if (result == null || result.isEmpty()) {
             return result;
@@ -24,7 +24,7 @@ public abstract class FanProcessingMixin {
         return result;
     }
 
-    @ModifyVariable(method = "applyProcessing(Lcom/simibubi/create/content/kinetics/belt/transport/TransportedItemStack;Lnet/minecraft/world/level/Level;Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;)Lcom/simibubi/create/content/kinetics/belt/behaviour/TransportedItemStackHandlerBehaviour$TransportedResult;", at = @At("STORE"))
+    @ModifyVariable(method = "applyProcessing(Lcom/simibubi/create/content/kinetics/belt/transport/TransportedItemStack;Lnet/minecraft/world/level/Level;Lcom/simibubi/create/content/kinetics/fan/processing/FanProcessingType;)Lcom/simibubi/create/content/kinetics/belt/behaviour/TransportedItemStackHandlerBehaviour$TransportedResult;", at = @At("STORE"), name = "stacks")
     private static List<ItemStack> quality_food$applyQuality(final List<ItemStack> result, @Local(argsOnly = true) final TransportedItemStack ingredient) {
         if (result == null) {
             return null;

@@ -3,7 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         maven { /* Forge */ url 'https://maven.minecraftforge.net/' }
         maven { /* ParchmentMC */ url "https://maven.parchmentmc.org" }
-        maven { /* SpongePowered */ url "https://repo.spongepowered.org/repository/maven-public/" }
+//        maven { /* SpongePowered */ url "https://repo.spongepowered.org/repository/maven-public/" }
     }
 }
 

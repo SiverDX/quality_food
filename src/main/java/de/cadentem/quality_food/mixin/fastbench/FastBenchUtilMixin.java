@@ -26,7 +26,7 @@ public abstract class FastBenchUtilMixin {
         return result;
     }
 
-    @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE", ordinal = 1))
+    @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE", ordinal = 1), name = "itemstack")
     private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
         QualityUtils.handleConversion(result, craftSlots, resultSlots.getRecipeUsed(), level.registryAccess());
         return result;

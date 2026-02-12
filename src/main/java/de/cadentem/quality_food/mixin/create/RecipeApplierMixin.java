@@ -24,7 +24,7 @@ public abstract class RecipeApplierMixin {
     }
 
     /** Used my mechanical press */
-    @ModifyVariable(method = "applyRecipeOn(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)V", at = @At("STORE"))
+    @ModifyVariable(method = "applyRecipeOn(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)V", at = @At("STORE"), name = "stacks")
     private static List<ItemStack> quality_food$applyQuality(final List<ItemStack> result, @Local(argsOnly = true) final ItemEntity ingredient) {
         result.forEach(stack -> QualityUtils.applyQuality(stack, List.of(ingredient.getItem()), null));
         return result;

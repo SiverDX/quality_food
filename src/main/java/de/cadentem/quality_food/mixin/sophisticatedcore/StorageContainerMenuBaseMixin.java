@@ -33,8 +33,8 @@ public abstract class StorageContainerMenuBaseMixin extends AbstractContainerMen
         super(type, containerId);
     }
 
-    @ModifyVariable(method = "quickMoveStack", at = @At("STORE"), ordinal = 2)
-    private ItemStack quality_food$applyQuality(final ItemStack stack, @Local final Slot slot) {
+    @ModifyVariable(method = "quickMoveStack", at = @At("STORE"), name = "stackToMerge")
+    private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(name = "slot") final Slot slot) {
         if (!(slot instanceof ResultSlot)) {
             return stack;
         }

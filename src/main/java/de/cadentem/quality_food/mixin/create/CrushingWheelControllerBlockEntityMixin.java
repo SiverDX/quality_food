@@ -13,7 +13,7 @@ import java.util.List;
 @Mixin(value = CrushingWheelControllerBlockEntity.class, remap = false)
 public abstract class CrushingWheelControllerBlockEntityMixin {
     @ModifyArg(method = "applyRecipe", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/foundation/item/ItemHelper;addToList(Lnet/minecraft/world/item/ItemStack;Ljava/util/List;)V", ordinal = 0))
-    private ItemStack quality_food$applyQuality(final ItemStack result, @Local(ordinal = 0) final ItemStack input) {
+    private ItemStack quality_food$applyQuality(final ItemStack result, @Local(name = "input") final ItemStack input) {
         QualityUtils.applyQuality(result, List.of(input), null);
         return result;
     }

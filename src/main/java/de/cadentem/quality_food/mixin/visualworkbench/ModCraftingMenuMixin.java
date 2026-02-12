@@ -22,7 +22,7 @@ public abstract class ModCraftingMenuMixin {
 
     /** Apply quality when crafting with shift-click */
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lfuzs/visualworkbench/world/inventory/ModCraftingMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
-    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
+    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(name = "itemstack1") final ItemStack stack) {
         if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed())) {
             return;
         }

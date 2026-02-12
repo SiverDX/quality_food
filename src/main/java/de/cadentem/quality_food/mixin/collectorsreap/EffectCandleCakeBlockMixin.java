@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 /** Apply quality to eaten / cut slices */
 @Mixin(value = EffectCandleCakeBlock.class, remap = false)
 public abstract class EffectCandleCakeBlockMixin {
-    @ModifyVariable(method = "eatSlice", at = @At("STORE"))
+    @ModifyVariable(method = "eatSlice", at = @At("STORE"), name = "sliceStack")
     private ItemStack quality_food$applyQuality_eat(final ItemStack slice, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final BlockPos position) {
         QualityUtils.applyQuality(slice, LevelData.get(level, position, true));
         return slice;

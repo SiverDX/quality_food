@@ -15,7 +15,7 @@ import snownee.fruits.food.FoodBlock;
 /** Apply quality to served item */
 @Mixin(FoodBlock.class)
 public abstract class FoodBlockMixin {
-    @ModifyVariable(method = "use", at = @At("STORE"))
+    @ModifyVariable(method = "use", at = @At("STORE"), name = "stack")
     private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final BlockPos position) {
         Quality quality = LevelData.get(level, position, true);
 

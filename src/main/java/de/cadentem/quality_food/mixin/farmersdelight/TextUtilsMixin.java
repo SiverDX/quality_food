@@ -10,7 +10,7 @@ import vectorwing.farmersdelight.common.utility.TextUtils;
 /** Access food properties through the stack (i.e. have context of tag data) */
 @Mixin(value = TextUtils.class, remap = false)
 public class TextUtilsMixin {
-    @ModifyVariable(method = "addFoodEffectTooltip", at = @At("STORE"))
+    @ModifyVariable(method = "addFoodEffectTooltip", at = @At("STORE"), name = "foodStats")
     private static FoodProperties quality_food$switchCall(final FoodProperties foodProperties, /* Method parameters: */ final ItemStack stack) {
         return stack.getFoodProperties(null);
     }

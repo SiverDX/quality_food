@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 /** Jade for 1.20 does not support Block server data */
 @Mixin(value = BlockAccessorImpl.class, remap = false)
 public abstract class BlockAccessorImplMixin {
-    @ModifyVariable(method = "lambda$handleRequest$0", at = @At(value = "STORE"))
+    @ModifyVariable(method = "lambda$handleRequest$0", at = @At(value = "STORE"), name = "tile")
     private static BlockEntity test(final BlockEntity blockEntity, @Local(argsOnly = true) final BlockAccessor accessor, @Local(argsOnly = true) final Consumer<CompoundTag> responseSender) {
         if (blockEntity == null && Utils.isValidBlock(accessor.getBlockState())) {
             CompoundTag tag = accessor.getServerData();

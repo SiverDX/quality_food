@@ -28,10 +28,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class FruitBushBlockMixin {
     @Unique private FruitBushContext quality_food$context;
 
-    @Inject(method = "performBonemeal", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 1))
-    private void quality_food$storeQuality(final ServerLevel level, final RandomSource random, final BlockPos position, final BlockState state, final CallbackInfo callback) {
-        Utils.storeQuality(state, level, position, position.above());
-    }
+//    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 1))
+//    private void quality_food$storeQuality(final ServerLevel level, final RandomSource random, final BlockPos position, final BlockState state, final CallbackInfo callback) {
+//        Utils.storeQuality(state, level, position, position.above());
+//    }
 
     /** Set up the context (contains block state and player data) */
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/brdle/collectorsreap/common/block/FruitBushBlock;dropFruit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", shift = At.Shift.BEFORE, remap = false))
@@ -46,7 +46,7 @@ public abstract class FruitBushBlockMixin {
     }
 
     /** Apply quality to the harvested fruit */
-    @ModifyVariable(method = "dropFruit", at = @At("STORE"), remap = false)
+    @ModifyVariable(method = "dropFruit", at = @At("STORE"), remap = false, name = "stack")
     private ItemStack quality_food$applyQuality(final ItemStack fruit) {
         if (quality_food$context != null) {
             Quality blockQuality = LevelData.get(quality_food$context.level(), quality_food$context.position());

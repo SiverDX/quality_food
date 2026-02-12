@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class MillstoneBlockEntityMixin {
     @Unique private Quality quality_food$quality = Quality.NONE;
 
-    @ModifyVariable(method = "process", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE), ordinal = 0)
+    @ModifyVariable(method = "process", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE), name = "stackInSlot")
     private ItemStack quality_food$storeInput(final ItemStack stack) {
         quality_food$quality = QualityUtils.getQuality(stack);
         return stack;
