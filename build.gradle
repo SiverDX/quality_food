@@ -146,6 +146,8 @@ dependencies {
     implementation fg.deobf("curse.maven:farmers-delight-398521:7596353") // 1.2.10
     implementation fg.deobf("curse.maven:miners-delight-plus-689630:5038950") // 1.2.3
 
+    implementation fg.deobf("curse.maven:display-delight-1144296:7176651") // 1.4.0
+
     /* --- Compatibility Test --- */
     implementation fg.deobf("curse.maven:croptopia-415438:4997459") // 3.0.4
     implementation fg.deobf("curse.maven:epherolib-885449:4889101") // 1.2.0
