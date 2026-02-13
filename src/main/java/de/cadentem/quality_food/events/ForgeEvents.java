@@ -3,12 +3,19 @@ package de.cadentem.quality_food.events;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.client.ClientProxy;
+import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.core.EffectComponent;
+import de.cadentem.quality_food.util.FoodUtils;
 import de.cadentem.quality_food.util.QualityUtils;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -20,13 +27,12 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.text.DecimalFormat;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.satisfy.herbalbrews.core.items.DrinkBlockItem;
+import net.satisfy.herbalbrews.core.items.FlaskItem;
 
 @Mod.EventBusSubscriber
 public class ForgeEvents {
-    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleFishing(final ItemFishedEvent event) {
         if (event.getHookEntity() != null && event.getHookEntity().level().isClientSide()) {
@@ -56,6 +62,8 @@ public class ForgeEvents {
             return;
         }
 
+        // TODO :: may remove tooltips that do not come from food properties etc.
+
         for (Component component : event.getToolTip()) {
             if (component instanceof MutableComponent mutable && mutable.getContents() instanceof TranslatableContents contents && contents.getKey().equals("potion.withDuration")) {
                 event.getToolTip().remove(component);
@@ -84,6 +92,37 @@ public class ForgeEvents {
 
         for (Pair<MobEffectInstance, Float> possibleEffect : properties.getEffects()) {
             event.getTooltipElements().add(Either.right(new EffectComponent(possibleEffect)));
+        }
+
+        if (Compat.Mod.HERALBREWS.isLoaded()) {
+            CompoundTag nbt = stack.getTag();
+
+            if (nbt == null) {
+                return;
+            }
+
+            if (stack.getItem() instanceof FlaskItem && nbt.contains("CustomPotionEffects")) {
+                ListTag effects = nbt.getList("CustomPotionEffects", Tag.TAG_COMPOUND);
+
+                for (int i = 0; i < effects.size(); i++) {
+                    CompoundTag effect = effects.getCompound(i);
+                    MobEffectInstance instance = MobEffectInstance.load(effect);
+
+                    if (instance != null) {
+                        event.getTooltipElements().add(Either.right(new EffectComponent(Pair.of(instance, 1f))));
+                    }
+                }
+            } else if (stack.getItem() instanceof DrinkBlockItem && nbt.contains("Effect")) {
+                MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(nbt.getString("Effect")));
+
+                if (effect == null) {
+                    return;
+                }
+
+                FoodUtils.modifyEffect(new MobEffectInstance(effect, nbt.getInt("EffectDuration"), 0), QualityUtils.getQuality(stack)).ifPresent(instance -> {
+                    event.getTooltipElements().add(Either.right(new EffectComponent(Pair.of(instance, 1f))));
+                });
+            }
         }
     }
 }

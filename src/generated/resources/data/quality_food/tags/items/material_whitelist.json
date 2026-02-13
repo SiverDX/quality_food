@@ -41,6 +41,18 @@
     {
       "id": "farm_and_charm:oat",
       "required": false
+    },
+    {
+      "id": "herbalbrews:hibiscus",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:lavender_blossom",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:green_tea_leaf",
+      "required": false
     }
   ]
 }

@@ -55,6 +55,8 @@
     "fruitfulfun.FoodBlockMixin",
     "fruitfulfun.FruitLeavesBlockMixin",
     "herbalbrews.CoffeeCropBlockMixin",
+    "herbalbrews.DrinkBlockItemMixin",
+    "herbalbrews.FlaskItemMixin",
     "herbalbrews.TeaCupBlockMixin",
     "herbalbrews.TeaKettleBlockEntityMixin",
     "herbalbrews.TeaKettleGuiHandlerMixin",

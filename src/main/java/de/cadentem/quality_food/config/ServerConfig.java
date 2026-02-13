@@ -55,8 +55,10 @@ public class ServerConfig {
         FARMLAND_CONFIG_INTERNAL = BUILDER.comment(farmlandConfigComment1 + farmlandConfigComment2).defineList("farmland_config", Collections.emptyList(), ServerConfig::validateFarmlandConfig);
 
         BUILDER.push("Crafting");
-        NO_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should not result in quality being applied (e.g. when the items can be converted back and forth)").defineList("no_quality_recipes", NO_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
-        RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
+        String noQualityRecipesComment1 = "Define recipes (namespace:path) which should not result in quality being rolled (e.g. when the items can be converted back and forth)";
+        String noQualityRecipesComment2 = "\n(Note that without 'handle_compacting' or an addition to 'retain_quality_recipes' storage blocks will not retain their quality)";
+        NO_QUALITY_RECIPES = BUILDER.comment(noQualityRecipesComment1 + noQualityRecipesComment2).defineList("no_quality_recipes", NO_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
+        RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality being applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         HANDLE_COMPACTING = BUILDER.comment("Defines whether (de)compacting should be handled automatically (in terms of retaining quality)").define("handle_compacting", true);
         HANDLE_SEED_RECIPES = BUILDER.comment("Attempt to handle recipes involving seed items automatically (to avoid having to add all of them to the retain_quality_recipes config)").define("handle_seed_recipes", true);
         BUILDER.pop();
@@ -415,9 +417,16 @@ public class ServerConfig {
         NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM.modid(), "oat_from_ball").toString());
         NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM.modid(), "barley_ball").toString());
         NO_QUALITY_RECIPES_DEFAULT.add(location(FARM_AND_CHARM.modid(), "barley_from_ball").toString());
+
+//        NO_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "dried_green_tea_leaf_block").toString());
+//        NO_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "green_tea_leaf_block").toString());
+//        NO_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "mixed_tea_leaf_block").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "tea_leaf_crate").toString());
+        NO_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "tea_leafs_from_crate").toString());
     }
 
     private static void fillRetainQualityRecipes() {
+        // Glass bottle in recipe
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_sugar_cane");
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_honey_bottle");
 
@@ -428,5 +437,13 @@ public class ServerConfig {
         // Still Crate Delight
         RETAIN_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT.modid(), "stacked_melons").toString());
         RETAIN_QUALITY_RECIPES_DEFAULT.add(location(FARMERSDELIGHT.modid(), "stacked_pumpkins").toString());
+
+        // Other
+
+        // 2x3 storage block
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "tea_leaf_crate").toString());
+        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "tea_leafs_from_crate").toString());
+        // Mixed input items
+//        RETAIN_QUALITY_RECIPES_DEFAULT.add(location(HERALBREWS.modid(), "mixed_tea_leaf_block").toString());
     }
 }

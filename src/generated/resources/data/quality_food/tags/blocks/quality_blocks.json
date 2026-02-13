@@ -316,6 +316,10 @@
     {
       "id": "miners_delight:cave_carrot_crate",
       "required": false
+    },
+    {
+      "id": "herbalbrews:tea_leaf_crate",
+      "required": false
     }
   ]
 }

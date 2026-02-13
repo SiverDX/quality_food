@@ -124,6 +124,14 @@ public class QFBlockTags extends BlockTagsProvider {
                 .addOptional(location(FARM_AND_CHARM.modid(), "barley_ball"))
 
                 .addOptional(location("miners_delight", "cave_carrot_crate"))
+
+                .addOptional(location(HERALBREWS.modid(), "tea_leaf_crate"))
+//                .addOptional(location(HERALBREWS.modid(), "green_tea_leaf_block"))
+//                .addOptional(location(HERALBREWS.modid(), "dried_green_tea_leaf_block"))
+//                .addOptional(location(HERALBREWS.modid(), "black_tea_leaf_block"))
+//                .addOptional(location(HERALBREWS.modid(), "mixed_tea_leaf_block"))
+//                .addOptional(location(HERALBREWS.modid(), "oolong_leaf_block"))
+
         ;
     }
 }
