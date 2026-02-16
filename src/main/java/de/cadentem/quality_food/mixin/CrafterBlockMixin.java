@@ -2,7 +2,6 @@ package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ public abstract class CrafterBlockMixin {
         QualityUtils.handleConversion(result, crafter, recipe, level.registryAccess());
 
         if (!ServerConfig.isNoQualityRecipe(recipe, level.registryAccess())) {
-            QualityUtils.applyQuality(result, null, Bonus.additive(QualityUtils.getQualityBonus(crafter)));
+            QualityUtils.applyQuality(result, crafter.getItems(), null, level.registryAccess());
         }
 
         return result;

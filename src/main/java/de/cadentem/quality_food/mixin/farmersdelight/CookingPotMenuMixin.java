@@ -19,7 +19,7 @@ public abstract class CookingPotMenuMixin {
     @Shadow(remap = false) @Final public CookingPotBlockEntity blockEntity;
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lvectorwing/farmersdelight/common/block/entity/container/CookingPotMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
-    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
+    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(name = "slotStack") final ItemStack stack) {
         if (player.level().isClientSide()) {
             return;
         }

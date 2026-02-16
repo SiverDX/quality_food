@@ -14,7 +14,7 @@ import vectorwing.farmersdelight.common.block.FeastBlock;
 /** Apply quality to served item */
 @Mixin(FeastBlock.class)
 public abstract class FeastBlockMixin {
-    @ModifyVariable(method = "takeServing", at = @At("STORE"), ordinal = 0)
+    @ModifyVariable(method = "takeServing", at = @At("STORE"), name = "serving")
     private ItemStack quality_food$applyQualityToItem(final ItemStack stack, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
         QualityUtils.applyQuality(stack, LevelData.get(level, position));
         return stack;

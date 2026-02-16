@@ -31,8 +31,8 @@ public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<SingleReci
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractFurnaceMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        if (container instanceof BlockEntity furnace && !level.isClientSide()) {
-            Utils.useQuality(furnace, stack, player);
+        if (container instanceof BlockEntity blockEntity && !level.isClientSide()) {
+            Utils.useQuality(blockEntity, stack, player);
         }
     }
 }

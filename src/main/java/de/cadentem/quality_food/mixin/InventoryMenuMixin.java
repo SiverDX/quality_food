@@ -2,10 +2,13 @@ package de.cadentem.quality_food.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -32,6 +35,6 @@ public abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingInput, C
             return;
         }
 
-        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftSlots)));
+        QualityUtils.applyQuality(stack, craftSlots.getItems(), player, player.registryAccess());
     }
 }

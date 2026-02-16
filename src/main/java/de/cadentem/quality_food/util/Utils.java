@@ -125,6 +125,7 @@ public class Utils {
         data.addQualityType(type);
 
         if (type.value() != QualityType.NONE) {
+            // TODO :: consider stack size of result item
             data.incrementQuality(type.value().cookingBonus() / ingredientCount);
         }
 

@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.tom.storagemod.menu.CraftingTerminalMenu;
 import com.tom.storagemod.menu.StorageTerminalMenu;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +33,6 @@ public abstract class CraftingTerminalMenuMixin extends StorageTerminalMenu {
             return;
         }
 
-        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftMatrix)));
+        QualityUtils.applyQuality(stack, craftMatrix.getItems(), player, player.registryAccess());
     }
 }

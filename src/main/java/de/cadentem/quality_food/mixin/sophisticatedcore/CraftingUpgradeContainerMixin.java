@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 /** Apply quality when items are converted from / to their storage variants */
 @Mixin(CraftingUpgradeContainer.class)
 public abstract class CraftingUpgradeContainerMixin {
-    @ModifyVariable(method = "updateCraftingResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultSlot;set(Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "updateCraftingResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultSlot;set(Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE), name = "itemstack")
     private ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingContainer container, @Local(argsOnly = true) final ResultContainer resultContainer) {
         QualityUtils.handleConversion(result, container, resultContainer.getRecipeUsed(), level.registryAccess());
         return result;

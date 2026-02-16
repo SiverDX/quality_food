@@ -29,7 +29,7 @@ public class GameEvents {
             return;
         }
 
-        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop, event.getEntity()));
+        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop, event.getEntity(), event.getEntity().registryAccess()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -41,7 +41,7 @@ public class GameEvents {
         }
 
         if (attacker instanceof LivingEntity livingAttacker) {
-            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker));
+            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker instanceof Player player ? player : null, livingAttacker.registryAccess()));
         }
     }
 

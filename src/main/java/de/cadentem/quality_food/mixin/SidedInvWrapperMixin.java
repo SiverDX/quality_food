@@ -18,7 +18,7 @@ public abstract class SidedInvWrapperMixin {
     @Shadow @Final protected WorldlyContainer inv;
 
     @Inject(method = "extractItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldlyContainer;setChanged()V"))
-    private void quality_food$applyQuality(final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
+    private void quality_food$applyQuality(final CallbackInfoReturnable<ItemStack> callback, @Local(name = "ret") final ItemStack stack) {
         if (inv instanceof AbstractFurnaceBlockEntity furnace) {
             //noinspection DataFlowIssue -> previous check prevents null
             if (furnace.hasLevel() && furnace.getLevel().isClientSide()) {

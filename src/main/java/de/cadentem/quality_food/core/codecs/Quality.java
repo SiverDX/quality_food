@@ -26,6 +26,7 @@ public record Quality(ResourceLocation type, int level, Optional<List<FoodProper
                     FoodProperties.PossibleEffect.CODEC.listOf().optionalFieldOf("effects").forGetter(Quality::effects))
             .apply(builder, Quality::new));
 
+    /** May return a direct holder of {@link QualityType#NONE} */
     public Holder<QualityType> getType() {
         if (this == NONE) {
             return Holder.direct(QualityType.NONE);

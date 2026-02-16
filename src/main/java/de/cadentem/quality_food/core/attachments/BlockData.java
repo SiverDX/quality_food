@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.core.attachments;
 
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -39,6 +38,7 @@ public class BlockData implements INBTSerializable<CompoundTag> {
             QualityUtils.applyQuality(stack, chosenType);
         }
 
+        // FIXME
         QualityUtils.applyQuality(stack, player, List.of(Bonus.additive((float) qualityBonus)), true);
 
         qualityBonus = 0;

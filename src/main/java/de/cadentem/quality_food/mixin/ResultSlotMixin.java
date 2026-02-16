@@ -1,7 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +32,6 @@ public abstract class ResultSlotMixin extends Slot {
             return;
         }
 
-        QualityUtils.applyQuality(stack, player, Bonus.additive(QualityUtils.getQualityBonus(craftSlots)));
+        QualityUtils.applyQuality(stack, craftSlots.getItems(), player, player.registryAccess());
     }
 }

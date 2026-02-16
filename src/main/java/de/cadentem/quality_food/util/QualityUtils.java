@@ -3,19 +3,17 @@ package de.cadentem.quality_food.util;
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.config.ServerConfig;
-import de.cadentem.quality_food.core.Bonus;
+import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.Slot;
@@ -25,17 +23,153 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.WildCropBlock;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class QualityUtils {
     private static final RandomSource RANDOM = RandomSource.create();
+
+    /**
+     * Used for crafting <br>
+     * Quality depends on the average weight of the quality from the ingredients
+     */
+    public static void applyQuality(final ItemStack stack, final Collection<ItemStack> ingredients, @Nullable final Player player, final RegistryAccess access) {
+        double totalWeight = 0;
+        int validIngredients = 0;
+
+        for (ItemStack ingredient : ingredients) {
+            if (!Utils.isValidItem(ingredient)) {
+                continue;
+            }
+
+            Holder<QualityType> type = QualityUtils.getType(ingredient);
+
+            if (type.value() == QualityType.NONE) {
+                continue;
+            }
+
+            totalWeight += type.value().weight();
+            validIngredients++;
+        }
+
+        if (validIngredients == 0) {
+            applyQuality(stack, player, access);
+            return;
+        }
+
+        Holder<QualityType> selected = null;
+        double averageWeight = totalWeight / validIngredients;
+
+        for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            double minWeight = type.value().minWeight();
+            double chance = Mth.clamp((averageWeight - minWeight) / (type.value().weight() - minWeight), 0, 1);
+            chance = Modification.luck(player).apply(chance);
+
+            if (chance > 0 && chance >= RANDOM.nextDouble()) {
+                selected = type;
+            }
+        }
+
+        if (selected == null) {
+            return;
+        }
+
+        QualityUtils.applyQuality(stack, QualityType.createQuality(selected, stack));
+    }
+
+    /** Used for block drops */
+    public static void applyQuality(final ItemStack stack, final BlockState state, final Quality blockQuality, @Nullable final Player player, @Nullable final BlockState farmland, final RegistryAccess access) {
+        if (isRelevantCrop(state)) {
+            Holder<QualityType> selected = null;
+
+            for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+                double chance;
+
+                if (blockQuality == Quality.NONE || blockQuality == Quality.PLAYER_PLACED) {
+                    chance = type.value().chance();
+                } else {
+                    double minWeight = type.value().minWeight();
+                    chance = Mth.clamp((blockQuality.getType().value().weight() - minWeight) / (type.value().weight() - minWeight), 0, 1);
+                }
+
+                chance = Modification.harvestOrSeedMultiplier(type, stack).apply(chance);
+                chance = Modification.luck(player).apply(chance);
+                chance = Modification.farmland(state, farmland).apply(chance);
+
+                if (chance > 0 && chance >= RANDOM.nextDouble()) {
+                    selected = type;
+                }
+            }
+
+            if (selected != null) {
+                QualityUtils.applyQuality(stack, selected);
+            }
+        } else if (isValidQuality(blockQuality)) {
+            // The block itself if it has quality
+            applyQuality(stack, blockQuality);
+        } else if (blockQuality == Quality.PLAYER_PLACED) {
+            // The block itself or harvested items when the crop has no quality
+            applyQuality(stack, player, access);
+        }
+    }
+
+    /** Generic if no further context is present */
+    public static void applyQuality(final ItemStack stack, @Nullable final Player player, final RegistryAccess access) {
+        Holder<QualityType> selected = null;
+
+        for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            double chance = RANDOM.nextDouble();
+            chance = Modification.luck(player).apply(chance);
+
+            if (chance >= 1 - type.value().chance()) {
+                selected = type;
+            }
+        }
+
+        if (selected != null) {
+            QualityUtils.applyQuality(stack, selected);
+        }
+    }
+
+    public static boolean applyQuality(final ItemStack stack, final Holder<QualityType> type) {
+        return applyQuality(stack, QualityType.createQuality(type, stack));
+    }
+
+    /**
+     * @param stack   The item to apply quality to
+     * @param quality The quality to directly set
+     * @return If the quality was successfully set true otherwise false
+     */
+    public static boolean applyQuality(final ItemStack stack, final Quality quality) {
+        return applyQuality(stack, quality, false);
+    }
+
+    /**
+     * @param stack   The item to apply quality to
+     * @param quality The quality to directly set
+     * @param canUpgrade Allows the quality to override the (potentially) existing quality
+     * @return If the quality was successfully set true otherwise false
+     */
+    public static boolean applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
+        if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
+            return false;
+        }
+
+        if (!canUpgrade && QualityUtils.hasQuality(stack) || getQuality(stack).level() > quality.level()) {
+            return false;
+        }
+
+        stack.set(QFComponents.QUALITY_DATA_COMPONENT, quality);
+        return true;
+    }
 
     public static boolean hasQuality(final ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
@@ -102,174 +236,6 @@ public class QualityUtils {
         return bonus;
     }
 
-    public static void applyQuality(final ItemStack stack) {
-        applyQuality(stack, null, Bonus.DEFAULT);
-    }
-
-    public static void applyQuality(final ItemStack stack, @NotNull final Bonus bonus) {
-        applyQuality(stack, null, bonus);
-    }
-
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity) {
-        applyQuality(stack, entity, Bonus.DEFAULT);
-    }
-
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final Bonus bonus) {
-        List<Bonus> bonusList = new ArrayList<>();
-        bonusList.add(bonus);
-        applyQuality(stack, entity, bonusList);
-    }
-
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList) {
-        if (Utils.LAST_STACK.get() == stack) {
-            return;
-        }
-
-        Utils.LAST_STACK.set(stack);
-
-        applyQuality(stack, entity, bonusList, false);
-    }
-
-    /** If 'canUpgrade' is true the quality may be overridden by a higher level one */
-    public static void applyQuality(final ItemStack stack, @Nullable final Entity entity, @NotNull final List<Bonus> bonusList, boolean canUpgrade) {
-        RandomSource random = entity instanceof LivingEntity livingEntity ? livingEntity.getRandom() : RANDOM;
-        double rolls = 1 + (entity instanceof Player player ? player.getLuck() * ServerConfig.LUCK_MULTIPLIER.get() : 0);
-
-        if (rolls < 0) {
-            rolls = 0.1;
-        }
-
-        HolderLookup.RegistryLookup<QualityType> lookup = CommonHooks.resolveLookup(QFComponents.QUALITY_TYPE_REGISTRY);
-
-        if (lookup == null) {
-            return;
-        }
-
-        List<Holder<QualityType>> types = new ArrayList<>();
-
-        if (canUpgrade) {
-            Holder<QualityType> type = QualityUtils.getType(stack);
-
-            lookup.listElements().forEach(entry -> {
-                if (entry.value().level() > type.value().level()) {
-                    types.add(entry);
-                }
-            });
-        } else {
-            lookup.listElements().forEach(types::add);
-        }
-
-        if (types.isEmpty()) {
-            return;
-        }
-
-        // Try the highest level first
-        //noinspection unchecked -> type is valid
-        types.sort(Comparator.comparingInt(type -> ((Holder<QualityType>) type).value().level()).reversed());
-
-        float roll = random.nextFloat();
-        int fullRolls = (int) rolls;
-
-        if (random.nextDouble() <= (rolls - fullRolls)) {
-            fullRolls++;
-        }
-
-        for (int i = 0; i < fullRolls; i++) {
-            for (Holder<QualityType> type : types) {
-                double chance = type.value().chance();
-
-                for (Bonus bonus : bonusList) {
-                    chance = switch (bonus.type()) {
-                        case ADDITIVE -> chance + bonus.amount();
-                        case MULTIPLICATIVE -> chance * bonus.amount();
-                    };
-                }
-
-                if (roll <= chance) {
-                    boolean wasApplied = applyQuality(stack, QualityType.createQuality(type, stack), canUpgrade);
-
-                    if (wasApplied) {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    public static boolean applyQuality(final ItemStack stack, final Holder<QualityType> type) {
-        return applyQuality(stack, QualityType.createQuality(type, stack));
-    }
-
-    /**
-     * @param stack   The item to apply quality to
-     * @param quality The quality to directly set
-     * @return If the quality was successfully set true otherwise false
-     */
-    public static boolean applyQuality(final ItemStack stack, final Quality quality) {
-        return applyQuality(stack, quality, false);
-    }
-
-    /**
-     * @param stack   The item to apply quality to
-     * @param quality The quality to directly set
-     * @param canUpgrade Allows the quality to override the (potentially) existing quality
-     * @return If the quality was successfully set true otherwise false
-     */
-    public static boolean applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
-        if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
-            return false;
-        }
-
-        if (!canUpgrade && QualityUtils.hasQuality(stack) || getQuality(stack).level() > quality.level()) {
-            return false;
-        }
-
-        stack.set(QFComponents.QUALITY_DATA_COMPONENT, quality);
-        return true;
-    }
-
-    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @Nullable final BlockState farmland) {
-        if (farmland == null) {
-            applyQuality(stack, quality, state, player);
-            return;
-        }
-
-        double farmlandMultiplier = ServerConfig.getFarmlandMultiplier(state, farmland);
-
-        if (farmlandMultiplier == -1) {
-            applyQuality(stack, quality, state, player);
-        } else {
-            Bonus farmlandBonus = Bonus.multiplicative((float) farmlandMultiplier);
-            List<Bonus> bonusList = new ArrayList<>();
-            bonusList.add(farmlandBonus);
-            applyQuality(stack, quality, state, player, bonusList);
-        }
-    }
-
-    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player) {
-        applyQuality(stack, quality, state, player, new ArrayList<>());
-    }
-
-    public static void applyQuality(final ItemStack stack, @NotNull final Quality quality, @NotNull final BlockState state, @Nullable final Player player, @NotNull final List<Bonus> bonusList) {
-        if (isRelevantCrop(state)) {
-            float targetChance = ServerConfig.CROP_TARGET_CHANCE.get().floatValue();
-
-            if (stack.is(Tags.Items.SEEDS)) {
-                targetChance *= ServerConfig.SEED_CHANCE_MULTIPLIER.get();
-            }
-
-            if (targetChance > 0 && quality.level() > 0) {
-                bonusList.add(Bonus.multiplicative((float) (targetChance / quality.getType().value().chance())));
-            }
-
-            QualityUtils.applyQuality(stack, player, bonusList);
-        } else if (QualityUtils.isValidQuality(quality)) {
-            QualityUtils.applyQuality(stack, quality);
-        } else if (quality != Quality.PLAYER_PLACED) {
-            QualityUtils.applyQuality(stack, player);
-        }
-    }
-
     @SuppressWarnings("RedundantIfStatement") // ignore for clarity
     private static boolean isRelevantCrop(final BlockState state) {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
@@ -288,10 +254,10 @@ public class QualityUtils {
     }
 
     public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final RecipeHolder<?> recipe, @Nullable final RegistryAccess access) {
-        boolean isRecipe = ServerConfig.isRetainQualityRecipe(recipe, access);
+        boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe, access);
         boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
 
-        if (!isRecipe && !handleCompacting) {
+        if (!shouldRetainQuality && !handleCompacting) {
             return;
         }
 
@@ -307,7 +273,7 @@ public class QualityUtils {
 
         Quality quality = getQuality(data.getSecond(), relevantItemCount, result);
 
-        if (quality.level() > 0 && (isRecipe || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
+        if (quality.level() > 0 && (shouldRetainQuality || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
             QualityUtils.applyQuality(result, quality);
         }
     }
@@ -317,7 +283,7 @@ public class QualityUtils {
     }
 
     private static Pair<HashMap<Item, Integer>, HashMap<Integer, Integer>> getContainerData(final Container container) {
-        // Collect the amount of qualities present for all items in the container
+        // Collect the number of qualities present for all items in the container
         HashMap<Integer, Integer> qualities = new HashMap<>();
         HashMap<Item, Integer> items = new HashMap<>();
 
@@ -349,7 +315,9 @@ public class QualityUtils {
             itemCount -= qualities.get(level);
 
             if (itemCount <= 0) {
-                // FIXME 1.21 :: if there are not multiple don't re-create (would constantly randomize effects)
+                // Could result in different effects
+                // But the same quality cannot be guaranteed
+                // When multiple ingredients are present
                 return Quality.getRandom(result, level);
             }
         }
@@ -357,6 +325,7 @@ public class QualityUtils {
         return Quality.NONE;
     }
 
+    // TODO :: fix (create special container etc.)
     private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {
         Set<Item> keys = items.keySet();
 

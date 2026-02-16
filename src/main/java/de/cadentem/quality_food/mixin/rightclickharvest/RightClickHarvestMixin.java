@@ -19,11 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class RightClickHarvestMixin {
     @Inject(method = "dropStacks", at = @At("HEAD"))
     private static void quality_food$setDropData(final BlockState state, final ServerLevel level, final BlockPos position, final Entity entity, final ItemStack tool, boolean removePlant, final CallbackInfo callback) {
-        DropData.current.set(new DropData(LevelData.get(level, position, true), state, entity instanceof Player player ? player : null, level.getBlockState(position.below())));
+        DropData.CURRENT.set(new DropData(LevelData.get(level, position, true), state, entity instanceof Player player ? player : null, level.getBlockState(position.below())));
     }
 
     @Inject(method = "dropStacks", at = @At("TAIL"))
     private static void quality_food$clearDropDAta(final BlockState state, final ServerLevel level, final BlockPos position, final Entity entity, final ItemStack tool, boolean removePlant, final CallbackInfo callback) {
-        DropData.current.remove();
+        DropData.CURRENT.remove();
     }
 }

@@ -26,7 +26,7 @@ public abstract class SFHarvestFarmlandMixin {
 
     /** Planted crops retains quality of used seed */
     @Inject(method = "replant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private void quality_food$storeQuality(final ServerLevel level, final Villager villager, final Item item, final CallbackInfo callback, @Local final ItemStack seed) {
+    private void quality_food$storeQuality(final ServerLevel level, final Villager villager, final Item item, final CallbackInfo callback, @Local(name = "itemToPlant") final ItemStack seed) {
         Quality quality = QualityUtils.getQuality(seed);
 
         if (quality.level() > 0) {

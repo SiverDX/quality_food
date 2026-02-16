@@ -42,7 +42,7 @@ public class FoodUtils {
             optional.ifPresent(instance -> {
                 float probability = originalData.probability();
 
-                if (blacklist.isEmpty() || !blacklist.get().contains(instance.getEffect()) ) {
+                if (blacklist.isEmpty() || !blacklist.get().contains(instance.getEffect())) {
                     if (instance.getEffect().value().isBeneficial()) {
                         probability = (float) (probability * type.probabilityMultiplier());
                     } else if (instance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
