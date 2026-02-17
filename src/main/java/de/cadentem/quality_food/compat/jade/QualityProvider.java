@@ -6,7 +6,6 @@ import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.Utils;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

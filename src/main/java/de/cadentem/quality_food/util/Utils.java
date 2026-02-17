@@ -108,10 +108,10 @@ public class Utils {
     }
 
     public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack) {
-        incrementQuality(blockEntity, stack, 1);
+        incrementQuality(blockEntity, stack, 1, 64);
     }
 
-    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack, int ingredientCount) {
+    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack, int ingredientCount, int resultStackSize) {
         if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredientCount < 1) {
             return;
         }

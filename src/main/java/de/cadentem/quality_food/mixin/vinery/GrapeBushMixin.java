@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.satisfy.vinery.block.grape.GrapeBush;
+import net.satisfy.vinery.core.block.GrapeBush;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 /** Apply quality with player context */
 @Mixin(GrapeBush.class)
 public abstract class GrapeBushMixin {
-    @ModifyArg(method = "useWithoutItem", at = @At(value = "INVOKE", target = "Lnet/satisfy/vinery/block/grape/GrapeBush;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"))
+    @ModifyArg(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/satisfy/vinery/core/block/GrapeBush;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"))
     private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final BlockState state, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final Player player, @Local(argsOnly = true) final BlockPos position) {
         QualityUtils.applyQuality(stack, state, LevelData.get(level, position), player, player.level().getBlockState(position.below()), player.registryAccess());
         return stack;

@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.mixin.quark;
 
-//import de.cadentem.quality_food.compat.PropertiesExtension;
 //import net.minecraft.world.level.block.state.BlockBehaviour;
 //import org.spongepowered.asm.mixin.Mixin;
 //import org.spongepowered.asm.mixin.injection.At;

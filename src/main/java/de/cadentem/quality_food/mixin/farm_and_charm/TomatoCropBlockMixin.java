@@ -1,29 +1,21 @@
 package de.cadentem.quality_food.mixin.farm_and_charm;
 
-import de.cadentem.quality_food.core.attachments.LevelData;
-import de.cadentem.quality_food.util.DropData;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.satisfy.farm_and_charm.block.crops.TomatoCropBlock;
+import net.satisfy.farm_and_charm.core.block.crops.TomatoCropBodyBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /** Have more context for dropped loot */
-@Mixin(TomatoCropBlock.class)
+@Mixin(TomatoCropBodyBlock.class)
 public abstract class TomatoCropBlockMixin {
-    @Inject(method = "useWithoutItem", at = @At(value = "INVOKE", target = "Lnet/satisfy/farm_and_charm/block/crops/TomatoCropBlock;dropTomatoes(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.BEFORE))
-    private void quality_food$setContext(final BlockState state, final Level level, final BlockPos position, final Player player, final BlockHitResult result, final CallbackInfoReturnable<InteractionResult> callback) {
-        DropData.CURRENT.set(DropData.create(LevelData.get(level, position), state, player, level.getBlockState(position.below())));
-    }
-
-    @Inject(method = "useWithoutItem", at = @At(value = "INVOKE", target = "Lnet/satisfy/farm_and_charm/block/crops/TomatoCropBlock;dropTomatoes(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", shift = At.Shift.AFTER))
-    private void quality_food$clearContext(final BlockState state, final Level level, final BlockPos position, final Player player, final BlockHitResult result, final CallbackInfoReturnable<InteractionResult> callback) {
-        DropData.CURRENT.remove();
+    @Inject(method = "performBonemeal", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 0))
+    private void qualtiy_food$storeQuality(final ServerLevel level, final RandomSource random, final BlockPos position, final BlockState state, final CallbackInfo callback) {
+        Utils.storeQuality(state, level, position, position.above());
     }
 }

@@ -1,6 +1,7 @@
-package de.cadentem.quality_food.mixin.farmersdelight;
+package de.cadentem.quality_food.mixin.miners_delight;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.sammy.minersdelight.content.block.copper_pot.CopperPotBlockEntity;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -13,22 +14,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import vectorwing.farmersdelight.common.block.entity.CookingPotBlockEntity;
 import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 
-@Mixin(value = CookingPotBlockEntity.class)
-public abstract class CookingPotBlockEntityMixin {
+@Mixin(value = CopperPotBlockEntity.class, remap = false)
+public abstract class CopperPotBlockEntityMixin {
     /** Display particles to show how much quality the block has stored */
-    @Inject(method = "cookingTick", at = @At("TAIL"), remap = false)
-    private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final CookingPotBlockEntity blockEntity, final CallbackInfo callback) {
+    @Inject(method = "cookingTick", at = @At("TAIL"))
+    private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final CopperPotBlockEntity blockEntity, final CallbackInfo callback) {
         if (level instanceof ServerLevel serverLevel) {
             Utils.sendParticles(serverLevel, blockEntity, position);
         }
     }
 
     /** Increment quality after cooking an item */
-    @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private void quality_food$incrementQuality(final RecipeHolder<CookingPotRecipe> recipe, final CookingPotBlockEntity cookingPot, final CallbackInfoReturnable<Boolean> callback, @Local(name = "slotStack") final ItemStack stack) {
+    @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE, remap = true))
+    private void quality_food$incrementQuality(final RecipeHolder<CookingPotRecipe> recipe, final CopperPotBlockEntity cookingPot, final CallbackInfoReturnable<Boolean> callback, @Local(name = "slotStack") final ItemStack stack) {
         int resultStackSize = 64;
 
         if (cookingPot.getLevel() != null) {

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.core.attachments.LevelData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
-import net.satisfy.farm_and_charm.block.FoodBlock;
+import net.satisfy.farm_and_charm.core.block.FoodBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;

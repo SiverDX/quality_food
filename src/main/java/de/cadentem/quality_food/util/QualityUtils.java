@@ -372,7 +372,7 @@ public class QualityUtils {
     }
 
     public static boolean isValidQuality(final Quality quality) {
-        return quality != null && quality.level() > 0;
+        return quality != null && quality != Quality.NONE && quality != Quality.PLAYER_PLACED;
     }
 
     public static int countIngredients(final CraftingContainer container) {

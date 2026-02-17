@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.QualityFood;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -26,25 +28,13 @@ public record QualityType(
         double saturationMultiplier,
         double craftingBonus,
         double cookingBonus,
+        double cropMultiplier,
+        double seedMultiplier,
         Optional<List<Effect>> effects,
-        ResourceLocation icon
+        ResourceLocation icon,
+        Component name
 ) {
-    public static final QualityType NONE = new QualityType(
-            0,
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            1,
-            1,
-            0,
-            0,
-            Optional.empty(),
-            QualityFood.location("none")
-    );
-
+    public static final QualityType NONE = new QualityType(0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, Optional.empty(), QualityFood.location("none"), Component.empty());
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static final Codec<QualityType> CODEC = RecordCodecBuilder.create(builder -> builder.group(
@@ -62,7 +52,8 @@ public record QualityType(
                     Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("crop_multiplier", 1d).forGetter(QualityType::cropMultiplier),
                     Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("seed_multiplier", 1d).forGetter(QualityType::seedMultiplier),
                     Effect.CODEC.listOf().optionalFieldOf("effects").forGetter(QualityType::effects),
-                    ResourceLocation.CODEC.fieldOf("icon").forGetter(QualityType::icon))
+                    ResourceLocation.CODEC.fieldOf("icon").forGetter(QualityType::icon),
+                    ComponentSerialization.CODEC.fieldOf("name").forGetter(QualityType::name))
             .apply(builder, QualityType::new));
 
     /**

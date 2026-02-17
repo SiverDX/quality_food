@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.core.attachments;
 
+import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -44,6 +45,43 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         qualityBonus = 0;
         cookedQualities.clear();
     }
+
+    // TODO (1.20.1 state)
+    public void useQuality(final ItemStack stack, @Nullable final Player player) {
+        Quality selected = null;
+
+        for (Quality quality : cookedQualities) {
+            if (selected == null || quality.level() < selected.level()) {
+                selected = quality;
+            }
+        }
+
+        if (selected != null) {
+            QualityUtils.applyQuality(stack, selected);
+        } else {
+            selected = Quality.NONE;
+        }
+
+        for (Quality quality : Quality.values()) {
+            if (quality.level() == 0) {
+                continue;
+            }
+
+            double chance = RANDOM.nextDouble();
+            chance = Modification.luck(player).apply(chance);
+            chance = Modification.additive((float) qualityBonus).apply(chance);
+
+            if (chance >= 1 - QualityConfig.getChance(quality)) {
+                selected = quality;
+            }
+        }
+
+        QualityUtils.applyQuality(stack, selected, true);
+
+        qualityBonus = 0;
+        cookedQualities.clear();
+    }
+
 
     public double getQuality() {
         return qualityBonus;

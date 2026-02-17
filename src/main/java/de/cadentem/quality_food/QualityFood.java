@@ -2,6 +2,7 @@ package de.cadentem.quality_food;
 
 import com.mojang.logging.LogUtils;
 import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.create.QualityAttribute;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.events.ModEvents;
@@ -29,8 +30,12 @@ public class QualityFood {
         NeoForge.EVENT_BUS.addListener(QFCommands::registerCommands);
         NeoForge.EVENT_BUS.addListener(ServerConfig::storeServer);
 
-        if (Compat.isModLoaded(Compat.HARVEST_WITH_EASE)) {
+        if (Compat.Mod.HARVEST_WITH_EASE.isLoaded()) {
             NeoForge.EVENT_BUS.addListener(ModEvents::handleHarvestEvent);
+        }
+
+        if (Compat.Mod.CREATE.isLoaded()) {
+            QualityAttribute.REGISTRY.register(bus);
         }
 
         container.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);

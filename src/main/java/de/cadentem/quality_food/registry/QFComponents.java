@@ -5,6 +5,7 @@ import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -13,10 +14,10 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class QFComponents {
     public static final ResourceKey<Registry<QualityType>> QUALITY_TYPE_REGISTRY = ResourceKey.createRegistryKey(QualityFood.location("quality_types"));
-    public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(QualityFood.MODID);
+    public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, QualityFood.MODID);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Quality>> QUALITY_DATA_COMPONENT = REGISTRAR.registerComponentType("quality", builder -> builder.persistent(Quality.CODEC));
 
     @SubscribeEvent
