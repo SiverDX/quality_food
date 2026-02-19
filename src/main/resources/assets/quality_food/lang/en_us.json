@@ -1,13 +1,12 @@
 {
   "potion.withProbability": "%s (%s)",
 
-  "quality_food.quality": "Quality: ",
-
   "quality_type.quality_food.iron": "Iron",
   "quality_type.quality_food.gold": "Gold",
   "quality_type.quality_food.diamond": "Diamond",
 
   "config.jade.plugin_quality_food.quality": "Quality",
+  "quality_food.jade": "Quality: %s",
 
   "create.item_attributes.quality_food.quality": "has '%1$s' quality",
   "create.item_attributes.quality_food.quality.inverted": "does not have '%1$s' quality",

@@ -1,7 +1,7 @@
 {
   "potion.withProbability": "%s (%s)",
 
-  "quality_food.quality": "品质: ",
+  "quality_food.jade": "品质: %s",
 
   "quality_type.quality_food.iron": "铁",
   "quality_type.quality_food.gold": "金",

@@ -2,6 +2,7 @@ package de.cadentem.quality_food.util;
 
 import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.compat.Compat;
+import de.cadentem.quality_food.compat.SpecialContainer;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.codecs.Quality;
@@ -15,8 +16,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,7 +31,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class QualityUtils {
     private static final RandomSource RANDOM = RandomSource.create();
@@ -69,6 +67,10 @@ public class QualityUtils {
         double averageWeight = totalWeight / validIngredients;
 
         for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            if (selected != null && type.value().level() <= selected.value().level()) {
+                continue;
+            }
+
             double minWeight = type.value().minWeight();
             double chance = Mth.clamp((averageWeight - minWeight) / (type.value().weight() - minWeight), 0, 1);
             chance = Modification.luck(player).apply(chance);
@@ -91,6 +93,10 @@ public class QualityUtils {
             Holder<QualityType> selected = null;
 
             for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+                if (selected != null && type.value().level() <= selected.value().level()) {
+                    continue;
+                }
+
                 double chance;
 
                 if (blockQuality == Quality.NONE || blockQuality == Quality.PLAYER_PLACED) {
@@ -115,7 +121,7 @@ public class QualityUtils {
         } else if (isValidQuality(blockQuality)) {
             // The block itself if it has quality
             applyQuality(stack, blockQuality);
-        } else if (blockQuality == Quality.PLAYER_PLACED) {
+        } else if (blockQuality != Quality.PLAYER_PLACED) {
             // The block itself or harvested items when the crop has no quality
             applyQuality(stack, player, access);
         }
@@ -126,6 +132,10 @@ public class QualityUtils {
         Holder<QualityType> selected = null;
 
         for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            if (selected != null && type.value().level() <= selected.value().level()) {
+                continue;
+            }
+
             double chance = RANDOM.nextDouble();
             chance = Modification.luck(player).apply(chance);
 
@@ -146,7 +156,7 @@ public class QualityUtils {
     /**
      * @param stack   The item to apply quality to
      * @param quality The quality to directly set
-     * @return If the quality was successfully set true otherwise false
+     * @return If the quality was successfully set true, otherwise false
      */
     public static boolean applyQuality(final ItemStack stack, final Quality quality) {
         return applyQuality(stack, quality, false);
@@ -185,68 +195,21 @@ public class QualityUtils {
         return quality.level() > 0;
     }
 
-    /**
-     * @param slots       Slots which may contain crafting materials with quality (will apply a bonus)
-     * @param isSlotValid To test whether the slot is relevant or not (since the list usually contains the inventory as well)
-     */
-    public static float getQualityBonus(final List<Slot> slots, final Predicate<Slot> isSlotValid) {
-        int validIngredients = 0;
-        float bonus = 0;
-
-        for (Slot slot : slots) {
-            if (isSlotValid.test(slot) && Utils.isValidItem(slot.getItem())) {
-                validIngredients++;
-            }
-        }
-
-        if (validIngredients == 0) {
-            return 0;
-        }
-
-        for (Slot slot : slots) {
-            if (isSlotValid.test(slot)) {
-                Holder<QualityType> type = QualityUtils.getType(slot.getItem());
-
-                if (type.value() != QualityType.NONE) {
-                    bonus += (float) (type.value().craftingBonus() / validIngredients);
-                }
-            }
-        }
-
-        return bonus;
-    }
-
-    public static float getQualityBonus(final CraftingContainer container) {
-        int validIngredients = QualityUtils.countIngredients(container);
-
-        if (validIngredients == 0) {
-            return 0;
-        }
-
-        float bonus = 0;
-
-        for (ItemStack ingredient : container.getItems()) {
-            Holder<QualityType> type = QualityUtils.getType(ingredient);
-
-            if (type.value() != QualityType.NONE) {
-                bonus += (float) (type.value().craftingBonus() / validIngredients);
-            }
-        }
-
-        return bonus;
-    }
-
     @SuppressWarnings("RedundantIfStatement") // ignore for clarity
     private static boolean isRelevantCrop(final BlockState state) {
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARMERSDELIGHT) && state.getBlock() instanceof WildCropBlock) {
+        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && state.getBlock() instanceof WildCropBlock) {
             return true;
         }
 
-        if (Compat.isModLoaded(Compat.FARM_AND_CHARM) && state.is(TagKey.create(Registries.BLOCK, Compat.location(Compat.FARM_AND_CHARM, "wild_crops")))) {
+//        if (Compat.Mod.COLLECTORS_REAP.isLoaded() && state.getBlock() instanceof FruitBushBlock && state.getValue(FruitBushBlock.AGE) == FruitBushBlock.MAX_AGE) {
+//            return true;
+//        }
+
+        if (Compat.Mod.FARM_AND_CHARM.isLoaded() && state.is(TagKey.create(Registries.BLOCK, Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "wild_crops")))) {
             return true;
         }
 
@@ -284,20 +247,31 @@ public class QualityUtils {
 
     private static Pair<HashMap<Item, Integer>, HashMap<Integer, Integer>> getContainerData(final Container container) {
         // Collect the number of qualities present for all items in the container
+        // TODO :: hashmap of resourcekey to differentiate qualities of the same level?
         HashMap<Integer, Integer> qualities = new HashMap<>();
         HashMap<Item, Integer> items = new HashMap<>();
 
         for (int i = 0; i < container.getContainerSize(); i++) {
             ItemStack containerStack = container.getItem(i);
             Item item = containerStack.getItem();
-            items.put(item, items.getOrDefault(item, 0) + 1);
+
+            if (container instanceof SpecialContainer) {
+                items.put(item, items.getOrDefault(item, 0) + containerStack.getCount());
+            } else {
+                items.put(item, items.getOrDefault(item, 0) + 1);
+            }
 
             if (!Utils.isValidItem(containerStack)) {
                 continue;
             }
 
             Quality quality = QualityUtils.getQuality(containerStack);
-            qualities.compute(quality.level(), (key, value) -> value == null ? 1 : value + 1);
+
+            if (container instanceof SpecialContainer) {
+                qualities.compute(quality.level(), (key, value) -> value == null ? containerStack.getCount() : value + containerStack.getCount());
+            } else {
+                qualities.compute(quality.level(), (key, value) -> value == null ? 1 : value + 1);
+            }
         }
 
         return Pair.of(items, qualities);
@@ -325,7 +299,6 @@ public class QualityUtils {
         return Quality.NONE;
     }
 
-    // TODO :: fix (create special container etc.)
     private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {
         Set<Item> keys = items.keySet();
 
@@ -340,11 +313,24 @@ public class QualityUtils {
         for (Item key : keys) {
             int itemCount = items.get(key);
 
-            if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
-                // If the other slots (besides 2x2 / 3x3) are not empty then it's not a valid compacting recipe
-                return -1;
-            } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
-                result = itemCount;
+            if (container instanceof SpecialContainer) {
+                if (key == Items.AIR) {
+                    continue;
+                }
+
+                // There is probably a better way to check this but not worth the effort at the moment
+                if (itemCount == 4 || itemCount == 9) {
+                    return itemCount;
+                } else {
+                    return -1;
+                }
+            } else {
+                if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
+                    // If the other slots (besides 2x2 / 3x3) are not empty, then it's not a valid compacting recipe
+                    return -1;
+                } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
+                    return itemCount;
+                }
             }
         }
 
@@ -373,17 +359,5 @@ public class QualityUtils {
 
     public static boolean isValidQuality(final Quality quality) {
         return quality != null && quality != Quality.NONE && quality != Quality.PLAYER_PLACED;
-    }
-
-    public static int countIngredients(final CraftingContainer container) {
-        int count = 0;
-
-        for (ItemStack stack : container.getItems()) {
-            if (Utils.isValidItem(stack)) {
-                count++;
-            }
-        }
-
-        return count;
     }
 }

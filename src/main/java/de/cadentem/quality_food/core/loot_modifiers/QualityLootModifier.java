@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -27,7 +28,15 @@ public class QualityLootModifier extends LootModifier {
             return generatedLoot;
         }
 
-        generatedLoot.stream().filter(Utils::isValidItem).forEach(stack -> QualityUtils.applyQuality(stack, context.getParamOrNull(LootContextParams.THIS_ENTITY)));
+        Player player;
+
+        if (context.getParamOrNull(LootContextParams.THIS_ENTITY) instanceof Player playerParameter) {
+            player = playerParameter;
+        } else {
+            player = null;
+        }
+
+        generatedLoot.stream().filter(Utils::isValidItem).forEach(stack -> QualityUtils.applyQuality(stack, player, context.getLevel().registryAccess()));
         return generatedLoot;
     }
 

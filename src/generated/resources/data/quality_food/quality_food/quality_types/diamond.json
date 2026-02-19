@@ -3,10 +3,17 @@
   "chance": 0.005,
   "cooking_bonus": 0.015625,
   "crafting_bonus": 0.7,
+  "crop_multiplier": 0.75,
   "duration_multiplier": 2.5,
   "icon": "quality_food:quality_icon/diamond",
   "level": 3,
+  "min_weight": 1.75,
+  "name": {
+    "translate": "quality_type.quality_food.diamond"
+  },
   "nutrition_multiplier": 2.5,
   "probability_multiplier": 2.0,
-  "saturation_multiplier": 1.75
+  "saturation_multiplier": 1.75,
+  "seed_multiplier": 0.75,
+  "weight": 3.0
 }

@@ -125,8 +125,9 @@ public class Utils {
         data.addQualityType(type);
 
         if (type.value() != QualityType.NONE) {
-            // TODO :: consider stack size of result item
-            data.incrementQuality(type.value().cookingBonus() / ingredientCount);
+            // Lower stack size result in a higher bonus so that the intended bonus will be reached
+            double bonus = type.value().cookingBonus() * (64d / resultStackSize);
+            data.incrementQuality(bonus / ingredientCount);
         }
 
         blockEntity.setChanged();
@@ -134,7 +135,8 @@ public class Utils {
 
     public static void useQuality(final BlockEntity block, final ItemStack stack, @Nullable final Player player) {
         BlockData data = block.getData(AttachmentHandler.BLOCK_DATA);
-        data.useQuality(stack, player);
+        //noinspection DataFlowIssue -> level is present
+        data.useQuality(stack, player, block.getLevel());
         block.setChanged();
     }
 }

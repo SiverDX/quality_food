@@ -11,72 +11,48 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @ParametersAreNonnullByDefault
 public class BlockData implements INBTSerializable<CompoundTag> {
-    private final Set<Holder<QualityType>> cookedQualities = new HashSet<>();
+    private final HashSet<Holder<QualityType>> cookedQualities = new HashSet<>();
     private double qualityBonus;
 
-    public void useQuality(final ItemStack stack, @Nullable final Player player) {
-        Holder<QualityType> chosenType = null;
+    public void useQuality(final ItemStack stack, @Nullable final Player player, final Level level) {
+        Holder<QualityType> selected = null;
 
         for (Holder<QualityType> type : cookedQualities) {
-            if (chosenType == null || type.value().level() < chosenType.value().level()) {
-                chosenType = type;
+            if (selected == null || type.value().level() < selected.value().level()) {
+                selected = type;
             }
         }
 
-        if (chosenType != null) {
-            QualityUtils.applyQuality(stack, chosenType);
+        // Apply the lowest ingredient quality as base
+        // The cooking bonus can cause it to upgrade to a higher tier
+        if (selected != null) {
+            QualityUtils.applyQuality(stack, selected);
         }
 
-        // FIXME
-        QualityUtils.applyQuality(stack, player, List.of(Bonus.additive((float) qualityBonus)), true);
+        for (Holder<QualityType> type : level.registryAccess().registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            double chance = level.getRandom().nextDouble();
+            chance = Modification.luck(player).apply(chance);
+            chance = Modification.additive((float) qualityBonus).apply(chance);
 
-        qualityBonus = 0;
-        cookedQualities.clear();
-    }
-
-    // TODO (1.20.1 state)
-    public void useQuality(final ItemStack stack, @Nullable final Player player) {
-        Quality selected = null;
-
-        for (Quality quality : cookedQualities) {
-            if (selected == null || quality.level() < selected.level()) {
-                selected = quality;
+            if (chance >= 1 - type.value().chance()) {
+                selected = type;
             }
         }
 
         if (selected != null) {
-            QualityUtils.applyQuality(stack, selected);
-        } else {
-            selected = Quality.NONE;
+            QualityUtils.applyQuality(stack, QualityType.createQuality(selected, stack), true);
         }
-
-        for (Quality quality : Quality.values()) {
-            if (quality.level() == 0) {
-                continue;
-            }
-
-            double chance = RANDOM.nextDouble();
-            chance = Modification.luck(player).apply(chance);
-            chance = Modification.additive((float) qualityBonus).apply(chance);
-
-            if (chance >= 1 - QualityConfig.getChance(quality)) {
-                selected = quality;
-            }
-        }
-
-        QualityUtils.applyQuality(stack, selected, true);
 
         qualityBonus = 0;
         cookedQualities.clear();

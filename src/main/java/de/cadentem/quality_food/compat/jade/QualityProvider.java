@@ -3,10 +3,8 @@ package de.cadentem.quality_food.compat.jade;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.codecs.Quality;
-import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.Utils;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -18,8 +16,6 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.impl.ui.ElementHelper;
-
-import java.util.Optional;
 
 public class QualityProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
     private static final ResourceLocation ID = QualityFood.location("quality");
@@ -38,11 +34,10 @@ public class QualityProvider implements IBlockComponentProvider, IServerDataProv
 
             ResourceLocation location = ResourceLocation.parse(tag.getString(QualityFood.concat("type")));
 
-            toolTip.add(Component.translatable(QualityFood.concat("quality")));
-            toolTip.append(Component.translatable("quality_type." + location.toLanguageKey()));
-
-            Optional<Holder.Reference<QualityType>> optional = accessor.getLevel().holder(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, location));
-            optional.ifPresent(qualityTypeReference -> toolTip.append(ElementHelper.INSTANCE.sprite(qualityTypeReference.value().icon(), 10, 10).translate(TRANSLATE)));
+            accessor.getLevel().holder(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, location)).ifPresent(qualityTypeReference -> {
+                toolTip.add(Component.translatable("quality_food.jade", qualityTypeReference.value().name()));
+                toolTip.append(ElementHelper.INSTANCE.sprite(qualityTypeReference.value().icon(), 10, 10).translate(TRANSLATE));
+            });
         }
     }
 

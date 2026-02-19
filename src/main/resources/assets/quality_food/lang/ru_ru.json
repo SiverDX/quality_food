@@ -1,6 +1,6 @@
 {
   "potion.withProbability": "%s (%s)",
-  "quality_food.quality": "Качество: ",
+  "quality_food.jade": "Качество: %s",
   "config.jade.plugin_quality_food.quality": "Качество",
   "commands.quality_food.quality.failed.no_quality": "%s - невозможно применить качество к объекту",
   "commands.quality_food.quality.failed.invalid_quality": "Попытка применить недействительное качество",

@@ -39,9 +39,9 @@ public record Modification(Type type, float amount) {
 
     public static Modification harvestOrSeedMultiplier(final Holder<QualityType> type, final ItemStack stack) {
         if (stack.is(Tags.Items.CROPS)) {
-            return Modification.multiplicative(type.value().cropMultiplier());
+            return Modification.multiplicative((float) type.value().cropMultiplier());
         } else if (stack.is(Tags.Items.SEEDS)) {
-            return Modification.multiplicative(type.value().seedMultiplier());
+            return Modification.multiplicative((float) type.value().seedMultiplier());
         }
 
         return NONE;
@@ -52,7 +52,7 @@ public record Modification(Type type, float amount) {
             return NONE;
         }
 
-        return Modification.multiplicative(ServerConfig.getFarmlandMultiplier(crop, farmland));
+        return Modification.multiplicative((float) ServerConfig.getFarmlandMultiplier(crop, farmland));
     }
 
     public enum Type {

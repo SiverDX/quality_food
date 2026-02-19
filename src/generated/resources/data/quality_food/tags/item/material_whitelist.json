@@ -1,16 +1,24 @@
 {
   "values": [
-    "#c:mushrooms",
-    "#c:foods",
-    "#c:crops",
-    "#c:seeds",
-    "#c:eggs",
-    "minecraft:cocoa_beans",
-    "minecraft:sugar_cane",
     "minecraft:sugar",
+    "minecraft:sugar_cane",
+    "minecraft:cocoa_beans",
     "minecraft:ink_sac",
     "minecraft:hay_block",
     "minecraft:honey_block",
+    "#c:eggs",
+    "#c:seeds",
+    "#c:crops",
+    "#c:foods",
+    "#c:mushrooms",
+    {
+      "id": "#c:flours",
+      "required": false
+    },
+    {
+      "id": "#c:doughs",
+      "required": false
+    },
     {
       "id": "#farmersdelight:wild_crops",
       "required": false
@@ -20,11 +28,31 @@
       "required": false
     },
     {
+      "id": "fruitfulfun:lemon_roast_chicken_block",
+      "required": false
+    },
+    {
+      "id": "collectorsreap:pomegranate",
+      "required": false
+    },
+    {
       "id": "farm_and_charm:barley",
       "required": false
     },
     {
       "id": "farm_and_charm:oat",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:hibiscus",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:lavender_blossom",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:green_tea_leaf",
       "required": false
     }
   ]

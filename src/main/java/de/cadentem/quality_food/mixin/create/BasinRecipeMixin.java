@@ -4,9 +4,13 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import de.cadentem.quality_food.compat.SpecialContainer;
+import de.cadentem.quality_food.compat.create.RecipeMapping;
+import de.cadentem.quality_food.config.ServerConfig;
+import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,17 +35,21 @@ public abstract class BasinRecipeMixin {
             container.setItem(slot, ingredient);
         }
 
+        RecipeHolder<?> holder = RecipeMapping.RECIPES.get(recipe);
+
+        if (holder == null) {
+            return stacks;
+        }
+
         for (ItemStack stack : stacks) {
             //noinspection DataFlowIssue -> level is present
             RegistryAccess access = basin.getLevel().registryAccess();
 
-            // FIXME
-//            Holder<Recipe<?>> recipeHolder = access.registryOrThrow(Registries.RECIPE).wrapAsHolder(recipe);
-//            QualityUtils.handleConversion(stack, container, recipeHolder, access);
-//
-//            if (!QualityUtils.hasQuality(stack) && !ServerConfig.isNoQualityRecipe(recipeHolder, access)) {
-//                QualityUtils.applyQuality(stack, container.getIngredients(), null, access);
-//            }
+            QualityUtils.handleConversion(stack, container, holder, access);
+
+            if (!QualityUtils.hasQuality(stack) && !ServerConfig.isNoQualityRecipe(holder, access)) {
+                QualityUtils.applyQuality(stack, container.getIngredients(), null, access);
+            }
         }
 
         return stacks;

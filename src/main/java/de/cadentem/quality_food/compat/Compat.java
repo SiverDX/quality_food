@@ -13,8 +13,8 @@ public class Compat {
     private static final Map<String, List<String>> ALIAS = Map.of();
     private static final Map<String, Boolean> MODS = new HashMap<>();
 
-    public static ResourceLocation forge(final String path) {
-        return location(Mod.FORGE.modid(), path);
+    public static ResourceLocation common(final String path) {
+        return location("c", path);
     }
 
     public static ResourceLocation location(final String namespace, final String path) {
@@ -49,7 +49,6 @@ public class Compat {
 
     public enum Mod {
         QUARK("quark"),
-        FORGE("forge"),
         CREATE("create"),
         VINERY("vinery"),
         FARMERSDELIGHT("farmersdelight"),

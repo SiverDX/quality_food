@@ -23,6 +23,8 @@ public abstract class GuiGraphicsMixin {
             return;
         }
 
+        // TODO :: tooltip overhaul does not display the quality on the frame
+
         GuiGraphics instance = (GuiGraphics) (Object) this;
         instance.pose().pushPose();
         instance.pose().translate(0, 0, 200 + (model.isGui3d() ? guiOffset : 0));

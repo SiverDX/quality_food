@@ -32,6 +32,7 @@
     "create.HarvesterMovementBehaviourMixin",
     "create.MillstoneBlockEntityMixin",
     "create.RecipeApplierMixin",
+    "create.RecipeTrieFinderMixin",
     "create.SawBlockEntityMixin",
     "farm_and_charm.ClimbingCropBlockMixin",
     "farm_and_charm.EffectFoodBlockMixin",
