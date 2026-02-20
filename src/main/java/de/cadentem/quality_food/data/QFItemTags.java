@@ -39,8 +39,9 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.FOODS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(Compat.common("flours"))
-                .addOptionalTag(Compat.common("doughs"))
+                .addOptionalTag(Compat.common("flours")) // Create
+                .addOptionalTag(Compat.common("doughs")) // Create
+                .addOptionalTag(Compat.common("dough")) // Kaleidoscope Cookery
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops"))
                 .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "rice_panicle"))
                 .addOptional(Compat.location(Compat.Mod.FRUITFUL_FUN.modid(), "lemon_roast_chicken_block"))
@@ -50,6 +51,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "hibiscus"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "lavender_blossom"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "green_tea_leaf"))
+                .addOptional(Compat.location(Compat.Mod.KALEIDOSCOPE_COOKERY.modid(), "rice_panicle"))
         ;
 
         tag(BLACKLIST)

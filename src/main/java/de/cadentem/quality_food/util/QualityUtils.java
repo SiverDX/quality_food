@@ -50,11 +50,10 @@ public class QualityUtils {
 
             Holder<QualityType> type = QualityUtils.getType(ingredient);
 
-            if (type.value() == QualityType.NONE) {
-                continue;
+            if (type.value() != QualityType.NONE) {
+                totalWeight += type.value().weight();
             }
 
-            totalWeight += type.value().weight();
             validIngredients++;
         }
 

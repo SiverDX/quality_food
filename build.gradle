@@ -117,6 +117,8 @@ dependencies {
 
     compileOnly "curse.maven:tooltip-overhaul-1327508:7548783" // 1.4.2
 
+    implementation "curse.maven:kaleidoscope-cookery-1309203:7473813" // 1.2.0
+
     /* --- Compatibility (Farmer's Delight addons) --- */
     implementation "curse.maven:farmers-delight-398521:7596366" // 1.2.10
 
@@ -135,7 +137,8 @@ dependencies {
 
     /* --- Test --- */
     implementation "curse.maven:appleskin-248787:7517379" // 3.0.8
-    implementation "curse.maven:emi-580555:6420931" // 1.1.22
+    runtimeOnly "curse.maven:emi-580555:6420931" // 1.1.22
+    runtimeOnly "curse.maven:tmrv-1194921:7410429" // 0.7.1
 }
 
 tasks.withType(ProcessResources).configureEach {

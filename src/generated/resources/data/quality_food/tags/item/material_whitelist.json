@@ -20,6 +20,10 @@
       "required": false
     },
     {
+      "id": "#c:dough",
+      "required": false
+    },
+    {
       "id": "#farmersdelight:wild_crops",
       "required": false
     },
@@ -53,6 +57,10 @@
     },
     {
       "id": "herbalbrews:green_tea_leaf",
+      "required": false
+    },
+    {
+      "id": "kaleidoscope_cookery:rice_panicle",
       "required": false
     }
   ]
