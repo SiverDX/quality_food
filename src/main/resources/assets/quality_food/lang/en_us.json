@@ -7,6 +7,7 @@
 
   "config.jade.plugin_quality_food.quality": "Quality",
   "quality_food.jade": "Quality: %s",
+  "quality_food.create_goggle": " (%s)",
 
   "create.item_attributes.quality_food.quality": "has '%1$s' quality",
   "create.item_attributes.quality_food.quality.inverted": "does not have '%1$s' quality",

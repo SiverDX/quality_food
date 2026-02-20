@@ -26,6 +26,7 @@
     "SugarCaneBlockMixin",
     "SweetBerryBushBlockMixin",
     "ThrownEggMixin",
+    "create.BasinBlockEntityMixin",
     "create.BasinRecipeMixin",
     "create.CrushingWheelControllerBlockEntityMixin",
     "create.FanProcessingMixin",

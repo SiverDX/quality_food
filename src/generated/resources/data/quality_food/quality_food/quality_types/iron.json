@@ -8,6 +8,7 @@
   "level": 1,
   "min_weight": 0.0,
   "name": {
+    "color": "gray",
     "translate": "quality_type.quality_food.iron"
   },
   "nutrition_multiplier": 1.5,

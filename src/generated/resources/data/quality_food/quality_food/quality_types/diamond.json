@@ -9,6 +9,7 @@
   "level": 3,
   "min_weight": 1.75,
   "name": {
+    "color": "aqua",
     "translate": "quality_type.quality_food.diamond"
   },
   "nutrition_multiplier": 2.5,

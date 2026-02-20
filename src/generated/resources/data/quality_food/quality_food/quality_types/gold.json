@@ -9,6 +9,7 @@
   "level": 2,
   "min_weight": 1.0,
   "name": {
+    "color": "gold",
     "translate": "quality_type.quality_food.gold"
   },
   "nutrition_multiplier": 2.0,
