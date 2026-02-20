@@ -8,6 +8,7 @@ import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -45,10 +46,10 @@ public record QualityAttribute(Quality quality) implements ItemAttribute {
 
     @Override
     public Object[] getTranslationParameters() {
-        String parameter = "";
+        Component parameter = Component.empty();
 
         if (quality != null) {
-            parameter = quality.getType().value().name().getString();
+            parameter = quality.getType().value().name();
         }
 
         return new Object[]{parameter};
