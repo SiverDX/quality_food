@@ -70,8 +70,7 @@ public class QualityUtils {
                 continue;
             }
 
-            double minWeight = type.value().minWeight();
-            double chance = Mth.clamp((averageWeight - minWeight) / (type.value().weight() - minWeight), 0, 1);
+            double chance = QualityUtils.calculateChance(type.value(), averageWeight);
             chance = Modification.luck(player).apply(chance);
 
             if (chance > 0 && chance >= RANDOM.nextDouble()) {
@@ -101,8 +100,7 @@ public class QualityUtils {
                 if (blockQuality == Quality.NONE || blockQuality == Quality.PLAYER_PLACED) {
                     chance = type.value().chance();
                 } else {
-                    double minWeight = type.value().minWeight();
-                    chance = Mth.clamp((blockQuality.getType().value().weight() - minWeight) / (type.value().weight() - minWeight), 0, 1);
+                    chance = QualityUtils.calculateChance(type.value(), blockQuality.getType().value().weight());
                 }
 
                 chance = Modification.harvestOrSeedMultiplier(type, stack).apply(chance);
@@ -238,6 +236,10 @@ public class QualityUtils {
         if (quality.level() > 0 && (shouldRetainQuality || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
             QualityUtils.applyQuality(result, quality);
         }
+    }
+
+    public static double calculateChance(final QualityType quality, final double averageWeight) {
+        return Mth.clamp((averageWeight - quality.minWeight()) / (quality.weight() - quality.minWeight()), 0, 1);
     }
 
     public static boolean isInvalidItem(final ItemStack stack) {

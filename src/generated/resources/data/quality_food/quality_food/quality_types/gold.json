@@ -7,7 +7,7 @@
   "duration_multiplier": 2.0,
   "icon": "quality_food:quality_icon/gold",
   "level": 2,
-  "min_weight": 1.0,
+  "min_weight": 0.75,
   "name": {
     "color": "gold",
     "translate": "quality_type.quality_food.gold"
