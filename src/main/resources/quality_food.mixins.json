@@ -53,7 +53,6 @@
     "fastbench.CraftResultSlotExtMixin",
     "fastbench.FastBenchUtilMixin",
     "fastbench.ResultSlotAccess",
-    "herbalbrews.CoffeeCropBlockMixin",
     "herbalbrews.DrinkBlockItemMixin",
     "herbalbrews.FlaskItemMixin",
     "herbalbrews.TeaCupBlockMixin",

@@ -41,6 +41,10 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         }
 
         for (Holder<QualityType> type : level.registryAccess().registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            if (selected != null && type.value().level() <= selected.value().level()) {
+                continue;
+            }
+
             double chance = level.getRandom().nextDouble();
             chance = Modification.luck(player).apply(chance);
             chance = Modification.additive((float) qualityBonus).apply(chance);

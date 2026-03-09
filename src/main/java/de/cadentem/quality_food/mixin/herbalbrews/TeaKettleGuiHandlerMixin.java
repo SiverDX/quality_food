@@ -21,8 +21,8 @@ import java.lang.reflect.Field;
 public abstract class TeaKettleGuiHandlerMixin {
     @Shadow(remap = false) @Final private ContainerData propertyDelegate;
 
-    @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;onQuickCraft(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V", ordinal = 0, shift = At.Shift.BEFORE))
-    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(name = "copy") final ItemStack stack) {
+    @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/satisfy/herbalbrews/client/gui/handler/TeaKettleGuiHandler;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
+    private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(name = "item") final ItemStack stack) {
         if (player.level().isClientSide()) {
             return;
         }
