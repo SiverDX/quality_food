@@ -14,7 +14,7 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@EventBusSubscriber
+@EventBusSubscriber(modid = QualityFood.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class QFComponents {
     public static final ResourceKey<Registry<QualityType>> QUALITY_TYPE_REGISTRY = ResourceKey.createRegistryKey(QualityFood.location("quality_types"));
     public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, QualityFood.MODID);
