@@ -16,7 +16,7 @@ import vectorwing.farmersdelight.common.block.entity.container.CookingPotResultS
 @Mixin(CookingPotResultSlot.class)
 public abstract class CookingPotResultSlotMixin {
     @Shadow(remap = false) @Final private Player player;
-    @Shadow(remap = false) @Final public CookingPotBlockEntity tileEntity;
+    @Shadow(remap = false) @Final public CookingPotBlockEntity cookingPot;
 
     @Inject(method = "checkTakeAchievements", at = @At(value = "RETURN"))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
@@ -24,6 +24,6 @@ public abstract class CookingPotResultSlotMixin {
             return;
         }
 
-        Utils.useQuality(tileEntity, stack, player);
+        Utils.useQuality(cookingPot, stack, player);
     }
 }

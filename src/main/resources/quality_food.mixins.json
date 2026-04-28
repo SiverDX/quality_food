@@ -43,6 +43,7 @@
     "farmersdelight.CookingPotResultSlotMixin",
     "farmersdelight.CuttingBoardBlockEntityMixin",
     "farmersdelight.FeastBlockMixin",
+    "farmersdelight.PieBlockMixin",
     "farmersdelight.RiceBlockMixin",
     "farmersdelight.TextUtilsMixin",
     "farmersdelight.TomatoVineBlockMixin",

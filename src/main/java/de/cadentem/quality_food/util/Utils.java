@@ -23,9 +23,6 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class Utils {
-    /** Safety measure to avoid trying to apply quality multiple times to the same item */
-    public static final ThreadLocal<ItemStack> LAST_STACK = new ThreadLocal<>();
-
     public static boolean isValidItem(final ItemStack stack) {
         return isValidItem(stack, true);
     }

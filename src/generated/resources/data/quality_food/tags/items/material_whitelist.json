@@ -23,7 +23,15 @@
       "required": false
     },
     {
+      "id": "#farmersdelight:pies",
+      "required": false
+    },
+    {
       "id": "farmersdelight:rice_panicle",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:debug_pumpkin_pie",
       "required": false
     },
     {

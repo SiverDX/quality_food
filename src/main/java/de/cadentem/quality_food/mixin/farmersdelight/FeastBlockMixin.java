@@ -5,7 +5,7 @@ import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -15,7 +15,7 @@ import vectorwing.farmersdelight.common.block.FeastBlock;
 @Mixin(value = FeastBlock.class, remap = false)
 public class FeastBlockMixin {
     @ModifyVariable(method = "takeServing", at = @At("STORE"), name = "serving")
-    private ItemStack quality_food$applyQualityToItem(final ItemStack stack, @Local(argsOnly = true) final LevelAccessor level, @Local(argsOnly = true) final BlockPos position) {
+    private ItemStack quality_food$applyQualityToItem(final ItemStack stack, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final BlockPos position) {
         QualityUtils.applyQuality(stack, LevelData.get(level, position, true));
         return stack;
     }
