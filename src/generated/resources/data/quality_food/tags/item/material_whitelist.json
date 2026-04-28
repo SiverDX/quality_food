@@ -28,6 +28,10 @@
       "required": false
     },
     {
+      "id": "#farmersdelight:pies",
+      "required": false
+    },
+    {
       "id": "farmersdelight:rice_panicle",
       "required": false
     },
