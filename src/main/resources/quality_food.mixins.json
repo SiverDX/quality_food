@@ -47,6 +47,7 @@
     "farmersdelight.CookingPotResultSlotMixin",
     "farmersdelight.CuttingBoardBlockEntityMixin",
     "farmersdelight.FeastBlockMixin",
+    "farmersdelight.PieBlockMixin",
     "farmersdelight.RiceBlockMixin",
     "farmersdelight.TomatoVineBlockMixin",
     "farmersdelight.WildCropBlockMixin",

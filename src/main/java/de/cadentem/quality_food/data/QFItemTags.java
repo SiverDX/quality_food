@@ -44,6 +44,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptionalTag(Compat.common("dough")) // Kaleidoscope Cookery
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops"))
                 .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "rice_panicle"))
+                .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "debug_pumpkin_pie"))
                 .addOptional(Compat.location(Compat.Mod.FRUITFUL_FUN.modid(), "lemon_roast_chicken_block"))
                 .addOptional(Compat.location(Compat.Mod.COLLECTORS_REAP.modid(), "pomegranate"))
                 .addOptional(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "barley"))
