@@ -69,32 +69,44 @@ dependencies {
     compileOnly "curse.maven:harvest-with-ease-602171:7401545" // 9.4.0
     compileOnly "curse.maven:cobweb-968456:7355650" // 1.4.0
 
-    implementation "curse.maven:sophisticated-backpacks-422301:7608067" // 3.25.27.1528
-    implementation "curse.maven:sophisticated-storage-619320:7603092" // 1.5.27.1487
-    implementation "curse.maven:sophisticated-core-618298:7635107" // 1.4.5.1499
+    // https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:sophisticated-backpacks-422301:8238750" // 3.25.58.1880
+    // https://www.curseforge.com/minecraft/mc-mods/sophisticated-storage/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:sophisticated-storage-619320:8238761" // 1.5.58.1835
+    // https://www.curseforge.com/minecraft/mc-mods/sophisticated-core/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:sophisticated-core-618298:8238703" // 1.4.54.2004
 
-    compileOnly "curse.maven:toms-storage-378609:7397755" // 2.2.4
+    // https://www.curseforge.com/minecraft/mc-mods/toms-storage/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:toms-storage-378609:7917007" // 2.3.2
 
-    implementation "curse.maven:create-328085:7408951" // 6.0.9
+    // https://www.curseforge.com/minecraft/mc-mods/create/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:create-328085:7963363" // 6.0.10
     implementation "net.createmod.ponder:ponder-neoforge:${ponder_version}"
 
 //    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
 //    compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
 
+    // https://www.curseforge.com/minecraft/mc-mods/lets-do-farm-charm/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     implementation "curse.maven:lets-do-farm-charm-1038103:7959521" // 1.1.22
+    // https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     implementation "curse.maven:lets-do-vinery-704465:7539914" // 1.5.3
+    // https://www.curseforge.com/minecraft/mc-mods/lets-do-herbal-brews/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     implementation "curse.maven:lets-do-herbal-brews-951221:7657017" // 1.1.3
     implementation "curse.maven:do-api-864599:5730908" // 1.3.0
     implementation "curse.maven:architectury-api-419699:5786327" // 13.0.8
 
-    compileOnly "curse.maven:quark-243121:7625365" // 4.1-473
-    compileOnly "curse.maven:zeta-968868:7625372" // 1.1-38
+    // https://www.curseforge.com/minecraft/mc-mods/quark/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:quark-243121:8146177" // 4.1-480
+    // https://www.curseforge.com/minecraft/mc-mods/zeta/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:zeta-968868:7980010" // 1.1-40
 
+    // https://www.curseforge.com/minecraft/mc-mods/rightclickharvest/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     compileOnly "curse.maven:rightclickharvest-452834:7508749" // 4.6.1
     compileOnly "curse.maven:architectury-api-419699:5786327" // 13.0.8
     compileOnly "curse.maven:jamlib-623764:6421954" // 1.3.5
 
-    compileOnly "curse.maven:supplementaries-412082:7511735" // 3.5.17
+    // https://www.curseforge.com/minecraft/mc-mods/supplementaries/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:supplementaries-412082:8194573" // 3.6.7
     compileOnly "curse.maven:selene-499980:7522321" // 2.29.16
 
     // TODO :: check if it causes issues
@@ -109,23 +121,28 @@ dependencies {
 //    implementation fg.deobf("curse.maven:collectors-reap-807101:7457274") // 1.5.5
 //    implementation fg.deobf("curse.maven:blueprint-382216:6408581") // 7.1.3
 
+    // https://www.curseforge.com/minecraft/mc-mods/smarter-farmers-farmers-replant/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     compileOnly "curse.maven:smarter-farmers-farmers-replant-491290:7120722" // 2.2.4
     compileOnly "curse.maven:selene-499980:7522321" // 2.29.16
 
     compileOnly "curse.maven:visual-workbench-500273:6798196" // 21.1.1
     compileOnly "curse.maven:puzzles-lib-495476:7140307" // 21.1.39
 
-    compileOnly "curse.maven:tooltip-overhaul-1327508:7548783" // 1.4.2
+    // https://www.curseforge.com/minecraft/mc-mods/tooltip-overhaul/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:tooltip-overhaul-1327508:7907475" // 1.4.4
 
     implementation "curse.maven:kaleidoscope-cookery-1309203:7473813" // 1.2.0
 
     /* --- Compatibility (Farmer's Delight addons) --- */
-    implementation "curse.maven:farmers-delight-398521:8001010" // 1.3.1
+    // https://www.curseforge.com/minecraft/mc-mods/farmers-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:farmers-delight-398521:8083481" // 1.3.2
 
-    compileOnly "curse.maven:miners-delight-plus-689630:6860679" // 1.4.2
+    // https://www.curseforge.com/minecraft/mc-mods/miners-delight-plus/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:miners-delight-plus-689630:8011049" // 1.4.5
     compileOnly "curse.maven:lodestone-616457:7264731" // 1.8.2
 
-    compileOnly "curse.maven:display-delight-1144296:7174986" // 1.4.0
+    // https://www.curseforge.com/minecraft/mc-mods/display-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    compileOnly "curse.maven:display-delight-1144296:8188789" // 1.6.1
 
     /* --- Compatibility Test --- */
     implementation "curse.maven:croptopia-415438:6788725" // 4.2.1
