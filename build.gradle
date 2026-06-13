@@ -131,7 +131,8 @@ dependencies {
     // https://www.curseforge.com/minecraft/mc-mods/tooltip-overhaul/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     compileOnly "curse.maven:tooltip-overhaul-1327508:7907475" // 1.4.4
 
-    implementation "curse.maven:kaleidoscope-cookery-1309203:7473813" // 1.2.0
+    // https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-cookery/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:kaleidoscope-cookery-1309203:8231456" // 1.4.0
 
     /* --- Compatibility (Farmer's Delight addons) --- */
     // https://www.curseforge.com/minecraft/mc-mods/farmers-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide

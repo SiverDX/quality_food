@@ -19,8 +19,8 @@ public abstract class PotBlockEntityMixin {
 
     // TODO :: unsure if there is a good way to consider the quality of the carrier (e.g. cooked rice)
     //         since the quality application happens on input and carrier is only known when result is taken
-    @Inject(method = "lambda$startCooking$0", at = @At(value = "INVOKE", target = "Lcom/github/ysbbbbbb/kaleidoscopecookery/crafting/recipe/PotRecipe;assemble(Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.BY, by = 2))
-    private void quality_food$applyQuality(final SimpleInput input, final Level level, final RecipeHolder<?> recipe, final CallbackInfo callback) {
+    @Inject(method = "applyFlexRecipe", at = @At(value = "INVOKE", target = "Lcom/github/ysbbbbbb/kaleidoscopecookery/item/quality/QualityUtils;setQuality(Lnet/minecraft/world/item/ItemStack;Lcom/github/ysbbbbbb/kaleidoscopecookery/item/quality/Quality;)V", shift = At.Shift.BY, by = 2))
+    private void quality_food$applyQuality(final Level level, final SimpleInput input, final RecipeHolder<?> recipe, final CallbackInfo callback) {
         QualityUtils.applyQuality(result, input.getInputs(), null, level.registryAccess());
     }
 }
