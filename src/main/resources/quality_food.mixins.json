@@ -81,7 +81,8 @@
     "vinery.GrapeVineBlockMixin"
   ],
   "client": [
-    "client.GuiGraphicsMixin"
+    "client.GuiGraphicsMixin",
+    "create.StockKeeperRequestScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
