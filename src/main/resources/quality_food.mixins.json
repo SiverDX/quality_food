@@ -62,10 +62,17 @@
     "herbalbrews.TeaKettleBlockEntityMixin",
     "herbalbrews.TeaKettleGuiHandlerMixin",
     "jade.BlockAccessorImplMixin",
+    "kaleidoscope_cookery.ChoppingBoardBlockEntityMixin",
+    "kaleidoscope_cookery.MillstoneBlockEntityMixin",
+    "kaleidoscope_cookery.PotBlockEntityMixin",
+    "kaleidoscope_cookery.ShawarmaSpitBlockEntityMixin",
+    "kaleidoscope_cookery.SteamerBlockEntityMixin",
+    "kaleidoscope_cookery.StockpotBlockEntityMixin",
     "majruszsenchantments.TelekinesisEnchantmentMixin",
     "miners_delight.CopperPotBlockEntityMixin",
     "miners_delight.CopperPotMenuMixin",
     "miners_delight.CopperPotResultSlotMixin",
+    "mysterious_mountain_lib.HighCropBlockMixin",
     "quark.SimpleHarvestModuleMixin",
     "rightclickharvest.RightClickHarvestModInitMixin",
     "smarterfarmers.SFHarvestFarmlandMixin",
@@ -81,7 +88,9 @@
     "visualworkbench.ModCraftingMenuMixin"
   ],
   "client": [
+    "client.GuiGraphicsAccess",
     "client.GuiGraphicsMixin",
+    "create.StockKeeperRequestScreenMixin",
     "jade.BlockAccessorClientHandlerMixin"
   ],
   "injectors": {
