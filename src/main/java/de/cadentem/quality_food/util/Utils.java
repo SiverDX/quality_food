@@ -77,6 +77,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Store quality of a crop that has grown in another direction
+     * @param grown The new state
+     * @param position The position of the base crop (not the newly grown position), to retrieve the current quality
+     * @param direction The position in which the crop grows
+     */
     public static void storeQuality(final BlockState grown, final ServerLevel accessor, final BlockPos position, final Direction direction) {
         storeQuality(grown, accessor, position, position.relative(direction), 1);
     }

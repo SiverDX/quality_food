@@ -144,6 +144,11 @@ dependencies {
     // https://www.curseforge.com/minecraft/mc-mods/display-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     compileOnly "curse.maven:display-delight-1144296:8188789" // 1.6.1
 
+    // https://www.curseforge.com/minecraft/mc-mods/corn-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:corn-delight-577805:8021963" // 1.2.10
+    // https://www.curseforge.com/minecraft/mc-mods/mysterious-mountain-lib/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
+    implementation "curse.maven:mysterious-mountain-lib-368098:7878548" // 1.2.15
+
     /* --- Compatibility Test --- */
     implementation "curse.maven:croptopia-415438:6788725" // 4.2.1
     implementation "curse.maven:epherolib-885449:5872111" // 1.2.0

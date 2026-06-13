@@ -68,6 +68,8 @@
     "miners_delight.CopperPotBlockEntityMixin",
     "miners_delight.CopperPotMenuMixin",
     "miners_delight.CopperPotResultSlotMixin",
+    "mysterious_mountain_lib.HighCropBlockMixin",
+    "mysterious_mountain_lib.ItemFoodBaseMixin",
     "rightclickharvest.RightClickHarvestMixin",
     "smarterfarmers.SFHarvestFarmlandMixin",
     "sophisticatedcore.CompactedItemAccess",
