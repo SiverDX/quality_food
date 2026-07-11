@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.mixin.farmersdelight;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -8,16 +7,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vectorwing.farmersdelight.common.block.entity.CookingPotBlockEntity;
 import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 
 @Mixin(value = CookingPotBlockEntity.class)
 public abstract class CookingPotBlockEntityMixin {
+    @Shadow @Final private ItemStackHandler inventory;
+
     /** Display particles to show how much quality the block has stored */
     @Inject(method = "cookingTick", at = @At("TAIL"), remap = false)
     private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final CookingPotBlockEntity blockEntity, final CallbackInfo callback) {
@@ -27,14 +31,15 @@ public abstract class CookingPotBlockEntityMixin {
     }
 
     /** Increment quality after cooking an item */
-    @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private void quality_food$incrementQuality(final RecipeHolder<CookingPotRecipe> recipe, final CookingPotBlockEntity cookingPot, final CallbackInfoReturnable<Boolean> callback, @Local(name = "slotStack") final ItemStack stack) {
+    @ModifyVariable(method = "processCooking", at = @At(value = "STORE"), name = "resultStack")
+    private ItemStack quality_food$incrementQuality(final ItemStack resultStack, final RecipeHolder<CookingPotRecipe> recipe, final CookingPotBlockEntity cookingPot) {
         int resultStackSize = 64;
 
         if (cookingPot.getLevel() != null) {
             resultStackSize = recipe.value().getResultItem(cookingPot.getLevel().registryAccess()).getMaxStackSize();
         }
 
-        Utils.incrementQuality(cookingPot, stack, recipe.value().getIngredients().size(), resultStackSize);
+        Utils.incrementQuality(cookingPot, Utils.collectIngredients(inventory, () -> 6), resultStackSize);
+        return resultStack;
     }
 }

@@ -242,6 +242,7 @@ public class QualityUtils {
         return Mth.clamp((averageWeight - quality.minWeight()) / (quality.weight() - quality.minWeight()), 0, 1);
     }
 
+    /** Checks if the item already has quality and whether it is a valid item, see {@link Utils#isValidItem(ItemStack)} */
     public static boolean isInvalidItem(final ItemStack stack) {
         return hasQuality(stack) || !Utils.isValidItem(stack);
     }

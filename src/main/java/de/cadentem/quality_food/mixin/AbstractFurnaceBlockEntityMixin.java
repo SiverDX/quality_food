@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(AbstractFurnaceBlockEntity.class)
 public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlockEntity {
     protected AbstractFurnaceBlockEntityMixin(final BlockEntityType<?> type, final BlockPos position, final BlockState state) {
@@ -43,6 +45,6 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
         }
 
         // The slot of the block entity may have a lower stack size than the items' max. stack size
-        Utils.incrementQuality(furnace, inventory.getFirst(), 1, Math.min(resultStackSize, maxStackSize));
+        Utils.incrementQuality(furnace, List.of(inventory.getFirst()), Math.min(resultStackSize, maxStackSize));
     }
 }

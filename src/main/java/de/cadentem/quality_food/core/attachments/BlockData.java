@@ -7,6 +7,8 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -17,20 +19,32 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.HashSet;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public class BlockData implements INBTSerializable<CompoundTag> {
-    private final HashSet<Holder<QualityType>> cookedQualities = new HashSet<>();
-    private double qualityBonus;
+    private final Deque<CookingEntry> cookingQueue = new ArrayDeque<>();
 
     public void useQuality(final ItemStack stack, @Nullable final Player player, final Level level) {
-        Holder<QualityType> selected = null;
+        if (cookingQueue.isEmpty()) {
+            return;
+        }
 
-        for (Holder<QualityType> type : cookedQualities) {
-            if (selected == null || type.value().level() < selected.value().level()) {
-                selected = type;
+        Holder<QualityType> selected = null;
+        double qualityBonus = 0;
+
+        for (int i = 0; i < stack.getCount(); i++) {
+            CookingEntry entry = cookingQueue.poll();
+
+            // In case a quality is removed from the registry before taking out the items
+            if (entry != null) {
+                qualityBonus += entry.bonus();
+
+                if (selected == null || entry.type().value().level() < selected.value().level()) {
+                    selected = entry.type();
+                }
             }
         }
 
@@ -57,50 +71,44 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         if (selected != null) {
             QualityUtils.applyQuality(stack, QualityType.createQuality(selected, stack), true);
         }
-
-        qualityBonus = 0;
-        cookedQualities.clear();
     }
-
 
     public double getQuality() {
-        return qualityBonus;
+        return cookingQueue.stream().mapToDouble(CookingEntry::bonus).sum();
     }
 
-    public void incrementQuality(double value) {
-        qualityBonus += value;
-    }
-
-    public void addQualityType(final Holder<QualityType> type) {
-        cookedQualities.add(type);
+    public void addQualityEntry(final Holder<QualityType> type, double bonus) {
+        cookingQueue.add(new CookingEntry(type, bonus));
     }
 
     @Override
     public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
-        tag.putDouble("quality_bonus", qualityBonus);
-        CompoundTag types = new CompoundTag();
+        ListTag queue = new ListTag();
 
-        for (Holder<QualityType> type : cookedQualities) {
-            Optional<ResourceKey<QualityType>> optional = type.unwrapKey();
-            // doesn't matter what the actual value is
-            optional.ifPresent(qualityTypeResourceKey -> types.putBoolean(qualityTypeResourceKey.location().toString(), true));
+        for (CookingEntry entry : cookingQueue) {
+            CompoundTag entryTag = new CompoundTag();
+            entry.type().unwrapKey().ifPresent(key -> entryTag.putString("type", key.location().toString()));
+            entryTag.putDouble("bonus", entry.bonus());
+            queue.add(entryTag);
         }
 
-        tag.put("types", types);
+        tag.put("cooking_queue", queue);
         return tag;
     }
 
     @Override
     public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
-        qualityBonus = tag.getDouble("quality_bonus");
-        cookedQualities.clear();
+        cookingQueue.clear();
 
-        CompoundTag types = tag.getCompound("types");
+        ListTag queue = tag.getList("cooking_queue", Tag.TAG_COMPOUND);
 
-        for (String location : types.getAllKeys()) {
-            Optional<Holder.Reference<QualityType>> optional = provider.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.parse(location)));
-            optional.ifPresent(cookedQualities::add);
+        for (int i = 0; i < queue.size(); i++) {
+            CompoundTag entryTag = queue.getCompound(i);
+            Optional<Holder.Reference<QualityType>> optional = provider.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.parse(entryTag.getString("type"))));
+            optional.ifPresent(type -> cookingQueue.add(new CookingEntry(type, entryTag.getDouble("bonus"))));
         }
     }
+
+    public record CookingEntry(Holder<QualityType> type, double bonus) { }
 }

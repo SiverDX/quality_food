@@ -157,6 +157,9 @@ dependencies {
 
     implementation "curse.maven:crate-delight-forge-958291:7024451" // 25.09.22
 
+    // https://www.curseforge.com/minecraft/mc-mods/vintage-delight-kots/files/all?page=1&pageSize=20&showAlphaFiles=hide
+    implementation "curse.maven:vintage-delight-kots-1569514:8338764"
+
 //    implementation fg.deobf("curse.maven:vintage-delight-949719:5847856")
 
     /* --- Test --- */

@@ -19,8 +19,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class Utils {
     public static boolean isValidItem(final ItemStack stack) {
@@ -110,28 +117,54 @@ public class Utils {
         }
     }
 
-    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack) {
-        incrementQuality(blockEntity, stack, 1, 64);
+    /**
+     * Collects quality-applicable items from the given inventory
+     * @param maxSlotCheck To determine up to which slot the items should be considered
+     */
+    public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
+        List<ItemStack> ingredients = new ArrayList<>();
+
+        for (int slot = 0; slot < maxSlotCheck.get(); slot++) {
+            ItemStack ingredient = handler.getStackInSlot(slot);
+
+            if (!Utils.isValidItem(ingredient)) {
+                continue;
+            }
+
+            ingredients.add(ingredient);
+        }
+
+        return ingredients;
     }
 
-    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack, int ingredientCount, int resultStackSize) {
-        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredientCount < 1) {
+    /**
+     * Collects the cooking bonus from the ingredients and the lowest quality type present </br>
+     * This is then added to the cooking queue which will be used to apply the cooking bonus / quality to the result item
+     */
+    public static void incrementQuality(final BlockEntity blockEntity, @Unmodifiable final Collection<ItemStack> ingredients, int resultStackSize) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredients.isEmpty()) {
             return;
         }
 
-        if (!Utils.isValidItem(stack)) {
-            return;
+        double qualityBonus = 0;
+        Holder<QualityType> selected = null;
+
+        for (ItemStack ingredient : ingredients) {
+            Holder<QualityType> type = QualityUtils.getType(ingredient);
+
+            if (type.value() != QualityType.NONE) {
+                // Lower stack size result in a higher bonus so that the intended bonus will be reached
+                double bonus = type.value().cookingBonus() * (64d / resultStackSize);
+                qualityBonus += bonus / ingredients.size();
+            }
+
+            if (selected == null || type.value().level() < selected.value().level()) {
+                selected = type;
+            }
         }
 
-        Holder<QualityType> type = QualityUtils.getType(stack);
         BlockData data = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
-        data.addQualityType(type);
-
-        if (type.value() != QualityType.NONE) {
-            // Lower stack size result in a higher bonus so that the intended bonus will be reached
-            double bonus = type.value().cookingBonus() * (64d / resultStackSize);
-            data.incrementQuality(bonus / ingredientCount);
-        }
+        data.addQualityEntry(selected, qualityBonus);
 
         blockEntity.setChanged();
     }

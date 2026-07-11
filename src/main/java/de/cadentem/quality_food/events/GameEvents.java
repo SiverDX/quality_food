@@ -41,7 +41,7 @@ public class GameEvents {
     // TODO :: would need to find a way to check the recipe that was used
 //    @SubscribeEvent
 //    public static void handleCrafting(final PlayerEvent.ItemCraftedEvent event) {
-//        if (QualityUtils.isInvalidItem(event.getCrafting())) {
+//        if (!Utils.isValidItem(event.getCrafting())) {
 //            return;
 //        }
 //
