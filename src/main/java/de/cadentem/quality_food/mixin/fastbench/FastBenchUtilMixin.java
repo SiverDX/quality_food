@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.mixin.fastbench;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -16,14 +15,18 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(value = FastBenchUtil.class, remap = false)
 public abstract class FastBenchUtilMixin {
-    @ModifyReturnValue(method = "handleShiftCraft(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/inventory/Slot;Ldev/shadowsoffire/fastbench/util/CraftingInventoryExt;Lnet/minecraft/world/inventory/ResultContainer;Ldev/shadowsoffire/fastbench/util/FastBenchUtil$OutputMover;)Lnet/minecraft/world/item/ItemStack;", at = @At("RETURN"))
-    private static ItemStack quality_food$applyQuality(final ItemStack result, @Local(argsOnly = true) final Player player, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
+    @ModifyVariable(
+            method = "handleShiftCraft(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/inventory/Slot;Ldev/shadowsoffire/fastbench/util/CraftingInventoryExt;Lnet/minecraft/world/inventory/ResultContainer;Ldev/shadowsoffire/fastbench/util/FastBenchUtil$OutputMover;)Lnet/minecraft/world/item/ItemStack;",
+            at = @At(value = "STORE"),
+            name = "recipeOutput"
+    )
+    private static ItemStack quality_food$applyQuality(final ItemStack recipeOutput, @Local(argsOnly = true) final Player player, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
         if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed(), player.registryAccess())) {
-            return result;
+            return recipeOutput;
         }
 
-        QualityUtils.applyQuality(result, craftSlots.getItems(), player, player.registryAccess());
-        return result;
+        QualityUtils.applyQuality(recipeOutput, craftSlots.getItems(), player, player.registryAccess());
+        return recipeOutput;
     }
 
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE", ordinal = 1), name = "itemstack")

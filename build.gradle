@@ -109,8 +109,9 @@ dependencies {
     compileOnly "curse.maven:supplementaries-412082:8194573" // 3.6.7
     compileOnly "curse.maven:selene-499980:7522321" // 2.29.16
 
-    // TODO :: check if it causes issues
+    // https://www.curseforge.com/minecraft/mc-mods/fastworkbench/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     compileOnly "curse.maven:fastworkbench-288885:6751534" // 9.1.3
+    // https://www.curseforge.com/minecraft/mc-mods/placebo/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
     compileOnly "curse.maven:placebo-283644:6926281" // 9.9.1
 
     // Fruitful Fun 🍊

@@ -38,6 +38,26 @@ public class GameEvents {
         event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop, event.getEntity(), event.getEntity().registryAccess()));
     }
 
+    // TODO :: would need to find a way to check the recipe that was used
+//    @SubscribeEvent
+//    public static void handleCrafting(final PlayerEvent.ItemCraftedEvent event) {
+//        if (QualityUtils.isInvalidItem(event.getCrafting())) {
+//            return;
+//        }
+//
+//        List<ItemStack> ingredients = new ArrayList<>();
+//
+//        for (int slot = 0; slot < event.getInventory().getContainerSize(); slot++) {
+//            ItemStack ingredient = event.getInventory().getItem(slot);
+//
+//            if (!ingredient.isEmpty()) {
+//                ingredients.add(ingredient);
+//            }
+//        }
+//
+//        QualityUtils.applyQuality(event.getCrafting(), ingredients, event.getEntity(), event.getEntity().registryAccess());
+//    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void handleLoot(final LivingDropsEvent event) {
         Entity attacker = event.getSource().getEntity();
