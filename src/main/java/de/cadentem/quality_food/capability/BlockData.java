@@ -5,33 +5,45 @@ import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class BlockData {
     private static final RandomSource RANDOM = RandomSource.create();
-
-    private final Set<Quality> cookedQualities = new HashSet<>();
-    private double qualityBonus;
+    private final Deque<CookingEntry> cookingQueue = new ArrayDeque<>();
 
     public void useQuality(final ItemStack stack, @Nullable final Player player) {
-        Quality selected = null;
+        if (cookingQueue.isEmpty()) {
+            return;
+        }
 
-        for (Quality quality : cookedQualities) {
-            if (selected == null || quality.level() < selected.level()) {
-                selected = quality;
+        Quality selected = Quality.NONE;
+        double qualityBonus = 0;
+
+        for (int i = 0; i < stack.getCount(); i++) {
+            CookingEntry entry = cookingQueue.poll();
+
+            // In case a quality is removed from the registry before taking out the items
+            if (entry != null) {
+                qualityBonus += entry.bonus();
+
+                if (entry.quality().level() < selected.level()) {
+                    selected = entry.quality();
+                }
             }
         }
 
-        if (selected != null) {
+        // Apply the lowest ingredient quality as base
+        // The cooking bonus can cause it to upgrade to a higher tier
+        if (selected != Quality.NONE) {
             QualityUtils.applyQuality(stack, selected);
-        } else {
-            selected = Quality.NONE;
         }
 
         for (Quality quality : Quality.values()) {
@@ -48,48 +60,44 @@ public class BlockData {
             }
         }
 
-        QualityUtils.applyQuality(stack, selected, true);
-
-        qualityBonus = 0;
-        cookedQualities.clear();
+        if (selected != Quality.NONE) {
+            QualityUtils.applyQuality(stack, selected, true);
+        }
     }
 
     public double getQuality() {
-        return qualityBonus;
+        return cookingQueue.stream().mapToDouble(CookingEntry::bonus).sum();
     }
 
-    public void incrementQuality(double value) {
-        qualityBonus += value;
-    }
-
-
-    public void addQualityType(final Quality quality) {
-        cookedQualities.add(quality);
+    public void addQualityEntry(final Quality quality, double bonus) {
+        cookingQueue.add(new CookingEntry(quality, bonus));
     }
 
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putDouble("quality_bonus", qualityBonus);
+        ListTag queue = new ListTag();
 
-        CompoundTag types = new CompoundTag();
-
-        for (Quality quality : cookedQualities) {
-            types.putInt(quality.getName(), quality.ordinal());
+        for (CookingEntry entry : cookingQueue) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putInt("quality", entry.quality().ordinal());
+            entryTag.putDouble("bonus", entry.bonus());
+            queue.add(entryTag);
         }
 
-        tag.put("types", types);
-
+        tag.put("cooking_queue", queue);
         return tag;
     }
 
     public void deserializeNBT(final CompoundTag tag) {
-        qualityBonus = tag.getDouble("quality_bonus");
-        cookedQualities.clear();
+        cookingQueue.clear();
 
-        CompoundTag types = tag.getCompound("types");
+        ListTag queue = tag.getList("cooking_queue", Tag.TAG_COMPOUND);
 
-        for (String name : types.getAllKeys()) {
-            cookedQualities.add(Quality.get(types.getInt(name)));
+        for (int i = 0; i < queue.size(); i++) {
+            CompoundTag entryTag = queue.getCompound(i);
+            cookingQueue.add(new CookingEntry(Quality.get(entryTag.getInt("quality")), entryTag.getDouble("bonus")));
         }
     }
+
+    public record CookingEntry(Quality quality, double bonus) { }
 }

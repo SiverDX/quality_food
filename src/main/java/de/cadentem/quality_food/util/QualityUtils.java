@@ -313,8 +313,8 @@ public class QualityUtils {
 
         return switch (quality) {
             case IRON -> 1f / (resultStackSize * 3);
-            case GOLD -> 1f / (resultStackSize * 2);
-            case DIAMOND -> 1f / resultStackSize;
+            case GOLD -> 1f / (resultStackSize * 2); // 64 would result in 50%
+            case DIAMOND -> 1f / resultStackSize; // 64 would result in 100%
             default -> 0;
         };
     }

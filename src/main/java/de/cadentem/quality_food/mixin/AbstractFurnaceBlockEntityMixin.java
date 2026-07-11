@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
+
 @Mixin(AbstractFurnaceBlockEntity.class)
 public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlockEntity {
     protected AbstractFurnaceBlockEntityMixin(final BlockEntityType<?> type, final BlockPos position, final BlockState state) {
@@ -26,15 +28,22 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
 
     /** Display particles to show how much quality the block has stored */
     @Inject(method = "serverTick", at = @At("TAIL"))
-    private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity blockEntity, final CallbackInfo callback) {
+    private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity furnace, final CallbackInfo callback) {
         if (level instanceof ServerLevel serverLevel) {
-            Utils.sendParticles(serverLevel, blockEntity, position);
+            Utils.sendParticles(serverLevel, furnace, position);
         }
     }
 
     /** Increment quality after cooking an item */
     @Inject(method = "burn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private void quality_food$incrementQuality(final RegistryAccess access, final Recipe<?> recipe, final NonNullList<ItemStack> stacks, int stackSize, final CallbackInfoReturnable<Boolean> callback) {
-        Utils.incrementQuality(this, stacks.get(0));
+    private void quality_food$incrementQuality(final RegistryAccess access, final Recipe<?> recipe, final NonNullList<ItemStack> inventory, int maxStackSize, final CallbackInfoReturnable<Boolean> callback) {
+        int resultStackSize = 64;
+
+        if (recipe != null) {
+            resultStackSize = recipe.getResultItem(access).getMaxStackSize();
+        }
+
+        // The slot of the block entity may have a lower stack size than the items' max. stack size
+        Utils.incrementQuality(this, List.of(inventory.get(0)), Math.min(resultStackSize, maxStackSize));
     }
 }

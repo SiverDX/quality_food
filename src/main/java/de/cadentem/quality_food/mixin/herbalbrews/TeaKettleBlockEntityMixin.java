@@ -1,6 +1,8 @@
 package de.cadentem.quality_food.mixin.herbalbrews;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +16,12 @@ import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Mixin(TeaKettleBlockEntity.class)
 public abstract class TeaKettleBlockEntityMixin extends BlockEntity {
@@ -23,9 +30,25 @@ public abstract class TeaKettleBlockEntityMixin extends BlockEntity {
     }
 
     @Inject(method = "craft", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private void quality_food$incrementQuality(final TeaKettleRecipe recipe, final CallbackInfo callback, @Local(name = "inputStack") final ItemStack input) {
-        Utils.incrementQuality(this, input, recipe.getIngredients().size(), recipe.getResultItem().getMaxStackSize());
+    private void quality_food$storeIngredients(final TeaKettleRecipe recipe, final CallbackInfo callback, @Local(name = "inputStack") final ItemStack input, @Share("ingredients") final LocalRef<List<ItemStack>> ingredients) {
+        if (!Utils.isValidItem(input)) {
+            return;
+        }
+
+        if (ingredients.get() == null) {
+            ingredients.set(new ArrayList<>());
+        }
+
+        ingredients.get().add(input);
     }
+
+    @ModifyVariable(method = "craft", at = @At(value = "STORE"), name = "recipeOutput", remap = false)
+    private ItemStack quality_food$incrementQuality(final ItemStack recipeOutput, final TeaKettleRecipe recipe, @Share("ingredients") final LocalRef<List<ItemStack>> ingredients) {
+        Utils.incrementQuality(this, Objects.requireNonNullElse(ingredients.get(), List.of()), recipe.getResultItem().getMaxStackSize());
+        ingredients.set(null);
+        return recipeOutput;
+    }
+
 
     @Inject(method = "tick", at = @At("HEAD"), remap = false)
     private void quality_food$handleParticle(final Level level, final BlockPos position, final BlockState state, final CallbackInfo callback) {

@@ -19,8 +19,15 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class Utils {
     public static boolean isValidItem(final ItemStack stack) {
@@ -92,31 +99,6 @@ public class Utils {
         }
     }
 
-    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack) {
-        incrementQuality(blockEntity, stack, 1, 64);
-    }
-
-    public static void incrementQuality(final BlockEntity blockEntity, final ItemStack stack, int ingredientCount, int resultStackSize) {
-        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredientCount < 1) {
-            return;
-        }
-
-        if (!Utils.isValidItem(stack)) {
-            return;
-        }
-
-        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
-            Quality quality = QualityUtils.getQuality(stack);
-            data.addQualityType(quality);
-
-            if (quality.level() > 0) {
-                data.incrementQuality(QualityUtils.getCookingBonus(stack, resultStackSize) / ingredientCount);
-            }
-        });
-
-        blockEntity.setChanged();
-    }
-
     /**
      * Store quality of a crop that has grown in another direction
      * @param grown The new state
@@ -131,6 +113,10 @@ public class Utils {
         storeQuality(grown, accessor, position, grownPosition, 1);
     }
 
+    /**
+     * Used to store quality to a new position (based on the quality of the passed position) <br>
+     * Usually used to store quality to a crop which has a higher height than 1 when growing
+     */
     public static void storeQuality(final BlockState grown, final LevelAccessor accessor, final BlockPos position, final BlockPos grownPosition, double chance) {
         if (Utils.isValidBlock(grown.getBlock())) {
             LevelData data = LevelDataProvider.getOrNull(accessor);
@@ -149,6 +135,57 @@ public class Utils {
                 data.set(grownPosition, quality);
             }
         }
+    }
+
+    /**
+     * Collects quality-applicable items from the given inventory
+     * @param maxSlotCheck To determine up to which slot the items should be considered
+     */
+    public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
+        List<ItemStack> ingredients = new ArrayList<>();
+
+        for (int slot = 0; slot < maxSlotCheck.get(); slot++) {
+            ItemStack ingredient = handler.getStackInSlot(slot);
+
+            if (!Utils.isValidItem(ingredient)) {
+                continue;
+            }
+
+            ingredients.add(ingredient);
+        }
+
+        return ingredients;
+    }
+
+    /**
+     * Collects the cooking bonus from the ingredients and the lowest quality type present </br>
+     * This is then added to the cooking queue which will be used to apply the cooking bonus / quality to the result item
+     */
+    public static void incrementQuality(final BlockEntity blockEntity, @Unmodifiable final Collection<ItemStack> ingredients, int resultStackSize) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredients.isEmpty()) {
+            return;
+        }
+
+        BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
+            double qualityBonus = 0;
+            Quality selected = Quality.NONE;
+
+            for (ItemStack ingredient : ingredients) {
+                Quality quality = QualityUtils.getQuality(ingredient);
+
+                if (quality != Quality.NONE) {
+                    // Lower stack size result in a higher bonus so that the intended bonus will be reached
+                    qualityBonus += QualityUtils.getCookingBonus(ingredient, resultStackSize) / ingredients.size();
+                }
+
+                if (selected.level() < quality.level()) {
+                    selected = quality;
+                }
+            }
+
+            data.addQualityEntry(selected, qualityBonus);
+            blockEntity.setChanged();
+        });
     }
 
     public static void useQuality(final BlockEntity block, final ItemStack stack, @Nullable final Player player) {
