@@ -1,6 +1,5 @@
 package de.cadentem.quality_food.mixin.miners_delight;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import com.sammy.minersdelight.content.block.copper_pot.CopperPotBlockEntity;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
@@ -15,8 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 
 @Mixin(value = CopperPotBlockEntity.class, remap = false)
@@ -32,8 +31,8 @@ public abstract class CopperPotBlockEntityMixin {
     }
 
     /** Increment quality after cooking an item */
-    @Inject(method = "processCooking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE, remap = true))
-    private void quality_food$incrementQuality(final RecipeHolder<CookingPotRecipe> recipe, final CopperPotBlockEntity cookingPot, final CallbackInfoReturnable<Boolean> callback, @Local(name = "slotStack") final ItemStack stack) {
+    @ModifyVariable(method = "processCooking", at = @At(value = "STORE"), name = "resultStack")
+    private ItemStack quality_food$incrementQuality(final ItemStack resultStack, final RecipeHolder<CookingPotRecipe> recipe, final CopperPotBlockEntity cookingPot) {
         int resultStackSize = 64;
 
         if (cookingPot.getLevel() != null) {
@@ -41,5 +40,6 @@ public abstract class CopperPotBlockEntityMixin {
         }
 
         Utils.incrementQuality(cookingPot, Utils.collectIngredients(inventory, () -> 4), resultStackSize);
+        return resultStack;
     }
 }
