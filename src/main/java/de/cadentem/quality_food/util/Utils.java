@@ -95,10 +95,10 @@ public class Utils {
 
         if (serverLevel.getGameTime() % (10 + tickOffset) == 0) {
             BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
-                double qualityBonus = data.getQuality();
+                double size = data.getQueueSize();
 
-                if (qualityBonus >= 0.1) {
-                    NetworkHandler.CHANNEL.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(position.getX(), position.getY(), position.getZ(), 64, serverLevel.dimension())), new SyncCookingParticle(position, qualityBonus));
+                if (size > 0) {
+                    NetworkHandler.CHANNEL.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(position.getX(), position.getY(), position.getZ(), 64, serverLevel.dimension())), new SyncCookingParticle(position, size));
                 }
             });
         }

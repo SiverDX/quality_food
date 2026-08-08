@@ -26,7 +26,7 @@ public abstract class FermentingJarBlockEntityMixin extends BlockEntity {
         super(type, position, state);
     }
 
-    @Inject(method = "craftItem", at = @At("HEAD"))
+    @Inject(method = "craftItem", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemStackHandler;insertItem(ILnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;", ordinal = 0))
     private void quality_food$applyQuality(final FermentingRecipe recipe, final CallbackInfo callback) {
         int resultStackSize = 1;
 

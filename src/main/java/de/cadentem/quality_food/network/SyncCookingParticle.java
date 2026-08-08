@@ -8,10 +8,10 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public record SyncCookingParticle(BlockPos position, double qualityBonus) {
+public record SyncCookingParticle(BlockPos position, double queueSize) {
     public void encode(final FriendlyByteBuf buffer) {
         buffer.writeBlockPos(position);
-        buffer.writeDouble(qualityBonus);
+        buffer.writeDouble(queueSize);
     }
 
     public static SyncCookingParticle decode(final FriendlyByteBuf buffer) {
@@ -22,7 +22,7 @@ public record SyncCookingParticle(BlockPos position, double qualityBonus) {
         NetworkEvent.Context context = contextSupplier.get();
 
         if (context.getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
-            context.enqueueWork(() -> ClientProxy.handleCookingParticles(packet.position(), packet.qualityBonus()));
+            context.enqueueWork(() -> ClientProxy.handleCookingParticles(packet.position(), packet.queueSize()));
         }
 
         context.setPacketHandled(true);

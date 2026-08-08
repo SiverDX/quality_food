@@ -68,8 +68,8 @@ public class BlockData {
         }
     }
 
-    public double getQuality() {
-        return cookingQueue.stream().mapToDouble(CookingEntry::bonus).sum();
+    public double getQueueSize() {
+        return cookingQueue.size();
     }
 
     public void addQualityEntry(final Quality quality, double bonus) {

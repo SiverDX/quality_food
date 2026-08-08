@@ -37,7 +37,7 @@ public class LevelData {
 
         Quality result = data.get(position);
 
-        if (queryLastRemoved && data.lastRemoved != null && data.lastRemoved.getFirst() == position.asLong()) {
+        if (queryLastRemoved && data.lastRemoved != null && result == Quality.NONE && data.lastRemoved.getFirst() == position.asLong()) {
             result = data.lastRemoved.getSecond();
         }
 
