@@ -87,6 +87,9 @@
     "toms_storage.CraftingTerminalMenuMixin",
     "vinery.GrapeBushMixin",
     "vinery.GrapeVineBlockMixin",
+    "vintagedelight.AbstractContainerMenuMixin",
+    "vintagedelight.FermentingJarBlockEntityMixin",
+    "vintagedelight.FermentingJarMenuMixin",
     "visualworkbench.ModCraftingMenuMixin"
   ],
   "client": [

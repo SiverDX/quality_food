@@ -127,7 +127,6 @@ dependencies {
     compileOnly fg.deobf("curse.maven:supplementaries-412082:7431873") // 3.1.42
     compileOnly fg.deobf("curse.maven:selene-499980:7541536") // 2.16.27
 
-    // TODO :: check if it causes issues
     compileOnly fg.deobf("curse.maven:fastworkbench-288885:5101229") // 8.0.4
     compileOnly fg.deobf("curse.maven:placebo-283644:5414631") // 8.6.2
 
@@ -162,7 +161,7 @@ dependencies {
 
     compileOnly fg.deobf("curse.maven:crate-delight-forge-958291:5881388") // 24.11.06
 
-    compileOnly fg.deobf("curse.maven:vintage-delight-949719:5847856")
+    implementation fg.deobf("curse.maven:vintage-delight-949719:5847856")
 
     // https://www.curseforge.com/minecraft/mc-mods/corn-delight/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=hide
     implementation fg.deobf("curse.maven:corn-delight-577805:8219677") // 1.2.11

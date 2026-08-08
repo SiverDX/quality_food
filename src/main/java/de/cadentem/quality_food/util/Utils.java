@@ -11,6 +11,7 @@ import de.cadentem.quality_food.network.SyncCookingParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -26,7 +27,11 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Utils {
@@ -142,10 +147,22 @@ public class Utils {
      * @param maxSlotCheck To determine up to which slot the items should be considered
      */
     public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
+        return collectIngredients(handler::getStackInSlot, maxSlotCheck);
+    }
+
+    /**
+     * Collects quality-applicable items from the given inventory
+     * @param maxSlotCheck To determine up to which slot the items should be considered
+     */
+    public static Collection<ItemStack> collectIngredients(final SimpleContainer container, final Supplier<Integer> maxSlotCheck) {
+        return collectIngredients(container::getItem, maxSlotCheck);
+    }
+
+    private static Collection<ItemStack> collectIngredients(final Function<Integer, ItemStack> itemSupplier, final Supplier<Integer> maxSlotCheck) {
         List<ItemStack> ingredients = new ArrayList<>();
 
         for (int slot = 0; slot < maxSlotCheck.get(); slot++) {
-            ItemStack ingredient = handler.getStackInSlot(slot);
+            ItemStack ingredient = itemSupplier.apply(slot);
 
             if (!Utils.isValidItem(ingredient)) {
                 continue;
@@ -167,23 +184,23 @@ public class Utils {
         }
 
         BlockDataProvider.getCapability(blockEntity).ifPresent(data -> {
+            Set<Quality> qualities = new TreeSet<>(Comparator.comparingInt(Quality::level));
             double qualityBonus = 0;
-            Quality selected = Quality.NONE;
 
             for (ItemStack ingredient : ingredients) {
                 Quality quality = QualityUtils.getQuality(ingredient);
 
                 if (quality != Quality.NONE) {
-                    // Lower stack size result in a higher bonus so that the intended bonus will be reached
-                    qualityBonus += QualityUtils.getCookingBonus(ingredient, resultStackSize) / ingredients.size();
+                    qualityBonus += QualityUtils.getCookingBonus(ingredient) / ingredients.size();
                 }
 
-                if (selected.level() < quality.level()) {
-                    selected = quality;
-                }
+                qualities.add(quality);
             }
 
-            data.addQualityEntry(selected, qualityBonus);
+            for (int i = 0; i < resultStackSize; i++) {
+                data.addQualityEntry(qualities.stream().findFirst().orElse(Quality.NONE), qualityBonus);
+            }
+
             blockEntity.setChanged();
         });
     }

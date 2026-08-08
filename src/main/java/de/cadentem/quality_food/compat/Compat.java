@@ -61,7 +61,8 @@ public class Compat {
         FARM_AND_CHARM("farm_and_charm"),
         MINERS_DELIGHT("miners_delight"),
         TOOLTIPOVERHAUL("tooltipoverhaul"),
-        HERALBREWS("herbalbrews");
+        HERALBREWS("herbalbrews"),
+        VINTAGEDELIGHT("vintagedelight");
 
         private final String modid;
 

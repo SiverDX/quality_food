@@ -42,6 +42,30 @@
       "required": false
     },
     {
+      "id": "herbalbrews:dried_green_tea_leaf_block",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:dried_out_green_tea_leaf_block",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:mixed_tea_leaf_block",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:oolong_tea_leaf_block",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:green_tea_leaf_block",
+      "required": false
+    },
+    {
+      "id": "herbalbrews:black_tea_leaf_block",
+      "required": false
+    },
+    {
       "id": "farmersdelight:carrot_crate",
       "required": false
     },

@@ -51,6 +51,12 @@ public class QFBlockTags extends BlockTagsProvider {
                 .addOptional(location(FARMERSDELIGHT.modid(), "rice"))
                 .addOptional(location(COLLECTORS_REAP.modid(), "lime_cake"))
                 .addOptional(location(COLLECTORS_REAP.modid(), "pomegranate_cake"))
+                .addOptional(location(HERALBREWS.modid(), "dried_green_tea_leaf_block"))
+                .addOptional(location(HERALBREWS.modid(), "dried_out_green_tea_leaf_block"))
+                .addOptional(location(HERALBREWS.modid(), "mixed_tea_leaf_block"))
+                .addOptional(location(HERALBREWS.modid(), "oolong_tea_leaf_block"))
+                .addOptional(location(HERALBREWS.modid(), "green_tea_leaf_block"))
+                .addOptional(location(HERALBREWS.modid(), "black_tea_leaf_block"))
                 /* Storage blocks */
                 .addOptional(location(FARMERSDELIGHT.modid(), "carrot_crate"))
                 .addOptional(location(FARMERSDELIGHT.modid(), "potato_crate"))
@@ -130,12 +136,6 @@ public class QFBlockTags extends BlockTagsProvider {
                 .addOptional(location("miners_delight", "cave_carrot_crate"))
 
                 .addOptional(location(HERALBREWS.modid(), "tea_leaf_crate"))
-//                .addOptional(location(HERALBREWS.modid(), "green_tea_leaf_block"))
-//                .addOptional(location(HERALBREWS.modid(), "dried_green_tea_leaf_block"))
-//                .addOptional(location(HERALBREWS.modid(), "black_tea_leaf_block"))
-//                .addOptional(location(HERALBREWS.modid(), "mixed_tea_leaf_block"))
-//                .addOptional(location(HERALBREWS.modid(), "oolong_leaf_block"))
-
         ;
     }
 }

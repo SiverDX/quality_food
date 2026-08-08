@@ -13,7 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.Deque;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class BlockData {
     private static final RandomSource RANDOM = RandomSource.create();
@@ -24,7 +27,7 @@ public class BlockData {
             return;
         }
 
-        Quality selected = Quality.NONE;
+        Set<Quality> qualities = new TreeSet<>(Comparator.comparingInt(Quality::level));
         double qualityBonus = 0;
 
         for (int i = 0; i < stack.getCount(); i++) {
@@ -33,12 +36,12 @@ public class BlockData {
             // In case a quality is removed from the registry before taking out the items
             if (entry != null) {
                 qualityBonus += entry.bonus();
-
-                if (entry.quality().level() < selected.level()) {
-                    selected = entry.quality();
-                }
+                qualities.add(entry.quality());
             }
         }
+
+        double finalBonus = qualityBonus / stack.getCount();
+        Quality selected = qualities.stream().findFirst().orElse(Quality.NONE);
 
         // Apply the lowest ingredient quality as base
         // The cooking bonus can cause it to upgrade to a higher tier
@@ -53,9 +56,9 @@ public class BlockData {
 
             double chance = RANDOM.nextDouble();
             chance = Modification.luck(player).apply(chance);
-            chance = Modification.additive((float) qualityBonus).apply(chance);
+            chance = Modification.additive((float) finalBonus / quality.level()).apply(chance);
 
-            if (chance >= 1 - QualityConfig.getChance(quality)) {
+            if (chance > 1 - QualityConfig.getChance(quality)) {
                 selected = quality;
             }
         }
@@ -101,3 +104,4 @@ public class BlockData {
 
     public record CookingEntry(Quality quality, double bonus) { }
 }
+
