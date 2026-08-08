@@ -56,7 +56,7 @@ public class BlockData {
 
             double chance = RANDOM.nextDouble();
             chance = Modification.luck(player).apply(chance);
-            chance = Modification.additive((float) finalBonus / quality.level()).apply(chance);
+            chance = Modification.additive((float) finalBonus / (quality.level() * quality.level())).apply(chance);
 
             if (chance > 1 - QualityConfig.getChance(quality)) {
                 selected = quality;

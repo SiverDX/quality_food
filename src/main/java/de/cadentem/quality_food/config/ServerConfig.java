@@ -41,6 +41,8 @@ public class ServerConfig {
     private static final List<String> NO_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
     private static final List<String> RETAIN_QUALITY_RECIPES_DEFAULT = new ArrayList<>();
 
+    public static final Map<Quality, ForgeConfigSpec.DoubleValue> COOKING_BONUS = new HashMap<>();
+
     static {
         fillNoQualityRecipes();
         fillRetainQualityRecipes();
@@ -61,6 +63,22 @@ public class ServerConfig {
         RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality being applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         HANDLE_COMPACTING = BUILDER.comment("Defines whether (de)compacting should be handled automatically (in terms of retaining quality)").define("handle_compacting", true);
         HANDLE_SEED_RECIPES = BUILDER.comment("Attempt to handle recipes involving seed items automatically (to avoid having to add all of them to the retain_quality_recipes config)").define("handle_seed_recipes", true);
+        BUILDER.pop();
+
+        BUILDER.push("Cooking");
+        String cookingBonusComment = "The bonus this quality contributes when used as a cooking ingredient";
+        String cookingBonusComment1 = "\nThe logic is: <base_chance> + (<sum_of_bonus> / <ingredient_count>) / <quality_level>², which makes higher qualities more rare";
+        String cookingBonusComment2 = "\nExample: 3 iron & 1 gold -> x + (2.05 / 4) / y² results in ~16% chance for gold and ~6% chance for diamond ";
+        BUILDER.comment(cookingBonusComment + cookingBonusComment1 + cookingBonusComment2);
+
+        for (Quality quality : Quality.values()) {
+            if (!QualityUtils.isValidQuality(quality) || quality == Quality.UNDEFINED) {
+                continue;
+            }
+
+            COOKING_BONUS.put(quality, BUILDER.comment("Bonus for " + quality.name()).defineInRange(quality.name().toLowerCase(Locale.ENGLISH) + "_bonus", QualityUtils.getCookingBonus(quality), 0, 100));
+        }
+
         BUILDER.pop();
 
         for (Quality quality : Quality.values()) {

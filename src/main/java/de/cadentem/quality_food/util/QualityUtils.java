@@ -23,6 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.WildCropBlock;
@@ -308,13 +309,17 @@ public class QualityUtils {
         return -1;
     }
 
-    public static float getCookingBonus(final ItemStack stack) {
-        Quality quality = getQuality(stack);
+    public static float getCookingBonus(final Quality quality) {
+        ForgeConfigSpec.DoubleValue config = ServerConfig.COOKING_BONUS.get(quality);
+
+        if (config != null) {
+            return config.get().floatValue();
+        }
 
         return switch (quality) {
-            case IRON -> 0.5f;
-            case GOLD -> 1.2f;
-            case DIAMOND -> 2.5f;
+            case IRON -> 0.35f;
+            case GOLD -> 1;
+            case DIAMOND -> 2;
             default -> 0;
         };
     }

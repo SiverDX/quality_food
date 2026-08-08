@@ -191,7 +191,7 @@ public class Utils {
                 Quality quality = QualityUtils.getQuality(ingredient);
 
                 if (quality != Quality.NONE) {
-                    qualityBonus += QualityUtils.getCookingBonus(ingredient) / ingredients.size();
+                    qualityBonus += QualityUtils.getCookingBonus(quality) / ingredients.size();
                 }
 
                 qualities.add(quality);
