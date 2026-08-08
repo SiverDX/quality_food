@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = MinecoloniesCropBlock.class, remap = false)
+@Mixin(MinecoloniesCropBlock.class)
 public abstract class MineColoniesCropBlockMixin {
     /** Unsure - apply quality in case the crop can grow into other directions */
     @Inject(method = "attemptGrow", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
