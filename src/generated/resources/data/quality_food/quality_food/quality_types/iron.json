@@ -1,7 +1,7 @@
 {
   "amplifier_modifier": 1,
   "chance": 0.1,
-  "cooking_bonus": 0.00390625,
+  "cooking_bonus": 0.3499999940395355,
   "crafting_bonus": 0.15,
   "duration_multiplier": 1.5,
   "icon": "quality_food:quality_icon/iron",

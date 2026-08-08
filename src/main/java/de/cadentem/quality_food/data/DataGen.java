@@ -38,7 +38,7 @@ public class DataGen {
                     bootstrap.register(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, QualityFood.location("iron")), new QualityType(
                             1, 0.1, 1, 0,
                             1.5, 1.25, 1, 1.5, 1.25,
-                            0.15, 1 / 256d, 1, 1,
+                            0.15, 0.35f, 1, 1,
                             Optional.empty(),
                             QualityFood.location("quality_icon/iron"),
                             Component.translatable("quality_type.quality_food.iron").withStyle(ChatFormatting.GRAY)
@@ -47,7 +47,7 @@ public class DataGen {
                     bootstrap.register(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, QualityFood.location("gold")), new QualityType(
                             2, 0.03, 2, 1,
                             2, 1.5, 2, 2, 1.5,
-                            0.4, 1 / 128d, 0.9d, 0.9d,
+                            0.4, 1, 0.9d, 0.9d,
                             Optional.empty(),
                             QualityFood.location("quality_icon/gold"),
                             Component.translatable("quality_type.quality_food.gold").withStyle(ChatFormatting.GOLD)
@@ -56,7 +56,7 @@ public class DataGen {
                     bootstrap.register(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, QualityFood.location("diamond")), new QualityType(
                             3, 0.005, 3, 1.75,
                             2.5, 2, 3, 2.5, 1.75,
-                            0.7, 1 / 64d, 0.75d, 0.75d,
+                            0.7, 2, 0.75d, 0.75d,
                             Optional.empty(),
                             QualityFood.location("quality_icon/diamond"),
                             Component.translatable("quality_type.quality_food.diamond").withStyle(ChatFormatting.AQUA)

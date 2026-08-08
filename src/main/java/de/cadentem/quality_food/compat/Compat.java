@@ -61,7 +61,8 @@ public class Compat {
         MINERS_DELIGHT("miners_delight"),
         TOOLTIPOVERHAUL("tooltipoverhaul"),
         HERALBREWS("herbalbrews"),
-        KALEIDOSCOPE_COOKERY("kaleidoscope_cookery");
+        KALEIDOSCOPE_COOKERY("kaleidoscope_cookery"),
+        VINTAGEDELIGHT("vintagedelight");;
 
         private final String modid;
 

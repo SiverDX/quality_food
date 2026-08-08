@@ -20,8 +20,11 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 @ParametersAreNonnullByDefault
 public class BlockData implements INBTSerializable<CompoundTag> {
@@ -32,7 +35,7 @@ public class BlockData implements INBTSerializable<CompoundTag> {
             return;
         }
 
-        Holder<QualityType> selected = null;
+        Set<Holder<QualityType>> qualities = new TreeSet<>(Comparator.comparingInt(quality -> quality.value().level()));
         double qualityBonus = 0;
 
         for (int i = 0; i < stack.getCount(); i++) {
@@ -41,12 +44,12 @@ public class BlockData implements INBTSerializable<CompoundTag> {
             // In case a quality is removed from the registry before taking out the items
             if (entry != null) {
                 qualityBonus += entry.bonus();
-
-                if (selected == null || entry.type().value().level() < selected.value().level()) {
-                    selected = entry.type();
-                }
+                qualities.add(entry.type());
             }
         }
+
+        double finalBonus = qualityBonus / stack.getCount();
+        Holder<QualityType> selected = qualities.stream().findFirst().orElse(null);
 
         // Apply the lowest ingredient quality as base
         // The cooking bonus can cause it to upgrade to a higher tier
@@ -61,9 +64,9 @@ public class BlockData implements INBTSerializable<CompoundTag> {
 
             double chance = level.getRandom().nextDouble();
             chance = Modification.luck(player).apply(chance);
-            chance = Modification.additive((float) qualityBonus).apply(chance);
+            chance = Modification.additive((float) finalBonus / (type.value().level() * type.value().level())).apply(chance);
 
-            if (chance >= 1 - type.value().chance()) {
+            if (chance > 1 - type.value().chance()) {
                 selected = type;
             }
         }

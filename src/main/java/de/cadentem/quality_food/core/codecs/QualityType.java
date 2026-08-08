@@ -48,7 +48,7 @@ public record QualityType(
                     Codec.doubleRange(0, Double.MAX_VALUE).fieldOf("nutrition_multiplier").forGetter(QualityType::nutritionMultiplier),
                     Codec.doubleRange(0, Double.MAX_VALUE).fieldOf("saturation_multiplier").forGetter(QualityType::saturationMultiplier),
                     Codec.doubleRange(0, 1).optionalFieldOf("crafting_bonus", 0d).forGetter(QualityType::craftingBonus),
-                    Codec.doubleRange(0, 1).optionalFieldOf("cooking_bonus", 0d).forGetter(QualityType::cookingBonus),
+                    Codec.doubleRange(0, 100).optionalFieldOf("cooking_bonus", 0d).forGetter(QualityType::cookingBonus),
                     Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("crop_multiplier", 1d).forGetter(QualityType::cropMultiplier),
                     Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("seed_multiplier", 1d).forGetter(QualityType::seedMultiplier),
                     Effect.CODEC.listOf().optionalFieldOf("effects").forGetter(QualityType::effects),

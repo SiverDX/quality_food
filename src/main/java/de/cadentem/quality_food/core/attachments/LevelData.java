@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.core.attachments;
 
+import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.codecs.Quality;
 import net.minecraft.core.BlockPos;
@@ -20,8 +21,7 @@ import java.util.Optional;
 @ParametersAreNonnullByDefault
 public class LevelData implements INBTSerializable<CompoundTag> {
     private final HashMap<Long, Quality> qualities = new HashMap<>();
-
-    private @Nullable Quality lastRemoved;
+    private @Nullable Pair<Long, Quality> lastRemoved;
 
     public @NotNull Quality get(final BlockPos position) {
         Quality quality = qualities.get(position.asLong());
@@ -43,7 +43,8 @@ public class LevelData implements INBTSerializable<CompoundTag> {
     }
 
     public void remove(final BlockPos position) {
-        lastRemoved = qualities.remove(position.asLong());
+        long key = position.asLong();
+        lastRemoved = Pair.of(key, qualities.remove(key));
     }
 
     @Override
@@ -83,9 +84,8 @@ public class LevelData implements INBTSerializable<CompoundTag> {
             LevelData data = serverLevel.getData(AttachmentHandler.LEVEL_DATA);
             result = data.get(position);
 
-            if (queryLastRemoved && data.lastRemoved != null && result == Quality.NONE) {
-                result = data.lastRemoved;
-                data.lastRemoved = null;
+            if (queryLastRemoved && data.lastRemoved != null && result == Quality.NONE && data.lastRemoved.getFirst() == position.asLong()) {
+                result = data.lastRemoved.getSecond();
             }
         }
 

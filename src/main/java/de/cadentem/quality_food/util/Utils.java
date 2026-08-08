@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -26,7 +27,11 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Utils {
@@ -71,6 +76,7 @@ public class Utils {
         return false;
     }
 
+    // FIXME :: adjust particle count
     public static void sendParticles(final ServerLevel serverLevel, final BlockEntity furnace, final BlockPos position) {
         int tickOffset = serverLevel.getRandom().nextInt(-3, 3);
 
@@ -122,10 +128,22 @@ public class Utils {
      * @param maxSlotCheck To determine up to which slot the items should be considered
      */
     public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
+        return collectIngredients(handler::getStackInSlot, maxSlotCheck);
+    }
+
+    /**
+     * Collects quality-applicable items from the given inventory
+     * @param maxSlotCheck To determine up to which slot the items should be considered
+     */
+    public static Collection<ItemStack> collectIngredients(final SimpleContainer container, final Supplier<Integer> maxSlotCheck) {
+        return collectIngredients(container::getItem, maxSlotCheck);
+    }
+
+    private static Collection<ItemStack> collectIngredients(final Function<Integer, ItemStack> itemSupplier, final Supplier<Integer> maxSlotCheck) {
         List<ItemStack> ingredients = new ArrayList<>();
 
         for (int slot = 0; slot < maxSlotCheck.get(); slot++) {
-            ItemStack ingredient = handler.getStackInSlot(slot);
+            ItemStack ingredient = itemSupplier.apply(slot);
 
             if (!Utils.isValidItem(ingredient)) {
                 continue;
@@ -146,25 +164,24 @@ public class Utils {
             return;
         }
 
+        Set<Holder<QualityType>> qualities = new TreeSet<>(Comparator.comparingInt(quality -> quality.value().level()));
         double qualityBonus = 0;
-        Holder<QualityType> selected = null;
 
         for (ItemStack ingredient : ingredients) {
             Holder<QualityType> type = QualityUtils.getType(ingredient);
 
             if (type.value() != QualityType.NONE) {
-                // Lower stack size result in a higher bonus so that the intended bonus will be reached
-                double bonus = type.value().cookingBonus() * (64d / resultStackSize);
-                qualityBonus += bonus / ingredients.size();
+                qualityBonus += type.value().cookingBonus() / ingredients.size();
             }
 
-            if (selected == null || type.value().level() < selected.value().level()) {
-                selected = type;
-            }
+            qualities.add(type);
         }
 
         BlockData data = blockEntity.getData(AttachmentHandler.BLOCK_DATA);
-        data.addQualityEntry(selected, qualityBonus);
+
+        for (int i = 0; i < resultStackSize; i++) {
+            data.addQualityEntry(qualities.stream().findFirst().orElse(Holder.direct(QualityType.NONE)), qualityBonus);
+        }
 
         blockEntity.setChanged();
     }

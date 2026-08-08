@@ -162,6 +162,9 @@ dependencies {
 
 //    implementation fg.deobf("curse.maven:vintage-delight-949719:5847856")
 
+    // https://www.curseforge.com/minecraft/mc-mods/minecolonies/files/all?page=1&pageSize=20&version=1.21.1&showAlphaFiles=show
+    compileOnly "curse.maven:minecolonies-245506:8562600" // 1.1.1368
+
     /* --- Test --- */
     implementation "curse.maven:appleskin-248787:7517379" // 3.0.8
     runtimeOnly "curse.maven:emi-580555:6420931" // 1.1.22

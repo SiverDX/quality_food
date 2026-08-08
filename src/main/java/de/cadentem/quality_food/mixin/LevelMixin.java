@@ -21,6 +21,9 @@ public abstract class LevelMixin {
             return newState;
         }
 
+        // TODO :: Check if old and new are valid for conversion (crop growth e.g.)
+        //         If not, don't retain quality
+
         if (!Utils.isValidBlock(newState.getBlock()) && Utils.isValidBlock(oldState.getBlock())) {
             level.getData(AttachmentHandler.LEVEL_DATA).remove(position);
         }

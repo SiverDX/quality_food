@@ -44,7 +44,7 @@ public abstract class TeaKettleBlockEntityMixin extends BlockEntity {
 
     @ModifyVariable(method = "craft", at = @At(value = "STORE"), name = "recipeOutput")
     private ItemStack quality_food$incrementQuality(final ItemStack recipeOutput, final TeaKettleRecipe recipe, @Share("ingredients") final LocalRef<List<ItemStack>> ingredients) {
-        Utils.incrementQuality(this, Objects.requireNonNullElse(ingredients.get(), List.of()), recipe.getResultItem().getMaxStackSize());
+        Utils.incrementQuality(this, Objects.requireNonNullElse(ingredients.get(), List.of()), recipe.getResultItem().getCount());
         ingredients.set(null);
         return recipeOutput;
     }

@@ -42,6 +42,7 @@
     "farm_and_charm.StrawberryCropBlockMixin",
     "farm_and_charm.TomatoCropBlockMixin",
     "farm_and_charm.TomatoCropHeadBlockMixin",
+    "farmersdelight.AbstractStoveBlockEntityMixin",
     "farmersdelight.CookingPotBlockEntityMixin",
     "farmersdelight.CookingPotMenuMixin",
     "farmersdelight.CookingPotResultSlotMixin",
@@ -65,6 +66,8 @@
     "kaleidoscope_cookery.ShawarmaSpitBlockEntityMixin",
     "kaleidoscope_cookery.SteamerBlockEntityMixin",
     "kaleidoscope_cookery.StockpotBlockEntityMixin",
+    "minecolonies.EntityAIWorkFarmerMixin",
+    "minecolonies.MineColoniesCropBlockMixin",
     "miners_delight.CopperPotBlockEntityMixin",
     "miners_delight.CopperPotMenuMixin",
     "miners_delight.CopperPotResultSlotMixin",
@@ -80,7 +83,10 @@
     "toms_storage.CraftingTerminalBlockEntityMixin",
     "toms_storage.CraftingTerminalMenuMixin",
     "vinery.GrapeBushMixin",
-    "vinery.GrapeVineBlockMixin"
+    "vinery.GrapeVineBlockMixin",
+    "vintagedelight.AbstractContainerMenuMixin",
+    "vintagedelight.FermentingJarBlockEntityMixin",
+    "vintagedelight.FermentingJarMenuMixin"
   ],
   "client": [
     "client.GuiGraphicsMixin",

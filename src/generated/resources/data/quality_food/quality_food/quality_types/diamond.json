@@ -1,7 +1,7 @@
 {
   "amplifier_modifier": 3,
   "chance": 0.005,
-  "cooking_bonus": 0.015625,
+  "cooking_bonus": 2.0,
   "crafting_bonus": 0.7,
   "crop_multiplier": 0.75,
   "duration_multiplier": 2.5,
