@@ -52,6 +52,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "hibiscus"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "lavender_blossom"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "green_tea_leaf"))
+                .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "cheese_wheel"));
         ;
 
         tag(BLACKLIST)

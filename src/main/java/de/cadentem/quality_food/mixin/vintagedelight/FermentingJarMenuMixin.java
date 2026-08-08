@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FermentingJarMenu.class)
 public abstract class FermentingJarMenuMixin {
-    @Shadow @Final public FermentingJarBlockEntity blockEntity;
+    @Shadow(remap = false) @Final public FermentingJarBlockEntity blockEntity;
 
     /** Apply quality when crafting with shift-click */
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/ribs/vintagedelight/screen/FermentingJarMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 2, shift = At.Shift.BEFORE))

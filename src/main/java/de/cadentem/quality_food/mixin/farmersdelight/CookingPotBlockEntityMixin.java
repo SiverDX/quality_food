@@ -19,7 +19,7 @@ import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 
 @Mixin(value = CookingPotBlockEntity.class)
 public abstract class CookingPotBlockEntityMixin {
-    @Shadow @Final private ItemStackHandler inventory;
+    @Shadow(remap = false) @Final private ItemStackHandler inventory;
 
     /** Display particles to show how much quality the block has stored */
     @Inject(method = "cookingTick", at = @At("TAIL"), remap = false)

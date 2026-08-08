@@ -61,6 +61,10 @@
     {
       "id": "herbalbrews:green_tea_leaf",
       "required": false
+    },
+    {
+      "id": "vintagedelight:cheese_wheel",
+      "required": false
     }
   ]
 }

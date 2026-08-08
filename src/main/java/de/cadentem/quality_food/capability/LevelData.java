@@ -48,6 +48,16 @@ public class LevelData {
         return get(level, position, false);
     }
 
+    public static void remove(final LevelAccessor level, final BlockPos position) {
+        LevelData data = LevelDataProvider.getOrNull(level);
+
+        if (data == null || position == null) {
+            return;
+        }
+
+        data.remove(position);
+    }
+
     public static void storeItem(final LevelAccessor level, final BlockPos position, final ItemStack stack) {
         LevelData data = LevelDataProvider.getOrNull(level);
 

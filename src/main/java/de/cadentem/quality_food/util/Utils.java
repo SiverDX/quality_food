@@ -3,6 +3,7 @@ package de.cadentem.quality_food.util;
 import de.cadentem.quality_food.capability.BlockDataProvider;
 import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.capability.LevelDataProvider;
+import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
@@ -22,8 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
+import net.ribs.vintagedelight.block.custom.CheeseMoldBlock;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import vectorwing.farmersdelight.common.block.PieBlock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,6 +68,16 @@ public class Utils {
         return isValidBlock(state, true);
     }
 
+    /** Blocks that should not store quality themselves */
+    @SuppressWarnings("RedundantIfStatement") // ignore for clarity
+    public static boolean isBlockException(final BlockState state) {
+        if (Compat.Mod.VINTAGEDELIGHT.isLoaded() && state.getBlock() instanceof CheeseMoldBlock) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean isValidBlock(final BlockState state, boolean checkItem) {
         if (state.is(QFBlockTags.QUALITY_BLOCKS)) {
             return true;
@@ -79,12 +92,16 @@ public class Utils {
         return isValidBlock(block, true);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "RedundantIfStatement"}) // ignore for clarity
     public static boolean isValidBlock(final Block block, boolean checkItem) {
         if (block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS)) {
             return true;
         } else if (checkItem) {
             return isValidItem(block.asItem().getDefaultInstance(), false);
+        }
+
+        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && block instanceof PieBlock) {
+            return true;
         }
 
         return false;

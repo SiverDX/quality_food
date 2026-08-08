@@ -6,6 +6,7 @@ import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -19,7 +20,9 @@ import java.util.function.Consumer;
 public abstract class BlockAccessorImplMixin {
     @ModifyVariable(method = "lambda$handleRequest$0", at = @At(value = "STORE"), name = "tile")
     private static BlockEntity test(final BlockEntity blockEntity, @Local(argsOnly = true) final BlockAccessor accessor, @Local(argsOnly = true) final Consumer<CompoundTag> responseSender) {
-        if (Utils.isValidBlock(accessor.getBlockState())) {
+        BlockState state = accessor.getBlockState();
+
+        if (Utils.isValidBlock(state) || Utils.isBlockException(state)) {
             CompoundTag tag = accessor.getServerData();
             tag.putInt(QualityFood.concat("ordinal"), LevelData.get(accessor.getLevel(), accessor.getPosition()).ordinal());
 
