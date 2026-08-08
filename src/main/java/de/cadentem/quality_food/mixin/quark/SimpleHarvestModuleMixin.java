@@ -20,7 +20,7 @@ public abstract class SimpleHarvestModuleMixin {
     /** Roll quality with more context */
     @Inject(method = "harvestAndReplant", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", shift = At.Shift.BEFORE, remap = true))
     private static void quality_food$setDropData(final Level level, final BlockPos position, final BlockState state, final LivingEntity livingEntity, final InteractionHand hand, final CallbackInfoReturnable<Boolean> callback) {
-        DropData.CURRENT.set(new DropData(LevelData.get(level, position, true), state, livingEntity instanceof Player player ? player : null, level.getBlockState(position.below())));
+        DropData.CURRENT.set(new DropData(LevelData.get(level, position, true), position, state, livingEntity instanceof Player player ? player : null, level.getBlockState(position.below())));
     }
 
     /** Clear context */

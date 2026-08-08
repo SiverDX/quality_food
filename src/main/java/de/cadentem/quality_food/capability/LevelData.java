@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.capability;
 
+import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.core.Quality;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +19,7 @@ public class LevelData {
     /** For mods that allow placing items on the ground / stack them (e.g. 'Display Delight') */
     private final HashMap<Long, List<ItemStack>> storedItemStacks = new HashMap<>();
 
-    private @Nullable Quality lastRemoved;
+    private @Nullable Pair<Long, Quality> lastRemoved;
 
     public static void set(final LevelAccessor level, final BlockPos position, final Quality quality) {
         if (quality != Quality.NONE) {
@@ -36,9 +37,8 @@ public class LevelData {
 
         Quality result = data.get(position);
 
-        if (queryLastRemoved && data.lastRemoved != null && result == Quality.NONE) {
-            result = data.lastRemoved;
-            data.lastRemoved = null;
+        if (queryLastRemoved && data.lastRemoved != null && data.lastRemoved.getFirst() == position.asLong()) {
+            result = data.lastRemoved.getSecond();
         }
 
         return result;
@@ -88,7 +88,8 @@ public class LevelData {
     }
 
     public void remove(final BlockPos position) {
-        lastRemoved = qualities.remove(position.asLong());
+        long key = position.asLong();
+        lastRemoved = Pair.of(key, qualities.remove(key));
     }
 
     public CompoundTag serializeNBT() {

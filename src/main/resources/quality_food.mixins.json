@@ -71,6 +71,8 @@
     "kaleidoscope_cookery.SteamerBlockEntityMixin",
     "kaleidoscope_cookery.StockpotBlockEntityMixin",
     "majruszsenchantments.TelekinesisEnchantmentMixin",
+    "minecolonies.EntityAIWorkFarmerMixin",
+    "minecolonies.MineColoniesCropBlockMixin",
     "miners_delight.CopperPotBlockEntityMixin",
     "miners_delight.CopperPotMenuMixin",
     "miners_delight.CopperPotResultSlotMixin",

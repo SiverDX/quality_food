@@ -169,6 +169,9 @@ dependencies {
     // https://www.curseforge.com/minecraft/mc-mods/mysterious-mountain-lib/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=hide
     implementation fg.deobf("curse.maven:mysterious-mountain-lib-368098:7636232") // 1.6.34
 
+    // https://www.curseforge.com/minecraft/mc-mods/minecolonies/files/all?page=1&pageSize=20&version=1.20.1&showAlphaFiles=show
+    compileOnly fg.deobf("curse.maven:minecolonies-245506:8581585") // 1.1.1275
+
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")
     implementation fg.deobf("curse.maven:jei-238222:6075247") // 15.20.0.106
