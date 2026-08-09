@@ -68,7 +68,7 @@ public class ServerConfig {
 
         BUILDER.push("Crafting");
         String noQualityRecipesComment1 = "Define recipes (namespace:path) which should not result in quality being rolled (e.g. when the items can be converted back and forth)";
-        String noQualityRecipesComment2 = "\n(Note that without 'handle_compacting' or an addition to 'retain_quality_recipes' storage blocks will not retain their quality)";
+        String noQualityRecipesComment2 = "\nThis is not about keeping / retaining quality as a whole (e.g., in the case of storage-blocks - that is handled automatically + through the 'retain_quality_recipes' configuration)";
         NO_QUALITY_RECIPES = BUILDER.comment(noQualityRecipesComment1 + noQualityRecipesComment2).defineList("no_quality_recipes", NO_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         RETAIN_QUALITY_RECIPES = BUILDER.comment("Define recipes (namespace:path) which should result in the quality being applied to the result (only if all ingredients have the same quality)").defineList("retain_quality_recipes", RETAIN_QUALITY_RECIPES_DEFAULT, ServerConfig::validateRecipe);
         HANDLE_SEED_RECIPES = BUILDER.comment("Attempt to handle recipes involving seed items automatically (to avoid having to add all of them to the retain_quality_recipes config)").define("handle_seed_recipes", true);
@@ -300,7 +300,11 @@ public class ServerConfig {
     private static void fillRetainQualityRecipes() {
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_sugar_cane");
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:sugar_from_honey_bottle");
+        // Not detected automatically since the glass bottle is an additional ingredient (and a crafting remainder) - meaning it's not a plain conversion
         RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:honey_bottle");
+        RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:honey_block");
+        // Not detected automatically since there is no recipe to turn the melon block back into melon slices
+        RETAIN_QUALITY_RECIPES_DEFAULT.add("minecraft:melon");
 
         RETAIN_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT.modid(), "stacked_melons").toString());
         RETAIN_QUALITY_RECIPES_DEFAULT.add(location(CRATE_DELIGHT.modid(), "melons").toString());

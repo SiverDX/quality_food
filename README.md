@@ -78,13 +78,13 @@ Only blocks within the block tag `quality_food:quality_blocks` will support (i.e
 
 ---
 
-For crafting (crafting table) there are three configs:
+For crafting (crafting table) there are these configs:
 - `retain_quality_recipes`: The result will retain the quality of the ingredients, examples:
   - If all items are `diamond` quality the result will be `diamond`
   - If three items are `gold` quality and two are `diamond` the result will be `gold`
   - If two items are `iron` quality and the rest have none then the result will also have none
 - `no_quality_recipes`: Entries will not roll for quality (useful in case items can be crated back and forth)
-- `handle_compacting`: If enabled then (de)compacting results should retain quality automatically without having to specify the relevant recipes
+- `storage_recipe_blacklist`: Entries will be excluded from the automatic storage block detection
 
 The bonus quality a quality ingredient provides is configurable for the crafting table (`crafting_bonus`)
 
@@ -102,47 +102,16 @@ For compatibility’s sake certain blocks (and their item variant) are supported
 If you find some items having quality where it doesn't make much sense you can blacklist them using the item tag `quality_food:blacklist`
 
 # Compatibility
-- [Farmer's Delight](https://www.curseforge.com/minecraft/mc-mods/farmers-delight)
-  - Apply quality when crafting
-  - Handle quality block state for growing plants (rice and tomato)
-  - Apply quality to served items (feast blocks)
-  - Storage blocks are part of the default config
-- [Fast Entity Transfer](https://www.curseforge.com/minecraft/mc-mods/fastentitytransfer)
-  - Use stored quality bonus of the furnace
-- [Tom's Simple Storage Mod](https://www.curseforge.com/minecraft/mc-mods/toms-storage)
-  - Apply quality when crafting
-- [Sophisticated Core](https://www.curseforge.com/minecraft/mc-mods/sophisticated-core)
-  - Properly handle compacting
-  - Apply quality when crafting
-- [Create](https://www.curseforge.com/minecraft/mc-mods/create)
-  - Milling and Mechanical Mixer should apply the quality of the ingredients
-  - Mechanical Harvester and cooking with fan apply quality
-  - Quality item attribute (for filters)
-- [Harvest with ease](https://www.curseforge.com/minecraft/mc-mods/harvest-with-ease)
-  - Properly roll quality when auto harvesting
-- [Quark](https://www.curseforge.com/minecraft/mc-mods/quark)
-  - Quality gets properly rolled
-  - Storage blocks are part of the default config
-- [RightClickHarvest](https://www.curseforge.com/minecraft/mc-mods/rightclickharvest)
-  - Quality gets properly rolled
-- [[Let's Do] Vinery](https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery)
-  - Storage blocks are part of the default config
-- [FastWorkbench](https://www.curseforge.com/minecraft/mc-mods/fastworkbench)
-  - Quality gets properly handled when using the crafting bench
-- [Crate Delight](https://www.curseforge.com/minecraft/mc-mods/crate-delight-forge)
-  - Storage blocks are part of the default config
-- [Fruitful Fun 🍊](https://www.curseforge.com/minecraft/mc-mods/fruit-trees)
-  - Roll quality for dropped items from fruit trees
-  - Apply quality to served items
-- [Collector's Reap](https://www.curseforge.com/minecraft/mc-mods/collectors-reap)
-  - Quality effect cake blocks grant improved effects
-  - Apply quality to growing fruit bushes
-  - Roll quality for dropped items from fruit bushes
-  - Storage blocks are part of the default config
+There are a lot of mod-specific compatibilities already added
 
-This is mostly about block interaction / quality application through crafting
-- If a mod adds a new crafting block then quality may not apply correctly
-- Items should generally be fine
+Usually the problems are related to:
+- Crafting
+- Blocks (crops e.g.) drop items in a specific way
+- Crops that grow in a special way (e.g., two blocks high)
+
+These things are handled automatically
+- Food items (others need to be added to the tags mentioned above)
+- Most recipes for compacting (storage-blocks)
 
 # Misc
 

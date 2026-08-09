@@ -1,8 +1,6 @@
 package de.cadentem.quality_food.util;
 
-import com.mojang.datafixers.util.Pair;
 import de.cadentem.quality_food.compat.Compat;
-import de.cadentem.quality_food.compat.SpecialContainer;
 import de.cadentem.quality_food.config.QualityConfig;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Modification;
@@ -17,9 +15,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
@@ -30,8 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.WildCropBlock;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
 
 @MethodsReturnNonnullByDefault
 public class QualityUtils {
@@ -207,17 +201,12 @@ public class QualityUtils {
         boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe, level.registryAccess());
         StorageRecipeCache.Entry storage = StorageRecipeCache.get(recipe, level);
 
-        Pair<HashMap<Item, Integer>, int[]> data = getContainerData(container);
+        if (!shouldRetainQuality && storage == null) {
+            return;
+        }
 
-        int relevantItemCount = data.getFirst().entrySet().stream().mapToInt(entry -> {
-            if (Utils.isValidItem(entry.getKey().getDefaultInstance())) {
-                return entry.getValue();
-            }
-
-            return 0;
-        }).sum();
-
-        Quality quality = getQuality(data.getSecond(), relevantItemCount);
+        ContainerData data = getContainerData(container);
+        Quality quality = getQuality(data.qualities(), data.relevantItemCount());
 
         if (quality.level() == 0) {
             return;
@@ -225,40 +214,34 @@ public class QualityUtils {
 
         if (shouldRetainQuality) {
             applyQuality(result, quality);
-        } else if (storage != null && relevantItemCount == (storage.packing() ? storage.size() : 1)) {
-            applyQuality(result, quality);
-        } else if (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)) {
+        } else if (data.relevantItemCount() == (storage.packing() ? storage.size() : 1)) {
             applyQuality(result, quality);
         }
     }
 
-    private static Pair<HashMap<Item, Integer>, int[]> getContainerData(final Container container) {
-        // Collect the amount of qualities present for all items in the container
+    /**
+     * @param relevantItemCount The number of items quality can be applied to
+     * @param qualities         How often each quality is present, indexed by {@link Quality#ordinal()}
+     */
+    private record ContainerData(int relevantItemCount, int[] qualities) {}
+
+    private static ContainerData getContainerData(final Container container) {
+        // Collect the number of qualities present for all items in the container
         int[] qualities = new int[Quality.values().length];
-        HashMap<Item, Integer> items = new HashMap<>();
+        int relevantItemCount = 0;
 
         for (int i = 0; i < container.getContainerSize(); i++) {
             ItemStack containerStack = container.getItem(i);
-            Item item = containerStack.getItem();
-
-            if (container instanceof SpecialContainer) {
-                items.put(item, items.getOrDefault(item, 0) + containerStack.getCount());
-            } else {
-                items.put(item, items.getOrDefault(item, 0) + 1);
-            }
 
             if (!Utils.isValidItem(containerStack)) {
                 continue;
             }
 
-            if (container instanceof SpecialContainer) {
-                qualities[getQuality(containerStack).ordinal()] += containerStack.getCount();
-            } else {
-                qualities[getQuality(containerStack).ordinal()]++;
-            }
+            qualities[getQuality(containerStack).ordinal()]++;
+            relevantItemCount++;
         }
 
-        return Pair.of(items, qualities);
+        return new ContainerData(relevantItemCount, qualities);
     }
 
     /** Get the most fitting quality (if all items are diamond -> diamond / if 3 are diamond and 6 are gold -> gold) */
@@ -276,43 +259,6 @@ public class QualityUtils {
         }
 
         return Quality.NONE;
-    }
-
-    private static int getCompactingSize(final HashMap<Item, Integer> items, final Container container) {
-        Set<Item> keys = items.keySet();
-
-        if (keys.size() != 1 && !(keys.size() == 2 && keys.contains(Items.AIR))) {
-            // Either the crafting container only contains 1 type of item or it contains 2 and the other item is air (i.e. no item)
-            return -1;
-        }
-
-        int containerSize = container.getContainerSize();
-
-        for (Item key : keys) {
-            int itemCount = items.get(key);
-
-            if (container instanceof SpecialContainer) {
-                if (key == Items.AIR) {
-                    continue;
-                }
-
-                // There is probably a better way to check this but not worth the effort at the moment
-                if (itemCount == 4 || itemCount == 9) {
-                    return itemCount;
-                } else {
-                    return -1;
-                }
-            } else {
-                if (key == Items.AIR && (containerSize - itemCount - /* 2x2 */ 4 != 0 && containerSize - itemCount - /* 3x3 */ 9 != 0)) {
-                    // If the other slots (besides 2x2 / 3x3) are not empty then it's not a valid compacting recipe
-                    return -1;
-                } else if (key != Items.AIR && (itemCount == /* 2x2 */ 4 || itemCount == /* 3x3 */ 9)) {
-                    return itemCount;
-                }
-            }
-        }
-
-        return -1;
     }
 
     public static float getCookingBonus(final Quality quality) {

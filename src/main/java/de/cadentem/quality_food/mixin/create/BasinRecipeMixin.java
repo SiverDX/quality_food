@@ -3,44 +3,59 @@ package de.cadentem.quality_food.mixin.create;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import de.cadentem.quality_food.compat.SpecialContainer;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.util.QualityUtils;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-import java.util.List;
+import java.util.Collection;
 
 @Mixin(value = BasinRecipe.class, remap = false)
 public abstract class BasinRecipeMixin {
-    @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;acceptOutputs(Ljava/util/List;Ljava/util/List;Z)Z"), index = 0)
-    private static List<ItemStack> quality_food$applyQuality(final List<ItemStack> stacks, @Local final IItemHandler availableItems, @Local(ordinal = 0) int[] extractedItemsFromSlot, @Local(argsOnly = true) Recipe<?> recipe, @Local(argsOnly = true) BasinBlockEntity basin) {
-        SpecialContainer container = new SpecialContainer(18);
+    @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 2))
+    private static Object quality_food$applyQuality(final Object object, /* It's there, not an issue */ @Local(name = "remainderContainer") final CraftingContainer container, @Local(argsOnly = true) Recipe<?> recipe, @Local(argsOnly = true) BasinBlockEntity basin) {
+        if (!(object instanceof ItemStack result)) {
+            // Mixin cannot handle the generic parameter / type of the list
+            return object;
+        }
 
-        for (int slot = 0; slot < extractedItemsFromSlot.length; slot++) {
-            if (extractedItemsFromSlot[slot] == 0) {
-                container.setItem(slot, ItemStack.EMPTY);
+        // We get the direct result from the recipe - any modifications will impact any future crafting results
+        result = result.copy();
+
+        //noinspection DataFlowIssue -> level is not null at this point
+        QualityUtils.handleConversion(result, container, recipe, basin.getLevel());
+
+        if (!QualityUtils.hasQuality(result) && !ServerConfig.isNoQualityRecipe(recipe, basin.getLevel())) {
+            QualityUtils.applyQuality(result, container.getItems(), null);
+        }
+
+        return result;
+    }
+
+    @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Ljava/util/List;addAll(Ljava/util/Collection;)Z"))
+    private static Collection<Object> quality_food$applyQualityMultiple(@NotNull final Collection<Object> results, @Local(name = "remainderContainer") final CraftingContainer container, @Local(argsOnly = true) Recipe<?> recipe, @Local(argsOnly = true) BasinBlockEntity basin  /* It's there, not an issue */) {
+        for (Object object : results) {
+            if (!(object instanceof ItemStack result)) {
+                // Mixin cannot handle the generic parameter / type of the list
                 continue;
             }
 
-            ItemStack ingredient = availableItems.getStackInSlot(slot).copy();
-            ingredient.setCount(extractedItemsFromSlot[slot]);
-            container.setItem(slot, ingredient);
-        }
+            // We get the direct result from the recipe - any modifications will impact any future crafting results
+            result = result.copy();
 
-        for (ItemStack stack : stacks) {
             //noinspection DataFlowIssue -> level is not null at this point
-            QualityUtils.handleConversion(stack, container, recipe, basin.getLevel());
+            QualityUtils.handleConversion(result, container, recipe, basin.getLevel());
 
-            if (!QualityUtils.hasQuality(stack) && !ServerConfig.isNoQualityRecipe(recipe, basin.getLevel())) {
-                QualityUtils.applyQuality(stack, container.getIngredients(), null);
+            if (!QualityUtils.hasQuality(result) && !ServerConfig.isNoQualityRecipe(recipe, basin.getLevel())) {
+                QualityUtils.applyQuality(result, container.getItems(), null);
             }
         }
 
-        return stacks;
+        return results;
     }
 }
