@@ -172,6 +172,9 @@ dependencies {
     // https://www.curseforge.com/minecraft/mc-mods/minecolonies/files/all?page=1&pageSize=20&version=1.20.1&showAlphaFiles=show
     compileOnly fg.deobf("curse.maven:minecolonies-245506:8581585") // 1.1.1275
 
+    // https://www.curseforge.com/minecraft/mc-mods/hearth-and-harvest/files/all?page=1&pageSize=20&version=1.20.1&showAlphaFiles=show
+    implementation fg.deobf("curse.maven:hearth-and-harvest-1212197:8416048") // 1.0.12b
+
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")
     implementation fg.deobf("curse.maven:jei-238222:6075247") // 15.20.0.106

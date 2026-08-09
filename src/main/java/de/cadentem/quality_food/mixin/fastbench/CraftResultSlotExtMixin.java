@@ -24,7 +24,7 @@ public abstract class CraftResultSlotExtMixin extends ResultSlot {
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
         ResultSlotAccess access = (ResultSlotAccess) this;
 
-        if (access.quality_food$getPlayer().level().isClientSide() || container instanceof RecipeHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed())) {
+        if (access.quality_food$getPlayer().level().isClientSide() || container instanceof RecipeHolder holder && ServerConfig.isNoQualityRecipe(holder.getRecipeUsed(), access.quality_food$getPlayer().level())) {
             return;
         }
 

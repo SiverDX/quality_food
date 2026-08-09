@@ -136,6 +136,30 @@ public class QFBlockTags extends BlockTagsProvider {
                 .addOptional(location("miners_delight", "cave_carrot_crate"))
 
                 .addOptional(location(HERALBREWS.modid(), "tea_leaf_crate"))
+
+                .addOptional(location(VINTAGEDELIGHT.modid(), "oat_bag"))
+                .addOptional(location(VINTAGEDELIGHT.modid(), "oat_bale"))
+                .addOptional(location(VINTAGEDELIGHT.modid(), "ghost_pepper_crate"))
+                .addOptional(location(VINTAGEDELIGHT.modid(), "cucumber_crate"))
+                .addOptional(location(VINTAGEDELIGHT.modid(), "peanut_crate"))
+                .addOptional(location(VINTAGEDELIGHT.modid(), "gearo_berry_bag"))
+
+                .addOptional(location("hearthandharvest", "blueberry_crate"))
+                .addOptional(location("hearthandharvest", "cherry_crate"))
+                .addOptional(location("hearthandharvest", "red_grape_crate"))
+                .addOptional(location("hearthandharvest", "green_grape_crate"))
+                .addOptional(location("hearthandharvest", "raspberry_crate"))
+                .addOptional(location("hearthandharvest", "peanut_crate"))
+                .addOptional(location("hearthandharvest", "corn_crate"))
+                .addOptional(location("hearthandharvest", "apple_crate"))
+                .addOptional(location("hearthandharvest", "golden_apple_crate"))
+                .addOptional(location("hearthandharvest", "golden_carrot_crate"))
+                .addOptional(location("hearthandharvest", "glistering_melon_crate"))
+                .addOptional(location("hearthandharvest", "poisonous_potato_crate"))
+                .addOptional(location("hearthandharvest", "rotten_tomato_crate"))
+                .addOptional(location("hearthandharvest", "glow_berry_crate"))
+                .addOptional(location("hearthandharvest", "sweet_berry_crate"))
+
         ;
     }
 }

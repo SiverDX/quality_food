@@ -18,8 +18,8 @@ import java.util.Optional;
 public class CommonUtilsMixin {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType") // ignore
     @ModifyArg(method = "doLeftClickInteractions", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z", ordinal = 2))
-    private static ItemStack quality_food$applyQuality(final ItemStack output, @Local final AbstractFurnaceBlockEntity furnace, @Local(argsOnly = true, ordinal = 0) final Optional<?> recipeOptional, @Local(argsOnly = true) final Player player) {
-        if (furnace.getLevel() == null || (recipeOptional.isPresent() && recipeOptional.get() instanceof Recipe<?> recipe && ServerConfig.isNoQualityRecipe(recipe))) {
+    private static ItemStack quality_food$applyQuality(final ItemStack output, @Local(name = "abstractBlockEntity") final AbstractFurnaceBlockEntity furnace, @Local(argsOnly = true, ordinal = 0) final Optional<?> recipeOptional, @Local(argsOnly = true) final Player player) {
+        if (furnace.getLevel() == null || (recipeOptional.isPresent() && recipeOptional.get() instanceof Recipe<?> recipe && ServerConfig.isNoQualityRecipe(recipe, player.level()))) {
             return output;
         }
 

@@ -348,6 +348,90 @@
     {
       "id": "herbalbrews:tea_leaf_crate",
       "required": false
+    },
+    {
+      "id": "vintagedelight:oat_bag",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:oat_bale",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:ghost_pepper_crate",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:cucumber_crate",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:peanut_crate",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:gearo_berry_bag",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:blueberry_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:cherry_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:red_grape_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:green_grape_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:raspberry_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:peanut_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:corn_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:apple_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:golden_apple_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:golden_carrot_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:glistering_melon_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:poisonous_potato_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:rotten_tomato_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:glow_berry_crate",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:sweet_berry_crate",
+      "required": false
     }
   ]
 }

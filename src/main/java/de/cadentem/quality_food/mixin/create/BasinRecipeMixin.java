@@ -33,10 +33,10 @@ public abstract class BasinRecipeMixin {
         }
 
         for (ItemStack stack : stacks) {
-            //noinspection DataFlowIssue -> level is present
-            QualityUtils.handleConversion(stack, container, recipe, basin.getLevel().registryAccess());
+            //noinspection DataFlowIssue -> level is not null at this point
+            QualityUtils.handleConversion(stack, container, recipe, basin.getLevel());
 
-            if (!QualityUtils.hasQuality(stack) && !ServerConfig.isNoQualityRecipe(recipe)) {
+            if (!QualityUtils.hasQuality(stack) && !ServerConfig.isNoQualityRecipe(recipe, basin.getLevel())) {
                 QualityUtils.applyQuality(stack, container.getIngredients(), null);
             }
         }

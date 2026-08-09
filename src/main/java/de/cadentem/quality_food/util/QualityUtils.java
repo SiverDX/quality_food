@@ -8,7 +8,7 @@ import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.Quality;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -32,6 +33,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+@MethodsReturnNonnullByDefault
 public class QualityUtils {
     public static final String QUALITY_TAG = "quality_food";
     public static final String QUALITY_KEY = "quality";
@@ -201,13 +203,9 @@ public class QualityUtils {
         return false;
     }
 
-    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe, @Nullable final RegistryAccess access) {
-        boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe, access);
-        boolean handleCompacting = ServerConfig.HANDLE_COMPACTING.get();
-
-        if (!shouldRetainQuality && !handleCompacting) {
-            return;
-        }
+    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe, final Level level) {
+        boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe, level.registryAccess());
+        StorageRecipeCache.Entry storage = StorageRecipeCache.get(recipe, level);
 
         Pair<HashMap<Item, Integer>, int[]> data = getContainerData(container);
 
@@ -221,7 +219,15 @@ public class QualityUtils {
 
         Quality quality = getQuality(data.getSecond(), relevantItemCount);
 
-        if (quality.level() > 0 && (shouldRetainQuality || (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)))) {
+        if (quality.level() == 0) {
+            return;
+        }
+
+        if (shouldRetainQuality) {
+            applyQuality(result, quality);
+        } else if (storage != null && relevantItemCount == (storage.packing() ? storage.size() : 1)) {
+            applyQuality(result, quality);
+        } else if (getCompactingSize(data.getFirst(), container) == relevantItemCount || /* decompacting */ relevantItemCount == 1 && (result.getCount() == 4 || result.getCount() == 9)) {
             applyQuality(result, quality);
         }
     }

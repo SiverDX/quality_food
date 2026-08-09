@@ -27,7 +27,8 @@ public abstract class CraftingTerminalBlockEntityMixin extends BlockEntity {
 
     @ModifyArg(method = "onCraftingMatrixChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V", ordinal = 1))
     private ItemStack quality_food$handleConversion(final ItemStack stack) {
-        QualityUtils.handleConversion(stack, craftMatrix, currentRecipe.recipe(), level != null ? level.registryAccess() : null);
+        //noinspection DataFlowIssue -> level is not null at this point
+        QualityUtils.handleConversion(stack, craftMatrix, currentRecipe.recipe(), level);
         return stack;
     }
 }

@@ -27,7 +27,7 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
     /** Apply quality when crafting with shift-click */
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/CraftingMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void quality_food$applyQuality(final Player player, int slotIndex, final CallbackInfoReturnable<ItemStack> callback, @Local(ordinal = 1) final ItemStack stack) {
-        if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed())) {
+        if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed(), player.level())) {
             return;
         }
 
@@ -37,7 +37,7 @@ public abstract class CraftingMenuMixin extends RecipeBookMenu<CraftingContainer
     /** Apply quality when items are converted from / to their storage variants */
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE"), ordinal = 1)
     private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingContainer craftSlots, @Local(argsOnly = true) final ResultContainer resultContainer) {
-        QualityUtils.handleConversion(result, craftSlots, resultContainer.getRecipeUsed(), level.registryAccess());
+        QualityUtils.handleConversion(result, craftSlots, resultContainer.getRecipeUsed(), level);
         return result;
     }
 }

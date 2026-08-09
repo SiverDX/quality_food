@@ -21,7 +21,7 @@ public abstract class FastBenchUtilMixin {
             name = "recipeOutput"
     )
     private static ItemStack quality_food$applyQuality(final ItemStack recipeOutput, @Local(argsOnly = true) final Player player, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
-        if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed())) {
+        if (ServerConfig.isNoQualityRecipe(resultSlots.getRecipeUsed(), player.level())) {
             return recipeOutput;
         }
 
@@ -31,7 +31,7 @@ public abstract class FastBenchUtilMixin {
 
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE", ordinal = 1), name = "itemstack")
     private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots) {
-        QualityUtils.handleConversion(result, craftSlots, resultSlots.getRecipeUsed(), level.registryAccess());
+        QualityUtils.handleConversion(result, craftSlots, resultSlots.getRecipeUsed(), level);
         return result;
     }
 }
