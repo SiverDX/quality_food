@@ -45,5 +45,7 @@ public abstract class GuiGraphicsMixin {
     }
 
     @Shadow
-    protected abstract void renderItem(@Nullable LivingEntity entity, @Nullable Level level, ItemStack stack, int x, int y, int seed, int guiOffset);
+    private void renderItem(@Nullable final LivingEntity entity, @Nullable final Level level, final ItemStack stack, final int x, final int y, final int seed, final int guiOffset) {
+        throw new IllegalStateException("This method should not be called");
+    }
 }
