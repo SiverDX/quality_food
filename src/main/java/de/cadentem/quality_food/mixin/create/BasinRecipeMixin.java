@@ -24,7 +24,7 @@ public abstract class BasinRecipeMixin {
             return object;
         }
 
-        // We get the direct result from the recipe - any modifications will impact any future crafting results
+        // We get the direct result from the recipe - any modifications would impact future crafting results
         result = result.copy();
 
         //noinspection DataFlowIssue -> level is not null at this point
@@ -38,14 +38,14 @@ public abstract class BasinRecipeMixin {
     }
 
     @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Ljava/util/List;addAll(Ljava/util/Collection;)Z"))
-    private static Collection<Object> quality_food$applyQualityMultiple(@NotNull final Collection<Object> results, @Local(name = "remainderContainer") final CraftingContainer container, @Local(argsOnly = true) Recipe<?> recipe, @Local(argsOnly = true) BasinBlockEntity basin  /* It's there, not an issue */) {
+    private static Collection<Object> quality_food$applyQualityMultiple(@NotNull final Collection<Object> results, @Local(name = "remainderContainer") final CraftingContainer container, @Local(argsOnly = true) Recipe<?> recipe, @Local(argsOnly = true) BasinBlockEntity basin) {
         for (Object object : results) {
             if (!(object instanceof ItemStack result)) {
                 // Mixin cannot handle the generic parameter / type of the list
                 continue;
             }
 
-            // We get the direct result from the recipe - any modifications will impact any future crafting results
+            // We get the direct result from the recipe - any modifications would impact future crafting results
             result = result.copy();
 
             //noinspection DataFlowIssue -> level is not null at this point
