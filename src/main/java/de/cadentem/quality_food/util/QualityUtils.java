@@ -66,7 +66,7 @@ public class QualityUtils {
                 continue;
             }
 
-            double chance = QualityConfig.calculateChance(quality, averageWeight);
+            double chance = QualityConfig.getChance(quality) + QualityConfig.calculateChance(quality, averageWeight);
             chance = Modification.luck(player).apply(chance);
 
             if (chance > 0 && chance >= RANDOM.nextDouble()) {

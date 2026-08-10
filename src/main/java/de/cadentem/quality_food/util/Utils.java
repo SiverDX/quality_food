@@ -12,7 +12,7 @@ import de.cadentem.quality_food.network.SyncCookingParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -163,16 +163,16 @@ public class Utils {
      * Collects quality-applicable items from the given inventory
      * @param maxSlotCheck To determine up to which slot the items should be considered
      */
-    public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
-        return collectIngredients(handler::getStackInSlot, maxSlotCheck);
+    public static Collection<ItemStack> collectIngredients(final Container container, final Supplier<Integer> maxSlotCheck) {
+        return collectIngredients(container::getItem, maxSlotCheck);
     }
 
     /**
      * Collects quality-applicable items from the given inventory
      * @param maxSlotCheck To determine up to which slot the items should be considered
      */
-    public static Collection<ItemStack> collectIngredients(final SimpleContainer container, final Supplier<Integer> maxSlotCheck) {
-        return collectIngredients(container::getItem, maxSlotCheck);
+    public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
+        return collectIngredients(handler::getStackInSlot, maxSlotCheck);
     }
 
     private static Collection<ItemStack> collectIngredients(final Function<Integer, ItemStack> itemSupplier, final Supplier<Integer> maxSlotCheck) {

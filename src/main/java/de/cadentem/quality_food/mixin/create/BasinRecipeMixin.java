@@ -5,6 +5,7 @@ import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -31,7 +32,7 @@ public abstract class BasinRecipeMixin {
         QualityUtils.handleConversion(result, container, recipe, basin.getLevel());
 
         if (!QualityUtils.hasQuality(result) && !ServerConfig.isNoQualityRecipe(recipe, basin.getLevel())) {
-            QualityUtils.applyQuality(result, container.getItems(), null);
+            QualityUtils.applyQuality(result, Utils.collectIngredients(container, container::getContainerSize), null);
         }
 
         return result;
@@ -52,7 +53,7 @@ public abstract class BasinRecipeMixin {
             QualityUtils.handleConversion(result, container, recipe, basin.getLevel());
 
             if (!QualityUtils.hasQuality(result) && !ServerConfig.isNoQualityRecipe(recipe, basin.getLevel())) {
-                QualityUtils.applyQuality(result, container.getItems(), null);
+                QualityUtils.applyQuality(result, Utils.collectIngredients(container, container::getContainerSize), null);
             }
         }
 
