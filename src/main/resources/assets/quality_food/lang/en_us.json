@@ -2,13 +2,15 @@
   "potion.withProbability": "%s (%s)",
 
   "quality_food.quality": "Quality: ",
+  "quality_food.potential": "Quality potential: %s",
 
   "quality_type.quality_food.none": "None",
   "quality_type.quality_food.iron": "Iron",
   "quality_type.quality_food.gold": "Gold",
   "quality_type.quality_food.diamond": "Diamond",
 
-  "config.jade.plugin_quality_food.quality": "Quality",
+  "config.jade.plugin_quality_food.quality_block": "Quality Block",
+  "config.jade.plugin_quality_food.quality_mob": "Quality Mob",
 
   "create.item_attributes.quality_food.quality": "has '%1$s' quality",
   "create.item_attributes.quality_food.quality.inverted": "does not have '%1$s' quality",

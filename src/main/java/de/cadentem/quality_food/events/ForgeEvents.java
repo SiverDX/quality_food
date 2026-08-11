@@ -2,6 +2,7 @@ package de.cadentem.quality_food.events;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
+import de.cadentem.quality_food.capability.AnimalData;
 import de.cadentem.quality_food.client.ClientProxy;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.config.ClientConfig;
@@ -49,7 +50,9 @@ public class ForgeEvents {
             return;
         }
 
-        event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), event.getSource().getEntity() instanceof Player player ? player : null));
+        event.getDrops().forEach(drop ->
+                QualityUtils.applyQuality(drop.getItem(), event.getSource().getEntity() instanceof Player player ? player : null, AnimalData.getPotential(event.getEntity()))
+        );
     }
 
     @SubscribeEvent // remove existing effect tooltips

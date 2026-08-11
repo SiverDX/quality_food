@@ -2,6 +2,8 @@ package de.cadentem.quality_food.capability;
 
 import de.cadentem.quality_food.QualityFood;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -13,10 +15,18 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class CapabilityHandler {
-    public static final Capability<BlockData> BLOCK_DATA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static final Capability<LevelData> LEVEL_DATA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
-    public static final ResourceLocation BLOCK_DATA = new ResourceLocation(QualityFood.MODID, "block_data");
+    public static final Capability<BlockData> BLOCK_DATA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<AnimalData> ANIMAL_DATA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
     public static final ResourceLocation LEVEL_DATA = new ResourceLocation(QualityFood.MODID, "level_data");
+    public static final ResourceLocation BLOCK_DATA = new ResourceLocation(QualityFood.MODID, "block_data");
+    public static final ResourceLocation ANIMAL_DATA = new ResourceLocation(QualityFood.MODID, "animal_data");
+
+    @SubscribeEvent
+    public static void attachLevelCapability(final AttachCapabilitiesEvent<Level> event) {
+        event.addCapability(LEVEL_DATA, new LevelDataProvider());
+        event.addListener(() -> LevelDataProvider.CACHE.remove(event.getObject()));
+    }
 
     @SubscribeEvent
     public static void attachBlockEntityCapability(final AttachCapabilitiesEvent<BlockEntity> event) {
@@ -27,8 +37,12 @@ public class CapabilityHandler {
     }
 
     @SubscribeEvent
-    public static void attachLevelCapability(final AttachCapabilitiesEvent<Level> event) {
-        event.addCapability(LEVEL_DATA, new LevelDataProvider());
-        event.addListener(() -> LevelDataProvider.CACHE.remove(event.getObject()));
+    public static void attachAnimalCapability(final AttachCapabilitiesEvent<Entity> event) {
+        if (!(event.getObject() instanceof Mob)) {
+            return;
+        }
+
+        event.addCapability(ANIMAL_DATA, new AnimalDataProvider());
+        event.addListener(() -> AnimalDataProvider.SERVER_CACHE.remove(event.getObject().getUUID()));
     }
 }

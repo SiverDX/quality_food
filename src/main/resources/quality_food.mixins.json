@@ -11,10 +11,12 @@
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
     "AbstractFurnaceMenuMixin",
+    "AnimalMixin",
     "BlockItemMixin",
     "BlockMixin",
     "CakeBlockMixin",
     "CampFireBlockEntityMixin",
+    "CowMixin",
     "CraftingMenuMixin",
     "EntityMixin",
     "FurnaceResultSlotMixin",

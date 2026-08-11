@@ -17,6 +17,7 @@ public class QualityConfig {
     public ForgeConfigSpec.DoubleValue chance;
     public ForgeConfigSpec.DoubleValue cropMultiplier;
     public ForgeConfigSpec.DoubleValue seedMultiplier;
+    public ForgeConfigSpec.DoubleValue potentialBonus;
 
     public ForgeConfigSpec.DoubleValue durationMultiplier;
     public ForgeConfigSpec.DoubleValue probabilityAddition;
@@ -99,6 +100,21 @@ public class QualityConfig {
             case IRON -> 1;
             case GOLD -> 0.9f;
             case DIAMOND -> 0.75f;
+            default -> 0;
+        };
+    }
+
+    public static double getPotentialBonus(@NotNull final Quality quality) {
+        QualityConfig config = ServerConfig.QUALITY_CONFIG.get(quality);
+
+        if (config != null) {
+            return config.potentialBonus.get();
+        }
+
+        return switch (quality) {
+            case IRON -> 0.025;
+            case GOLD -> 0.1;
+            case DIAMOND -> 0.2;
             default -> 0;
         };
     }

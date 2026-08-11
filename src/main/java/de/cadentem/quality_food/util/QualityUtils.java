@@ -117,6 +117,11 @@ public class QualityUtils {
 
     /** Generic if no further context is present */
     public static void applyQuality(final ItemStack stack, @Nullable final Player player) {
+        QualityUtils.applyQuality(stack, player, 0);
+    }
+
+    /** @param qualityPotential A bonus to the quality roll (generally used for animals that had potential) */
+    public static void applyQuality(final ItemStack stack, @Nullable final Player player, double qualityPotential) {
         Quality selected = Quality.NONE;
 
         for (Quality quality : Quality.values()) {
@@ -124,10 +129,11 @@ public class QualityUtils {
                 continue;
             }
 
-            double chance = RANDOM.nextDouble();
+            double chance = QualityConfig.getChance(quality);
             chance = Modification.luck(player).apply(chance);
+            chance = Modification.potential(qualityPotential).apply(chance);
 
-            if (chance >= 1 - QualityConfig.getChance(quality)) {
+            if (chance > 0 && chance >= RANDOM.nextDouble()) {
                 selected = quality;
             }
         }

@@ -12,8 +12,8 @@ import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class QualityProvider implements IBlockComponentProvider {
-    private static final ResourceLocation ID = new ResourceLocation(QualityFood.MODID, "quality");
+public class QualityBlockProvider implements IBlockComponentProvider {
+    private static final ResourceLocation ID = new ResourceLocation(QualityFood.MODID, "quality_block");
     private static final Vec2 SIZE = new Vec2(10, 10);
     private static final Vec2 TRANSLATE = new Vec2(2, 0.5f);
 

@@ -54,6 +54,11 @@ public class ServerConfig {
 
     public static final Map<Quality, ForgeConfigSpec.DoubleValue> COOKING_BONUS = new HashMap<>();
 
+    public static final ForgeConfigSpec.DoubleValue CHILD_POTENTIAL_BASE_PERCENTAGE;
+    public static final ForgeConfigSpec.DoubleValue CHILD_POTENTIAL_RANDOM_FACTOR_AMOUNT;
+    public static final ForgeConfigSpec.DoubleValue CHILD_POTENTIAL_GROWTH_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue ANIMAL_POTENTIAL_IMPACT;
+
     static {
         fillRetainQualityRecipes();
 
@@ -91,6 +96,13 @@ public class ServerConfig {
 
         BUILDER.pop();
 
+        BUILDER.push("Animals");
+        CHILD_POTENTIAL_BASE_PERCENTAGE = BUILDER.comment("The percentage of the average potential from the parents that will be applied to the child").defineInRange("child_potential_base_percentage", 0.6, 0, 1);
+        CHILD_POTENTIAL_RANDOM_FACTOR_AMOUNT = BUILDER.comment("How much percent of a random factor (0..1) will be *added* to the base percentage").defineInRange("child_potential_random_factor_amount", 0.3, 0, 1);
+        CHILD_POTENTIAL_GROWTH_MULTIPLIER = BUILDER.comment("Can be used to reduce the potential bonus from quality for child animals per feeding").defineInRange("child_potential_growth_multiplier", 0.2, 0, 1);
+        ANIMAL_POTENTIAL_IMPACT = BUILDER.comment("Determines how impactful the potential of an animal is to quality application").defineInRange("animal_potential_impact", 49d, 0, 1_000);
+        BUILDER.pop();
+
         for (Quality quality : Quality.values()) {
             if (!QualityUtils.isValidQuality(quality) || quality == Quality.UNDEFINED) {
                 continue;
@@ -104,6 +116,7 @@ public class ServerConfig {
             config.chance = BUILDER.comment("The chance for a quality to occur (with no luck or other bonus)").defineInRange("chance", QualityConfig.getChance(quality), 0, 1);
             config.cropMultiplier = BUILDER.comment("A chance multiplier for dropped crops (from a fully grown crop)").defineInRange("crop_multiplier", QualityConfig.getCropMultiplier(quality), 0, 5);
             config.seedMultiplier = BUILDER.comment("A chance multiplier for dropped seeds (from a fully grown crop)").defineInRange("seed_multiplier", QualityConfig.getCropMultiplier(quality), 0, 5);
+            config.potentialBonus = BUILDER.comment("The potential bonus (applied when feeding an animal) for the quality (potential is 0..1)").defineInRange("potential_bonus", QualityConfig.getPotentialBonus(quality), 0, 1);
             config.durationMultiplier = BUILDER.comment("By how much the duration of the effect will get multiplied (beneficial) or divided (harmful) for").defineInRange("duration_multiplier", QualityConfig.getDurationMultiplier(quality), 1, 100);
             config.probabilityAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the probability (chance for the effect to apply)").defineInRange("probability_addition", QualityConfig.getProbabilityAddition(quality), 0, 1);
             config.amplifierAddition = BUILDER.comment("The addition (beneficial) or subtraction (harmful) for the amplifier (level of the effect)").defineInRange("amplifier_addition", QualityConfig.getAmplifierAddition(quality), 0, 255);
