@@ -19,7 +19,7 @@ public abstract class CowMixin extends Animal {
         super(type, level);
     }
 
-    @ModifyVariable(method = "mobInteract", at = @At("STORE"))
+    @ModifyVariable(method = "mobInteract", at = @At("STORE"), ordinal = 1)
     private ItemStack quality_food$applyQuality(final ItemStack milkBucket, @Local(argsOnly = true) final Player player) {
         QualityUtils.applyQuality(milkBucket, player, AnimalData.getPotential(this));
         return milkBucket;
