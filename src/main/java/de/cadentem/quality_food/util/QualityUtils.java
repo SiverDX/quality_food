@@ -102,7 +102,8 @@ public class QualityUtils {
             Quality selected = Quality.NONE;
 
             for (Quality quality : Quality.values()) {
-                if (quality.level() == 0) {
+                // If the crop was player-placed, it should be able to roll for quality
+                if (quality.level() == 0 || (blockQuality == Quality.NONE && quality.level() > ServerConfig.MAX_NATURAL_HARVEST_QUALITY.get().level())) {
                     continue;
                 }
 
@@ -129,7 +130,7 @@ public class QualityUtils {
             // To get back the planted seed with its quality
             applyQuality(stack, blockQuality);
         } else if (blockQuality != Quality.NONE_PLAYER_PLACED) {
-            // Naturally generated crops (which should never have any quality)
+            // Naturally generated crops / fruits (which should never have any quality)
             applyQuality(stack, player, ServerConfig.MAX_NATURAL_HARVEST_QUALITY.get());
         }
     }
