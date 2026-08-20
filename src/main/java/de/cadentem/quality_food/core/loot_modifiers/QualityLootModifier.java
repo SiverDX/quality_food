@@ -9,6 +9,7 @@ import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,6 +29,8 @@ public class QualityLootModifier extends LootModifier {
     // That injection is needed to handle right-click harvesting used by glow berries e.g., which do not trigger the loot collection event
     public static BlockPos lastProcessedPosition;
 
+    private static final ResourceLocation FISHING_LOOT_TABLE = new ResourceLocation("minecraft:gameplay/fishing");
+
     public QualityLootModifier(final LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
@@ -35,6 +38,12 @@ public class QualityLootModifier extends LootModifier {
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(final ObjectArrayList<ItemStack> generatedLoot, final LootContext context) {
         if (generatedLoot.isEmpty()) {
+            return generatedLoot;
+        }
+
+        ResourceLocation lootTable = context.getQueriedLootTableId();
+
+        if (/* Handled by Forge event */ lootTable.getPath().startsWith("entities") || lootTable.equals(FISHING_LOOT_TABLE)) {
             return generatedLoot;
         }
 
