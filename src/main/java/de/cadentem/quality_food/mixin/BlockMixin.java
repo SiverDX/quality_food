@@ -3,12 +3,12 @@ package de.cadentem.quality_food.mixin;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import de.cadentem.quality_food.capability.LevelData;
+import de.cadentem.quality_food.core.Quality;
 import de.cadentem.quality_food.core.loot_modifiers.QualityLootModifier;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -70,9 +70,9 @@ public abstract class BlockMixin {
         }
 
         if (dropData == null) {
-            QualityUtils.applyQuality(stack, (Player) null);
+            QualityUtils.applyHarvestQuality(stack, null, Quality.NONE, null, null);
         } else {
-            QualityUtils.applyQuality(stack, dropData.state(), dropData.quality(), dropData.player(), dropData.farmland());
+            QualityUtils.applyHarvestQuality(stack, dropData.state(), dropData.quality(), dropData.player(), dropData.farmland());
         }
 
         return stack;

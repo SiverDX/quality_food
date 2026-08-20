@@ -195,8 +195,8 @@ public class Utils {
      * Collects the cooking bonus from the ingredients and the lowest quality type present </br>
      * This is then added to the cooking queue which will be used to apply the cooking bonus / quality to the result item
      */
-    public static void incrementQuality(final BlockEntity blockEntity, @Unmodifiable final Collection<ItemStack> ingredients, int resultStackSize) {
-        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredients.isEmpty()) {
+    public static void incrementQuality(final BlockEntity blockEntity, @Unmodifiable final Collection<ItemStack> ingredients, @Unmodifiable final ItemStack result) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredients.isEmpty() || !Utils.isValidItem(result)) {
             return;
         }
 
@@ -214,7 +214,7 @@ public class Utils {
                 qualities.add(quality);
             }
 
-            for (int i = 0; i < resultStackSize; i++) {
+            for (int i = 0; i < result.getCount(); i++) {
                 data.addQualityEntry(qualities.stream().findFirst().orElse(Quality.NONE), qualityBonus);
             }
 

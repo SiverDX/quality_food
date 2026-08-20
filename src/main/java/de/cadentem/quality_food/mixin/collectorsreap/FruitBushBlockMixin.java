@@ -3,12 +3,10 @@ package de.cadentem.quality_food.mixin.collectorsreap;
 import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.compat.collectorsreap.FruitBushContext;
 import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
-import de.cadentem.quality_food.util.Utils;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -21,18 +19,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FruitBushBlock.class)
 public abstract class FruitBushBlockMixin {
     @Unique private FruitBushContext quality_food$context;
-
-    // FIXME :: check 'above'
-//    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 1))
-//    private void quality_food$storeQuality(final ServerLevel level, final RandomSource random, final BlockPos position, final BlockState state, final CallbackInfo callback) {
-//        Utils.storeQuality(state, level, position, position.above());
-//    }
 
     /** Set up the context (contains block state and player data) */
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/brdle/collectorsreap/common/block/FruitBushBlock;dropFruit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", shift = At.Shift.BEFORE, remap = false))
@@ -51,7 +42,8 @@ public abstract class FruitBushBlockMixin {
     private ItemStack quality_food$applyQuality(final ItemStack fruit) {
         if (quality_food$context != null) {
             Quality blockQuality = LevelData.get(quality_food$context.level(), quality_food$context.position());
-            QualityUtils.applyQuality(fruit, quality_food$context.state(), blockQuality, null, quality_food$context.level().getBlockState(quality_food$context.position().below()));
+            QualityUtils.applyHarvestQuality(fruit, quality_food$context.state(), blockQuality, quality_food$context.player(), quality_food$context.level().getBlockState(quality_food$context.position().below()));
+            DropData.CURRENT.set(DropData.SKIP);
         }
 
         return fruit;

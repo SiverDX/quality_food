@@ -3,6 +3,7 @@ package de.cadentem.quality_food.mixin.fruitfulfun;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.capability.LevelData;
 import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.util.HarvestContext;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -25,7 +26,7 @@ public abstract class FruitLeavesBlockMixin {
         if (quality.level() > 0) {
             QualityUtils.applyQuality(fruit, quality);
         } else {
-            QualityUtils.applyQuality(fruit, (Player) null);
+            QualityUtils.applyHarvestQuality(HarvestContext.create(fruit, level).position(position).build());
         }
 
         return fruit;
@@ -38,7 +39,7 @@ public abstract class FruitLeavesBlockMixin {
         if (quality.level() > 0) {
             QualityUtils.applyQuality(fruit, quality);
         } else {
-            QualityUtils.applyQuality(fruit, player);
+            QualityUtils.applyHarvestQuality(HarvestContext.create(fruit, player.level()).position(result.getBlockPos()).player(player).build());
         }
 
         return fruit;

@@ -32,13 +32,8 @@ public abstract class CopperPotBlockEntityMixin {
     /** Increment quality after cooking an item */
     @ModifyVariable(method = "processCooking", at = @At(value = "STORE"), name = "resultStack", remap = false)
     private ItemStack quality_food$incrementQuality(final ItemStack resultStack, final CookingPotRecipe recipe, final CopperPotBlockEntity cookingPot) {
-        int resultStackSize = 1;
-
-        if (cookingPot.getLevel() != null) {
-            resultStackSize = recipe.getResultItem(cookingPot.getLevel().registryAccess()).getCount();
-        }
-
-        Utils.incrementQuality(cookingPot, Utils.collectIngredients(inventory, () -> 4), resultStackSize);
+        //noinspection DataFlowIssue -> level cannot be null here
+        Utils.incrementQuality(cookingPot, Utils.collectIngredients(inventory, () -> 4), recipe.getResultItem(cookingPot.getLevel().registryAccess()));
         return resultStack;
     }
 }

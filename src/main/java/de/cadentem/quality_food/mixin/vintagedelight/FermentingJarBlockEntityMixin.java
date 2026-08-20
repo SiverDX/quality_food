@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,14 +27,8 @@ public abstract class FermentingJarBlockEntityMixin extends BlockEntity {
 
     @Inject(method = "craftItem", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/items/ItemStackHandler;insertItem(ILnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;", ordinal = 0))
     private void quality_food$applyQuality(final FermentingRecipe recipe, final CallbackInfo callback) {
-        int resultStackSize = 1;
-
-        if (recipe != null) {
-            //noinspection DataFlowIssue -> level is not null
-            resultStackSize = recipe.getResultItem(level.registryAccess()).getCount();
-        }
-
-        Utils.incrementQuality(this, Utils.collectIngredients(inputInventory, () -> 5), resultStackSize);
+        //noinspection DataFlowIssue -> level cannot be null here
+        Utils.incrementQuality(this, Utils.collectIngredients(inputInventory, () -> 5), recipe.getResultItem(level.registryAccess()));
     }
 
     /** Display particles to show how much quality the block has stored */

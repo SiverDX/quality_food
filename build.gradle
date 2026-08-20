@@ -117,6 +117,7 @@ dependencies {
     implementation fg.deobf("curse.maven:lets-do-vinery-704465:6965751") // 1.4.41
     implementation fg.deobf("curse.maven:lets-do-herbal-brews-951221:6458889") // 1.0.12
     implementation fg.deobf("curse.maven:do-api-864599:5468182") // 1.2.15
+    // https://www.curseforge.com/minecraft/mc-mods/architectury-api/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=show
     implementation fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
 
     compileOnly fg.deobf("curse.maven:quark-243121:6427817") // 4.0-462
@@ -178,6 +179,13 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:crafting-tweaks-233071:8019501") // 18.2.9
     // https://www.curseforge.com/minecraft/mc-mods/balm/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=show
 //    runtimeOnly fg.deobf("curse.maven:balm-531761:8545415") // 7.3.42
+
+    // https://www.curseforge.com/minecraft/mc-mods/ftb-ultimine-forge/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=show
+    runtimeOnly fg.deobf("curse.maven:ftb-ultimine-forge-386134:7880472") // 2001.1.8
+    // https://www.curseforge.com/minecraft/mc-mods/architectury-api/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=show
+    runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137938") // 9.2.14
+    // https://www.curseforge.com/minecraft/mc-mods/ftb-library-forge/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=show
+    runtimeOnly fg.deobf("curse.maven:ftb-library-forge-404465:8226927")
 
     /* --- Test --- */
     implementation fg.deobf("curse.maven:appleskin-248787:4770828")

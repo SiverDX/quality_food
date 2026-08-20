@@ -27,6 +27,10 @@
       "required": false
     },
     {
+      "id": "#farmersdelight:mushroom_colonies",
+      "required": false
+    },
+    {
       "id": "farmersdelight:rice_panicle",
       "required": false
     },

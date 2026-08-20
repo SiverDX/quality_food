@@ -32,6 +32,7 @@
     "collectorsreap.EffectCakeBlockMixin",
     "collectorsreap.EffectCandleCakeBlockMixin",
     "collectorsreap.FruitBushBlockMixin",
+    "collectorsreap.TallBushCropBlockMixin",
     "create.BasinRecipeMixin",
     "create.CrushingWheelControllerBlockEntityMixin",
     "create.FanProcessingMixin",

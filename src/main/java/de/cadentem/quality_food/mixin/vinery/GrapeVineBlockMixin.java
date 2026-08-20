@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.mixin.vinery;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.capability.LevelData;
+import de.cadentem.quality_food.util.HarvestContext;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class GrapeVineBlockMixin {
     @ModifyArg(method = "use", at = @At(value = "INVOKE", target = "Lnet/satisfy/vinery/core/block/GrapeVineBlock;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"))
     private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final BlockState state, @Local(argsOnly = true) final BlockPos position, @Local(argsOnly = true) final Player player) {
-        QualityUtils.applyQuality(stack, state, LevelData.get(player.level(), position), player, /* TODO :: farmland? */ null);
+        QualityUtils.applyHarvestQuality(HarvestContext.create(stack, player.level()).position(position).state(state).player(player).build());
         return stack;
     }
 }

@@ -6,7 +6,6 @@ import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.Modification;
 import de.cadentem.quality_food.core.Quality;
 import net.brdle.collectorsreap.common.block.FruitBushBlock;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -21,13 +20,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.block.WildCropBlock;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
+import java.util.Objects;
 
-@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class QualityUtils {
     public static final String QUALITY_TAG = "quality_food";
     public static final String QUALITY_KEY = "quality";
@@ -77,8 +78,26 @@ public class QualityUtils {
         QualityUtils.applyQuality(stack, selected);
     }
 
-    /** Used for block drops */
+    @ApiStatus.ScheduledForRemoval(inVersion = "2.5.0")
     public static void applyQuality(final ItemStack stack, final BlockState state, final Quality blockQuality, @Nullable final Player player, @Nullable final BlockState farmland) {
+        applyHarvestQuality(stack, state, blockQuality, player, farmland);
+    }
+
+    public static void applyHarvestQuality(@Nullable final HarvestContext context) {
+        if (context == null) {
+            return;
+        }
+
+        applyHarvestQuality(context.stack(), context.state(), context.quality(), context.player(), context.farmland());
+    }
+
+    /**
+     * For most parameters see {@link HarvestContext}
+     * @param blockQuality The quality of the harvested block, set to {@link Quality#NONE} if not provided
+     * */
+    public static void applyHarvestQuality(final ItemStack stack, @Nullable final BlockState state, @Nullable Quality blockQuality, @Nullable final Player player, @Nullable final BlockState farmland) {
+        blockQuality = Objects.requireNonNullElse(blockQuality, Quality.NONE);
+
         if (isRelevantCrop(state)) {
             Quality selected = Quality.NONE;
 
@@ -107,11 +126,11 @@ public class QualityUtils {
 
             QualityUtils.applyQuality(stack, selected);
         } else if (isValidQuality(blockQuality)) {
-            // The block itself if it has quality
+            // To get back the planted seed with its quality
             applyQuality(stack, blockQuality);
         } else if (blockQuality != Quality.NONE_PLAYER_PLACED) {
-            // The block itself or harvested items when the crop has no quality
-            applyQuality(stack, player);
+            // Naturally generated crops (which should never have any quality)
+            applyQuality(stack, player, ServerConfig.MAX_NATURAL_HARVEST_QUALITY.get());
         }
     }
 
@@ -120,12 +139,22 @@ public class QualityUtils {
         QualityUtils.applyQuality(stack, player, 0);
     }
 
+    /** Generic if no further context is present */
+    public static void applyQuality(final ItemStack stack, @Nullable final Player player, final Quality maxQuality) {
+        QualityUtils.applyQuality(stack, player, 0, maxQuality);
+    }
+
     /** @param qualityPotential A bonus to the quality roll (generally used for animals that had potential) */
     public static void applyQuality(final ItemStack stack, @Nullable final Player player, double qualityPotential) {
+        QualityUtils.applyQuality(stack, player, qualityPotential, Quality.DIAMOND);
+    }
+
+    /** @param qualityPotential A bonus to the quality roll (generally used for animals that had potential) */
+    public static void applyQuality(final ItemStack stack, @Nullable final Player player, final double qualityPotential, final Quality maxQuality) {
         Quality selected = Quality.NONE;
 
         for (Quality quality : Quality.values()) {
-            if (quality.level() == 0) {
+            if (quality.level() == 0 || quality.level() > maxQuality.level()) {
                 continue;
             }
 
@@ -141,12 +170,12 @@ public class QualityUtils {
         QualityUtils.applyQuality(stack, selected);
     }
 
-    /** Applies the quality if its valid and the item has no existing quality */
+    /** Applies the quality if it's valid and the item has no existing quality */
     public static void applyQuality(final ItemStack stack, final Quality quality) {
         applyQuality(stack, quality, false);
     }
 
-    /** Applies the quality if its valid (if 'canUpgrade' is set to 'true' it can override the quality if its of a higher level */
+    /** Applies the quality if it's valid (if 'canUpgrade' is set to 'true', it can override the quality if it's of a higher level */
     public static void applyQuality(final ItemStack stack, final Quality quality, boolean canUpgrade) {
         if (!isValidQuality(quality) || !Utils.isValidItem(stack)) {
             return;
@@ -181,7 +210,11 @@ public class QualityUtils {
     }
 
     @SuppressWarnings("RedundantIfStatement") // ignore for clarity
-    public static boolean isRelevantCrop(final BlockState state) {
+    public static boolean isRelevantCrop(@Nullable final BlockState state) {
+        if (state == null) {
+            return false;
+        }
+
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
             return true;
         }
@@ -203,7 +236,7 @@ public class QualityUtils {
         return false;
     }
 
-    public static void handleConversion(@NotNull final ItemStack result, @NotNull final Container container, @Nullable final Recipe<?> recipe, final Level level) {
+    public static void handleConversion(final ItemStack result, final Container container, @Nullable final Recipe<?> recipe, final Level level) {
         boolean shouldRetainQuality = ServerConfig.isRetainQualityRecipe(recipe, level.registryAccess());
         StorageRecipeCache.Entry storage = StorageRecipeCache.get(recipe, level);
 
@@ -282,7 +315,7 @@ public class QualityUtils {
         };
     }
 
-    public static boolean hasQuality(final ItemStack stack) {
+    public static boolean hasQuality(@Nullable final ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
             return false;
         }
@@ -311,7 +344,7 @@ public class QualityUtils {
         return Quality.NONE;
     }
 
-    public static boolean isValidQuality(final Quality quality) {
+    public static boolean isValidQuality(@Nullable final Quality quality) {
         return !(quality == null || quality == Quality.NONE || quality == Quality.NONE_PLAYER_PLACED);
     }
 }

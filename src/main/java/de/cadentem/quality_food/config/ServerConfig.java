@@ -43,6 +43,8 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue CROP_TARGET_CHANCE;
     public static final ForgeConfigSpec.DoubleValue SEED_CHANCE_MULTIPLIER;
     public static final ForgeConfigSpec.BooleanValue QUARK_HANDLE_CONFIG;
+
+    // Crafting
     public static final ForgeConfigSpec.BooleanValue HANDLE_SEED_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> NO_QUALITY_RECIPES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> RETAIN_QUALITY_RECIPES;
@@ -54,10 +56,16 @@ public class ServerConfig {
 
     public static final Map<Quality, ForgeConfigSpec.DoubleValue> COOKING_BONUS = new HashMap<>();
 
+    // Animal potential
     public static final ForgeConfigSpec.DoubleValue CHILD_POTENTIAL_BASE_PERCENTAGE;
     public static final ForgeConfigSpec.DoubleValue CHILD_POTENTIAL_RANDOM_FACTOR_AMOUNT;
     public static final ForgeConfigSpec.DoubleValue CHILD_POTENTIAL_GROWTH_MULTIPLIER;
     public static final ForgeConfigSpec.DoubleValue ANIMAL_POTENTIAL_IMPACT;
+
+    // Balance
+    public static final ForgeConfigSpec.EnumValue<Quality> MAX_NATURAL_HARVEST_QUALITY;
+    public static final ForgeConfigSpec.EnumValue<Quality> MAX_NATURAL_LOOT_QUALITY;
+    // TODO :: blacklist for loot tables
 
     static {
         fillRetainQualityRecipes();
@@ -101,6 +109,11 @@ public class ServerConfig {
         CHILD_POTENTIAL_RANDOM_FACTOR_AMOUNT = BUILDER.comment("How much percent of a random factor (0..1) will be *added* to the base percentage").defineInRange("child_potential_random_factor_amount", 0.3, 0, 1);
         CHILD_POTENTIAL_GROWTH_MULTIPLIER = BUILDER.comment("Can be used to reduce the potential bonus from quality for child animals per feeding").defineInRange("child_potential_growth_multiplier", 0.2, 0, 1);
         ANIMAL_POTENTIAL_IMPACT = BUILDER.comment("Determines how impactful the potential of an animal is to quality application").defineInRange("animal_potential_impact", 49d, 0, 1_000);
+        BUILDER.pop();
+
+        BUILDER.push("Balance");
+        MAX_NATURAL_HARVEST_QUALITY = BUILDER.comment("Max. quality found in naturally generated crops / plants").defineEnum("max_natural_harvest_quality", Quality.DIAMOND, /* Valid entries */ Quality.NONE, Quality.IRON, Quality.GOLD, Quality.DIAMOND);
+        MAX_NATURAL_LOOT_QUALITY = BUILDER.comment("Max. quality found in loot (e.g. chests)").defineEnum("max_natural_loot_quality", Quality.DIAMOND, /* Valid entries */ Quality.NONE, Quality.IRON, Quality.GOLD, Quality.DIAMOND);
         BUILDER.pop();
 
         for (Quality quality : Quality.values()) {

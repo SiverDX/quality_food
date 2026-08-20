@@ -103,12 +103,11 @@ public record Modification(Type type, float amount) {
             return this;
         }
 
-        // Only combine modifications of the same type.
-        if (this.type == modification.type) {
+        if (type == modification.type) {
             return switch (type) {
-                case ADDITIVE -> additive(this.amount + modification.amount);
-                case MULTIPLICATIVE -> multiplicative(this.amount * modification.amount);
-                case ODDS_MULTIPLICATIVE -> oddsMultiplier(this.amount * modification.amount);
+                case ADDITIVE -> additive(amount + modification.amount);
+                case MULTIPLICATIVE -> multiplicative(amount * modification.amount);
+                case ODDS_MULTIPLICATIVE -> oddsMultiplier(amount * modification.amount);
             };
         }
 

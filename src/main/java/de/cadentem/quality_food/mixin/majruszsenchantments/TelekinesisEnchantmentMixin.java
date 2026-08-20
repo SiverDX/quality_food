@@ -5,8 +5,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.majruszlibrary.events.OnLootGenerated;
 import com.majruszsenchantments.enchantments.TelekinesisEnchantment;
-import de.cadentem.quality_food.capability.LevelData;
-import de.cadentem.quality_food.core.Quality;
+import de.cadentem.quality_food.util.HarvestContext;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -27,8 +26,7 @@ public abstract class TelekinesisEnchantmentMixin {
 
             if (data.blockState != null) {
                 BlockPos position = data.origin != null ? BlockPos.containing(data.origin) : null;
-                Quality blockQuality = LevelData.get(data.level, position, true);
-                QualityUtils.applyQuality(stack, data.blockState, blockQuality, player, position != null ? data.level.getBlockState(position.below()) : null);
+                QualityUtils.applyHarvestQuality(HarvestContext.create(stack, data.level).position(position).state(data.blockState).player(player).build());
             } else {
                 QualityUtils.applyQuality(stack, player);
             }
