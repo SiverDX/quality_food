@@ -44,6 +44,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptionalTag(Compat.common("dough")) // Kaleidoscope Cookery
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops"))
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "pies"))
+                .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "mushroom_colonies"))
                 .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "rice_panicle"))
                 .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "debug_pumpkin_pie"))
                 .addOptional(Compat.location(Compat.Mod.FRUITFUL_FUN.modid(), "lemon_roast_chicken_block"))
@@ -54,6 +55,18 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "lavender_blossom"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "green_tea_leaf"))
                 .addOptional(Compat.location(Compat.Mod.KALEIDOSCOPE_COOKERY.modid(), "rice_panicle"))
+                .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "cheese_wheel"))
+                .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "oat"))
+                .addOptional(Compat.location("hearthandharvest", "unripe_cheddar_cheese_wheel"))
+                .addOptional(Compat.location("hearthandharvest", "cheddar_cheese_wheel"))
+                .addOptional(Compat.location("hearthandharvest", "unripe_goat_cheese_wheel"))
+                .addOptional(Compat.location("hearthandharvest", "goat_cheese_wheel"))
+                .addOptional(Compat.location("hearthandharvest", "blueberry_pie"))
+                .addOptional(Compat.location("hearthandharvest", "raspberry_pie"))
+                .addOptional(Compat.location("hearthandharvest", "grape_pie"))
+                .addOptional(Compat.location("hearthandharvest", "peanut_butter_pie"))
+                .addOptional(Compat.location("hearthandharvest", "chicken_pot_pie"))
+                .addOptional(Compat.location("hearthandharvest", "carrot_cake"))
         ;
 
         tag(BLACKLIST)

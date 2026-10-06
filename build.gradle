@@ -15,7 +15,7 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
-    flatDir { dirs 'dev' }
+    flatDir { dirs 'libs' }
     maven { url = "https://jitpack.io" } // Mixin Squared
     maven { url = "https://www.cursemaven.com" } // CurseForge
     maven { url = "https://maven.createmod.net" } // Create
@@ -163,7 +163,7 @@ dependencies {
 //    implementation fg.deobf("curse.maven:vintage-delight-949719:5847856")
 
     // https://www.curseforge.com/minecraft/mc-mods/minecolonies/files/all?page=1&pageSize=20&version=1.21.1&showAlphaFiles=show
-    compileOnly "curse.maven:minecolonies-245506:8562600" // 1.1.1368
+    compileOnly "curse.maven:minecolonies-245506:9058295" // 1.1.1403
 
     /* --- Test --- */
     implementation "curse.maven:appleskin-248787:7517379" // 3.0.8

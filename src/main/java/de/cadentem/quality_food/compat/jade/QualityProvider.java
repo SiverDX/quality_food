@@ -58,6 +58,6 @@ public class QualityProvider implements IBlockComponentProvider, IServerDataProv
 
     @Override
     public boolean shouldRequestData(final BlockAccessor accessor) {
-        return Utils.isValidBlock(accessor.getBlock());
+        return Utils.isValidBlock(accessor.getBlock()) || Utils.isBlockException(accessor.getBlockState());
     }
 }

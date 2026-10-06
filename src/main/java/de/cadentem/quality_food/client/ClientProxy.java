@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class ClientProxy {
-    public static void handleCookingParticles(final BlockPos position, double qualityBonus) {
+    public static void handleCookingParticles(final BlockPos position, double queueSize) {
         if (!ClientConfig.PARTICLES.get()) {
             return;
         }
@@ -20,17 +20,8 @@ public class ClientProxy {
             return;
         }
 
-        int amount = 1;
-
-        if (qualityBonus == 1) {
-            amount = 5;
-        } else if (qualityBonus >= 0.75) {
-            amount = 4;
-        } else if (qualityBonus >= 0.5) {
-            amount = 3;
-        } else if (qualityBonus >= 0.25) {
-            amount = 2;
-        }
+        // Max. amount is based on a stack size of 64 (high particle count if a stack is theoretically fully cooked)
+        int amount = (int) Math.ceil(queueSize * 5d / 64d);
 
         for (int i = 0; i < amount; i++) {
             double x = 0.5 + position.getX() + (level.getRandom().nextDouble() - 0.5);

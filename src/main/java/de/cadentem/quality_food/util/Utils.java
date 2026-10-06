@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.util;
 
+import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.attachments.BlockData;
 import de.cadentem.quality_food.core.attachments.LevelData;
@@ -7,7 +8,7 @@ import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.data.QFBlockTags;
 import de.cadentem.quality_food.data.QFItemTags;
-import de.cadentem.quality_food.network.CookingParticles;
+import de.cadentem.quality_food.network.SyncCookingParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -22,8 +23,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.ribs.vintagedelight.block.CheeseMoldBlock;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import vectorwing.farmersdelight.common.block.PieBlock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,23 +72,38 @@ public class Utils {
     public static boolean isValidBlock(final Block block, boolean checkItem) {
         if (block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS)) {
             return true;
-        } else if (checkItem) {
+        }
+
+        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && block instanceof PieBlock) {
+            return true;
+        }
+
+        if (checkItem) {
             return isValidItem(block.asItem().getDefaultInstance(), false);
         }
 
         return false;
     }
 
-    // FIXME :: adjust particle count
+    /** Blocks that should not store quality themselves */
+    @SuppressWarnings("RedundantIfStatement") // ignore for clarity
+    public static boolean isBlockException(final BlockState state) {
+        if (Compat.Mod.VINTAGEDELIGHT.isLoaded() && state.getBlock() instanceof CheeseMoldBlock) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static void sendParticles(final ServerLevel serverLevel, final BlockEntity furnace, final BlockPos position) {
         int tickOffset = serverLevel.getRandom().nextInt(-3, 3);
 
         if (serverLevel.getGameTime() % (10 + tickOffset) == 0) {
             BlockData data = furnace.getData(AttachmentHandler.BLOCK_DATA);
-            double qualityBonus = data.getQuality();
+            double queueSize = data.getQueueSize();
 
-            if (qualityBonus > 0.1) {
-                PacketDistributor.sendToPlayersNear(serverLevel, null, position.getX(), position.getY(), position.getZ(), 64, new CookingParticles(position, qualityBonus));
+            if (queueSize > 0) {
+                PacketDistributor.sendToPlayersNear(serverLevel, null, position.getX(), position.getY(), position.getZ(), 64, new SyncCookingParticles(position, queueSize));
             }
         }
     }

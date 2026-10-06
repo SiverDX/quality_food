@@ -76,8 +76,8 @@ public class BlockData implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public double getQuality() {
-        return cookingQueue.stream().mapToDouble(CookingEntry::bonus).sum();
+    public double getQueueSize() {
+        return cookingQueue.size();
     }
 
     public void addQualityEntry(final Holder<QualityType> type, double bonus) {

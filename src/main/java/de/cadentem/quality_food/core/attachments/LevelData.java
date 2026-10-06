@@ -47,28 +47,6 @@ public class LevelData implements INBTSerializable<CompoundTag> {
         lastRemoved = Pair.of(key, qualities.remove(key));
     }
 
-    @Override
-    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-
-        for (Long key : qualities.keySet()) {
-            Optional<Tag> qualityTag = Quality.CODEC.encodeStart(NbtOps.INSTANCE, qualities.get(key)).resultOrPartial(QualityFood.LOG::error);
-            qualityTag.ifPresent(value -> tag.put(String.valueOf(key), value));
-        }
-
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
-        qualities.clear();
-
-        tag.getAllKeys().forEach(key -> {
-            Quality quality = Quality.CODEC.parse(NbtOps.INSTANCE, tag.getCompound(key)).resultOrPartial(QualityFood.LOG::error).orElse(Quality.NONE);
-            qualities.put(Long.parseLong(key), quality);
-        });
-    }
-
     public static void set(final LevelAccessor level, final BlockPos position, final Quality quality) {
         if (level instanceof ServerLevel serverLevel && quality != Quality.NONE) {
             LevelData data = serverLevel.getData(AttachmentHandler.LEVEL_DATA);
@@ -94,5 +72,34 @@ public class LevelData implements INBTSerializable<CompoundTag> {
 
     public static @NotNull Quality get(final LevelAccessor level, final BlockPos position) {
         return get(level, position, false);
+    }
+
+    public static void remove(final LevelAccessor level, final BlockPos position) {
+        if (level instanceof ServerLevel serverLevel) {
+            LevelData data = serverLevel.getData(AttachmentHandler.LEVEL_DATA);
+            data.remove(position);
+        }
+    }
+
+    @Override
+    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
+        CompoundTag tag = new CompoundTag();
+
+        for (Long key : qualities.keySet()) {
+            Optional<Tag> qualityTag = Quality.CODEC.encodeStart(NbtOps.INSTANCE, qualities.get(key)).resultOrPartial(QualityFood.LOG::error);
+            qualityTag.ifPresent(value -> tag.put(String.valueOf(key), value));
+        }
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
+        qualities.clear();
+
+        tag.getAllKeys().forEach(key -> {
+            Quality quality = Quality.CODEC.parse(NbtOps.INSTANCE, tag.getCompound(key)).resultOrPartial(QualityFood.LOG::error).orElse(Quality.NONE);
+            qualities.put(Long.parseLong(key), quality);
+        });
     }
 }

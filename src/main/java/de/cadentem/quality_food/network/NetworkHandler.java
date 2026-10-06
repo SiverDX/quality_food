@@ -12,6 +12,6 @@ public class NetworkHandler {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
-        registrar.playToClient(CookingParticles.TYPE, CookingParticles.STREAM_CODEC, CookingParticles::handleClient);
+        registrar.playToClient(SyncCookingParticles.TYPE, SyncCookingParticles.STREAM_CODEC, SyncCookingParticles::handleClient);
     }
 }
