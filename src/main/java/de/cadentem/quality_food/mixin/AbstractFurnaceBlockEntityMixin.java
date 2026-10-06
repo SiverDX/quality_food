@@ -38,12 +38,10 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
     /** Increment quality after cooking an item */
     @Inject(method = "burn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
     private static void quality_food$incrementQuality(final RegistryAccess access, @Nullable final RecipeHolder<?> recipe, final NonNullList<ItemStack> inventory, int maxStackSize, final AbstractFurnaceBlockEntity furnace, final CallbackInfoReturnable<Boolean> callback) {
-        int resultStackSize = 1;
-
-        if (recipe != null) {
-            resultStackSize = recipe.value().getResultItem(access).getCount();
+        if (recipe == null) {
+            return;
         }
 
-        Utils.incrementQuality(furnace, List.of(inventory.getFirst()), resultStackSize);
+        Utils.incrementQuality(furnace, List.of(inventory.getFirst()), recipe.value().getResultItem(access));
     }
 }

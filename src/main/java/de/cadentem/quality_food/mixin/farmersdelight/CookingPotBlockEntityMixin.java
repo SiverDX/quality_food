@@ -33,13 +33,10 @@ public abstract class CookingPotBlockEntityMixin {
     /** Increment quality after cooking an item */
     @ModifyVariable(method = "processCooking", at = @At(value = "STORE"), name = "resultStack")
     private ItemStack quality_food$incrementQuality(final ItemStack resultStack, final RecipeHolder<CookingPotRecipe> recipe, final CookingPotBlockEntity cookingPot) {
-        int resultStackSize = 1;
-
         if (cookingPot.getLevel() != null) {
-            resultStackSize = recipe.value().getResultItem(cookingPot.getLevel().registryAccess()).getCount();
+            Utils.incrementQuality(cookingPot, Utils.collectIngredients(inventory, () -> 6), recipe.value().getResultItem(cookingPot.getLevel().registryAccess()));
         }
 
-        Utils.incrementQuality(cookingPot, Utils.collectIngredients(inventory, () -> 6), resultStackSize);
         return resultStack;
     }
 }

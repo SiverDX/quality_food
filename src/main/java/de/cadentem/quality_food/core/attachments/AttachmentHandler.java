@@ -11,4 +11,5 @@ public class AttachmentHandler {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, QualityFood.MODID);
     public static final Supplier<AttachmentType<BlockData>> BLOCK_DATA = ATTACHMENT_TYPES.register("block_data", () -> AttachmentType.serializable(BlockData::new).build());
     public static final Supplier<AttachmentType<LevelData>> LEVEL_DATA = ATTACHMENT_TYPES.register("level_data", () -> AttachmentType.serializable(LevelData::new).build());
+    public static final Supplier<AttachmentType<AnimalData>> ANIMAL_DATA = ATTACHMENT_TYPES.register("animal_data", () -> AttachmentType.serializable(AnimalData::new).build());
 }

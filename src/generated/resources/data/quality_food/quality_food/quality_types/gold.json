@@ -13,6 +13,7 @@
     "translate": "quality_type.quality_food.gold"
   },
   "nutrition_multiplier": 2.0,
+  "potential_bonus": 0.1,
   "probability_multiplier": 1.5,
   "saturation_multiplier": 1.5,
   "seed_multiplier": 0.9,

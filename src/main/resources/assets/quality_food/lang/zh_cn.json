@@ -7,7 +7,9 @@
   "quality_type.quality_food.gold": "金",
   "quality_type.quality_food.diamond": "钻石",
 
-  "config.jade.plugin_quality_food.quality": "品质",
+  "config.jade.plugin_quality_food.quality_block": "品质",
+  "config.jade.plugin_quality_food.quality_mob": "品质潜力",
+  "quality_food.potential": "品质潜力：%s",
 
   "create.item_attributes.quality_food.quality": "具有 '%1$s' 品质",
   "create.item_attributes.quality_food.quality.inverted": "没有 '%1$s' 品质",
@@ -34,6 +36,6 @@
   "quality_food.configuration.no_quality_recipes.tooltip": "定义不应导致应用品质的配方（名称空间：路径）（例如物品可以来回转换时）",
   "quality_food.configuration.retain_quality_recipes": "保留品质合成表",
   "quality_food.configuration.retain_quality_recipes.tooltip": "定义应导致品质应始终应用于结果的合成表（名称空间：路径）（仅当所有配料具有相同品质时）",
-  "quality_food.configuration.handle_compacting": "处理压缩",
-  "quality_food.configuration.handle_compacting.tooltip": "定义是否应自动处理（去）压缩（在保留品质方面）"
+  "quality_food.configuration.storage_recipe_blacklist": "存储方块合成表黑名单",
+  "quality_food.configuration.storage_recipe_blacklist.tooltip": "定义应从自动存储方块检测中排除的合成表（名称空间：路径）"
 }

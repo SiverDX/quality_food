@@ -29,6 +29,7 @@ public class DataGen {
         generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), blockTags.contentsGetter(), helper));
         generator.addProvider(event.includeServer(), new QFLootModifiers(generator.getPackOutput(), event.getLookupProvider()));
         generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), event.getLookupProvider(), helper));
+        generator.addProvider(event.includeServer(), new QFEntityTypeTags(generator.getPackOutput(), event.getLookupProvider(), helper));
         generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(generator.getPackOutput(), event.getLookupProvider(), createProvider(), Set.of(QualityFood.MODID)));
     }
 
@@ -39,6 +40,7 @@ public class DataGen {
                             1, 0.1, 1, 0,
                             1.5, 1.25, 1, 1.5, 1.25,
                             0.15, 0.35f, 1, 1,
+                            0.025,
                             Optional.empty(),
                             QualityFood.location("quality_icon/iron"),
                             Component.translatable("quality_type.quality_food.iron").withStyle(ChatFormatting.GRAY)
@@ -48,6 +50,7 @@ public class DataGen {
                             2, 0.03, 2, 1,
                             2, 1.5, 2, 2, 1.5,
                             0.4, 1, 0.9d, 0.9d,
+                            0.1,
                             Optional.empty(),
                             QualityFood.location("quality_icon/gold"),
                             Component.translatable("quality_type.quality_food.gold").withStyle(ChatFormatting.GOLD)
@@ -57,6 +60,7 @@ public class DataGen {
                             3, 0.005, 3, 1.75,
                             2.5, 2, 3, 2.5, 1.75,
                             0.7, 2, 0.75d, 0.75d,
+                            0.2,
                             Optional.empty(),
                             QualityFood.location("quality_icon/diamond"),
                             Component.translatable("quality_type.quality_food.diamond").withStyle(ChatFormatting.AQUA)

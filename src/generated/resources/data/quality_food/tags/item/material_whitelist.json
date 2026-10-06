@@ -32,6 +32,10 @@
       "required": false
     },
     {
+      "id": "#farmersdelight:mushroom_colonies",
+      "required": false
+    },
+    {
       "id": "farmersdelight:rice_panicle",
       "required": false
     },
@@ -69,6 +73,54 @@
     },
     {
       "id": "kaleidoscope_cookery:rice_panicle",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:cheese_wheel",
+      "required": false
+    },
+    {
+      "id": "vintagedelight:oat",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:unripe_cheddar_cheese_wheel",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:cheddar_cheese_wheel",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:unripe_goat_cheese_wheel",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:goat_cheese_wheel",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:blueberry_pie",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:raspberry_pie",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:grape_pie",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:peanut_butter_pie",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:chicken_pot_pie",
+      "required": false
+    },
+    {
+      "id": "hearthandharvest:carrot_cake",
       "required": false
     }
   ]

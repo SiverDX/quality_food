@@ -5,8 +5,10 @@
   "quality_type.quality_food.gold": "Gold",
   "quality_type.quality_food.diamond": "Diamond",
 
-  "config.jade.plugin_quality_food.quality": "Quality",
+  "config.jade.plugin_quality_food.quality_block": "Quality",
+  "config.jade.plugin_quality_food.quality_mob": "Quality Potential",
   "quality_food.jade": "Quality: %s",
+  "quality_food.potential": "Quality potential: %s",
   "quality_food.create_goggle": " (%s)",
 
   "create.item_attributes.quality_food.quality": "has '%1$s' quality",
@@ -31,9 +33,20 @@
   "quality_food.configuration.farmland_config.tooltip": "Define multipliers to be applied per farmland on crops - Syntax: <index>;<crop>;<farmland>;<multiplier>\n(Index determines check order - first matching one is applied) (Use # to specify tags)",
   "quality_food.configuration.Crafting": "Crafting",
   "quality_food.configuration.no_quality_recipes": "No Quality Recipes",
-  "quality_food.configuration.no_quality_recipes.tooltip": "Define recipes (namespace:path) which should not result in quality being applied (e.g. when the items can be converted back and forth)",
+  "quality_food.configuration.no_quality_recipes.tooltip": "Define recipes (namespace:path) which should not result in quality being rolled (e.g. when the items can be converted back and forth)\nThis is not about keeping / retaining quality as a whole (e.g., in the case of storage-blocks - that is handled automatically + through the 'retain_quality_recipes' configuration)",
   "quality_food.configuration.retain_quality_recipes": "Retain Quality Recipes",
-  "quality_food.configuration.retain_quality_recipes.tooltip": "Define recipes (namespace:path) which should result in the quality should be always be applied to the result (only if all ingredients have the same quality)",
-  "quality_food.configuration.handle_compacting": "Handle Compacting",
-  "quality_food.configuration.handle_compacting.tooltip": "Defines whether (de)compacting should be handled automatically (in terms of retaining quality)"
+  "quality_food.configuration.retain_quality_recipes.tooltip": "Define recipes (namespace:path) which should result in the quality being applied to the result (only if all ingredients have the same quality)",
+  "quality_food.configuration.handle_seed_recipes": "Handle Seed Recipes",
+  "quality_food.configuration.handle_seed_recipes.tooltip": "Attempt to handle recipes involving seed items automatically (to avoid having to add all of them to the retain_quality_recipes config)",
+  "quality_food.configuration.storage_recipe_blacklist": "Storage Recipe Blacklist",
+  "quality_food.configuration.storage_recipe_blacklist.tooltip": "Define recipes (namespace:path) which should be excluded from the automatic storage block detection",
+  "quality_food.configuration.Animals": "Animals",
+  "quality_food.configuration.child_potential_base_percentage": "Child Potential Base Percentage",
+  "quality_food.configuration.child_potential_base_percentage.tooltip": "The base percentage of the (averaged) potential of the parents which gets passed on to the child",
+  "quality_food.configuration.child_potential_random_factor_amount": "Child Potential Random Factor Amount",
+  "quality_food.configuration.child_potential_random_factor_amount.tooltip": "A random value between 0 and this amount is added to the base percentage",
+  "quality_food.configuration.child_potential_growth_multiplier": "Child Potential Growth Multiplier",
+  "quality_food.configuration.child_potential_growth_multiplier.tooltip": "Multiplier on the potential gained through feeding a child (usually children can be fed more often)",
+  "quality_food.configuration.animal_potential_impact": "Animal Potential Impact",
+  "quality_food.configuration.animal_potential_impact.tooltip": "Defines how much the potential (0 - 1) of an animal increases the odds for quality (e.g. at 49 a potential of 1 results in a 50 times higher odds)"
 }

@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.core.codecs;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.cadentem.quality_food.QualityFood;
@@ -30,11 +31,12 @@ public record QualityType(
         double cookingBonus,
         double cropMultiplier,
         double seedMultiplier,
+        double potentialBonus,
         Optional<List<Effect>> effects,
         ResourceLocation icon,
         Component name
 ) {
-    public static final QualityType NONE = new QualityType(0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, Optional.empty(), QualityFood.location("none"), Component.empty());
+    public static final QualityType NONE = new QualityType(0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, Optional.empty(), QualityFood.location("none"), Component.empty());
     private static final RandomSource RANDOM = RandomSource.create();
 
     public static final Codec<QualityType> CODEC = RecordCodecBuilder.create(builder -> builder.group(
@@ -49,12 +51,37 @@ public record QualityType(
                     Codec.doubleRange(0, Double.MAX_VALUE).fieldOf("saturation_multiplier").forGetter(QualityType::saturationMultiplier),
                     Codec.doubleRange(0, 1).optionalFieldOf("crafting_bonus", 0d).forGetter(QualityType::craftingBonus),
                     Codec.doubleRange(0, 100).optionalFieldOf("cooking_bonus", 0d).forGetter(QualityType::cookingBonus),
-                    Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("crop_multiplier", 1d).forGetter(QualityType::cropMultiplier),
-                    Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("seed_multiplier", 1d).forGetter(QualityType::seedMultiplier),
+                    // TODO :: think about what fields could be grouped or sth. like that, max. amount of fields is 16 for the mc provided interface
+                    Codec.mapPair(
+                            Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("crop_multiplier", 1d),
+                            Codec.doubleRange(0, Double.MAX_VALUE).optionalFieldOf("seed_multiplier", 1d)
+                    ).forGetter(type -> Pair.of(type.cropMultiplier(), type.seedMultiplier())),
+                    Codec.doubleRange(0, 1).optionalFieldOf("potential_bonus", 0d).forGetter(QualityType::potentialBonus),
                     Effect.CODEC.listOf().optionalFieldOf("effects").forGetter(QualityType::effects),
                     ResourceLocation.CODEC.fieldOf("icon").forGetter(QualityType::icon),
                     ComponentSerialization.CODEC.fieldOf("name").forGetter(QualityType::name))
-            .apply(builder, QualityType::new));
+            .apply(builder, QualityType::create));
+
+    private static QualityType create(
+            int level,
+            double chance,
+            double weight,
+            double minWeight,
+            double durationMultiplier,
+            double probabilityMultiplier,
+            int amplifierModifier,
+            double nutritionMultiplier,
+            double saturationMultiplier,
+            double craftingBonus,
+            double cookingBonus,
+            final Pair<Double, Double> cropAndSeedMultiplier,
+            double potentialBonus,
+            final Optional<List<Effect>> effects,
+            final ResourceLocation icon,
+            final Component name
+    ) {
+        return new QualityType(level, chance, weight, minWeight, durationMultiplier, probabilityMultiplier, amplifierModifier, nutritionMultiplier, saturationMultiplier, craftingBonus, cookingBonus, cropAndSeedMultiplier.getFirst(), cropAndSeedMultiplier.getSecond(), potentialBonus, effects, icon, name);
+    }
 
     /**
      * @param stack Used to determine which effects are applicable for this quality

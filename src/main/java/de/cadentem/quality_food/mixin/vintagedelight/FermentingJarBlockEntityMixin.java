@@ -28,14 +28,11 @@ public abstract class FermentingJarBlockEntityMixin extends BlockEntity {
 
     @Inject(method = "craftItem", at = @At(value = "INVOKE", target = "Lnet/ribs/vintagedelight/block/entity/FermentingJarBlockEntity;placeOutput(ILnet/minecraft/world/item/ItemStack;)V", ordinal = 0))
     private void quality_food$applyQuality(final CallbackInfo callback, @Local(name = "recipe") final FermentingRecipe recipe) {
-        int resultStackSize = 1;
-
-        if (recipe != null) {
-            //noinspection DataFlowIssue -> level is not null
-            resultStackSize = recipe.getResultItem(level.registryAccess()).getCount();
+        if (recipe == null || level == null) {
+            return;
         }
 
-        Utils.incrementQuality(this, Utils.collectIngredients(itemHandler, () -> 5), resultStackSize);
+        Utils.incrementQuality(this, Utils.collectIngredients(itemHandler, () -> 5), recipe.getResultItem(level.registryAccess()));
     }
 
     /** Display particles to show how much quality the block has stored */

@@ -13,6 +13,7 @@
     "translate": "quality_type.quality_food.diamond"
   },
   "nutrition_multiplier": 2.5,
+  "potential_bonus": 0.2,
   "probability_multiplier": 2.0,
   "saturation_multiplier": 1.75,
   "seed_multiplier": 0.75,

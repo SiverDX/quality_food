@@ -5,6 +5,7 @@ import de.cadentem.quality_food.client.ClientProxy;
 import de.cadentem.quality_food.compat.Compat;
 import de.cadentem.quality_food.config.ClientConfig;
 import de.cadentem.quality_food.core.EffectComponent;
+import de.cadentem.quality_food.core.attachments.AnimalData;
 import de.cadentem.quality_food.util.FoodUtils;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.component.DataComponents;
@@ -67,7 +68,8 @@ public class GameEvents {
         }
 
         if (attacker instanceof LivingEntity livingAttacker) {
-            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker instanceof Player player ? player : null, livingAttacker.registryAccess()));
+            double potential = AnimalData.getPotential(event.getEntity());
+            event.getDrops().forEach(drop -> QualityUtils.applyQuality(drop.getItem(), livingAttacker instanceof Player player ? player : null, potential, livingAttacker.registryAccess()));
         }
     }
 

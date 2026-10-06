@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import de.cadentem.quality_food.core.attachments.LevelData;
+import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.loot_modifiers.QualityLootModifier;
 import de.cadentem.quality_food.util.DropData;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -75,9 +76,9 @@ public abstract class BlockMixin {
         }
 
         if (dropData == null) {
-            QualityUtils.applyQuality(stack, null, level.registryAccess());
+            QualityUtils.applyHarvestQuality(stack, null, Quality.NONE, null, null, level.registryAccess());
         } else {
-            QualityUtils.applyQuality(stack, dropData.state(), dropData.quality(), dropData.player(), dropData.farmland(), level.registryAccess());
+            QualityUtils.applyHarvestQuality(stack, dropData.state(), dropData.quality(), dropData.player(), dropData.farmland(), level.registryAccess());
         }
 
         return stack;

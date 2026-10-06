@@ -1,7 +1,7 @@
 package de.cadentem.quality_food.mixin.farm_and_charm;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.cadentem.quality_food.core.attachments.LevelData;
+import de.cadentem.quality_food.util.HarvestContext;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class StrawberryCropBlockMixin {
     @ModifyArg(method = "useWithoutItem", at = @At(value = "INVOKE", target = "Lnet/satisfy/farm_and_charm/core/block/crops/StrawberryCropBlock;popResource(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"))
     private ItemStack quality_food$applyQuality(final ItemStack stack, @Local(argsOnly = true) final BlockState state, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final BlockPos position, @Local(argsOnly = true) final Player player) {
-        QualityUtils.applyQuality(stack, state, LevelData.get(level, position), player, level.getBlockState(position.below()), player.registryAccess());
+        QualityUtils.applyHarvestQuality(HarvestContext.create(stack, level).position(position).state(state).player(player).build());
         return stack;
     }
 }

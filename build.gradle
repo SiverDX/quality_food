@@ -133,7 +133,7 @@ dependencies {
     compileOnly "curse.maven:tooltip-overhaul-1327508:7907475" // 1.4.4
 
     // https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-cookery/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:kaleidoscope-cookery-1309203:8231456" // 1.4.0
+    implementation "curse.maven:kaleidoscope-cookery-1309203:9019242" // 1.6.0
 
     /* --- Compatibility (Farmer's Delight addons) --- */
     // https://www.curseforge.com/minecraft/mc-mods/farmers-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
@@ -156,6 +156,8 @@ dependencies {
     implementation "curse.maven:epherolib-885449:5872111" // 1.2.0
 
     implementation "curse.maven:crate-delight-forge-958291:7024451" // 25.09.22
+
+    implementation "curse.maven:hearth-and-harvest-1212197:8837088" // 1.3.4
 
     // https://www.curseforge.com/minecraft/mc-mods/vintage-delight-kots/files/all?page=1&pageSize=20&showAlphaFiles=hide
     implementation "curse.maven:vintage-delight-kots-1569514:8338764"

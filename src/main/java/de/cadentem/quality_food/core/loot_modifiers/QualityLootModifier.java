@@ -2,12 +2,14 @@ package de.cadentem.quality_food.core.loot_modifiers;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.core.attachments.LevelData;
 import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,8 +26,10 @@ public class QualityLootModifier extends LootModifier {
     public static final MapCodec<QualityLootModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> LootModifier.codecStart(instance).apply(instance, QualityLootModifier::new));
 
     // Otherwise quality will be double-checked on most blocks due to the 'popResource' inject in 'BlockMixin' (this modifier will trigger first)
-    // That injection is needed to handle with right-click harvesting like glow berries, which do not trigger the loot collection event
+    // That injection is needed to handle right-click harvesting used by glow berries e.g., which do not trigger the loot collection event
     public static BlockPos lastProcessedPosition;
+
+    private static final ResourceLocation FISHING_LOOT_TABLE = ResourceLocation.withDefaultNamespace("gameplay/fishing");
 
     public QualityLootModifier(final LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -34,6 +38,12 @@ public class QualityLootModifier extends LootModifier {
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(final ObjectArrayList<ItemStack> generatedLoot, @NotNull final LootContext context) {
         if (generatedLoot.isEmpty()) {
+            return generatedLoot;
+        }
+
+        ResourceLocation lootTable = context.getQueriedLootTableId();
+
+        if (/* Handled by NeoForge events (LivingDropsEvent / ItemFishedEvent) */ lootTable.getPath().startsWith("entities") || lootTable.equals(FISHING_LOOT_TABLE)) {
             return generatedLoot;
         }
 
@@ -57,10 +67,10 @@ public class QualityLootModifier extends LootModifier {
 
         generatedLoot.stream().filter(Utils::isValidItem).forEach(stack -> {
             if (state != null && position != null) {
-                QualityUtils.applyQuality(stack, state, quality, playerReference, farmland, context.getLevel().registryAccess());
+                QualityUtils.applyHarvestQuality(stack, state, quality, playerReference, farmland, context.getLevel().registryAccess());
                 lastProcessedPosition = position;
             } else {
-                QualityUtils.applyQuality(stack, playerReference, context.getLevel().registryAccess());
+                QualityUtils.applyQuality(stack, playerReference, ServerConfig.MAX_NATURAL_LOOT_QUALITY_LEVEL.get(), context.getLevel().registryAccess());
             }
         });
 

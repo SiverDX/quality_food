@@ -3,55 +3,102 @@ package de.cadentem.quality_food.mixin.create;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
-import de.cadentem.quality_food.compat.SpecialContainer;
 import de.cadentem.quality_food.compat.create.RecipeMapping;
 import de.cadentem.quality_food.config.ServerConfig;
 import de.cadentem.quality_food.util.QualityUtils;
+import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Mixin(value = BasinRecipe.class, remap = false)
 public abstract class BasinRecipeMixin {
-    @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;acceptOutputs(Ljava/util/List;Ljava/util/List;Z)Z"), index = 0)
-    private static List<ItemStack> quality_food$applyQuality(final List<ItemStack> stacks, @Local(name = "availableItems") final IItemHandler availableItems, @Local(name = "extractedItemsFromSlot") int[] extractedItemsFromSlot, @Local(argsOnly = true) Recipe<?> recipe, @Local(argsOnly = true) BasinBlockEntity basin) {
-        SpecialContainer container = new SpecialContainer(18);
+    /** Handles the result of non-basin recipes (e.g. crafting recipes) */
+    @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 2))
+    private static Object quality_food$applyQuality(final Object object, @Local(name = "availableItems") final IItemHandler availableItems, @Local(name = "extractedItemsFromSlot") final int[] extractedItemsFromSlot, @Local(argsOnly = true) final Recipe<?> recipe, @Local(argsOnly = true) final BasinBlockEntity basin) {
+        if (!(object instanceof ItemStack result)) {
+            // Mixin cannot handle the generic parameter / type of the list
+            return object;
+        }
 
-        for (int slot = 0; slot < extractedItemsFromSlot.length; slot++) {
-            if (extractedItemsFromSlot[slot] == 0) {
-                container.setItem(slot, ItemStack.EMPTY);
+        // We get the direct result from the recipe - any modifications would impact future crafting results
+        result = result.copy();
+        quality_food$handle(result, quality_food$toContainer(availableItems, extractedItemsFromSlot), recipe, basin);
+
+        return result;
+    }
+
+    /** Handles the (rolled) results of basin recipes */
+    @ModifyArg(method = "apply(Lcom/simibubi/create/content/processing/basin/BasinBlockEntity;Lnet/minecraft/world/item/crafting/Recipe;Z)Z", at = @At(value = "INVOKE", target = "Ljava/util/List;addAll(Ljava/util/Collection;)Z"))
+    private static Collection<Object> quality_food$applyQualityMultiple(@NotNull final Collection<Object> results, @Local(name = "availableItems") final IItemHandler availableItems, @Local(name = "extractedItemsFromSlot") final int[] extractedItemsFromSlot, @Local(argsOnly = true) final Recipe<?> recipe, @Local(argsOnly = true) final BasinBlockEntity basin) {
+        List<Object> modified = new ArrayList<>(results.size());
+        SimpleContainer container = quality_food$toContainer(availableItems, extractedItemsFromSlot);
+
+        for (Object object : results) {
+            if (!(object instanceof ItemStack result)) {
+                // Mixin cannot handle the generic parameter / type of the list
+                modified.add(object);
                 continue;
             }
 
-            ItemStack ingredient = availableItems.getStackInSlot(slot).copy();
-            ingredient.setCount(extractedItemsFromSlot[slot]);
-            container.setItem(slot, ingredient);
+            // We get the direct result from the recipe - any modifications would impact future crafting results
+            result = result.copy();
+            quality_food$handle(result, container, recipe, basin);
+            modified.add(result);
         }
 
+        return modified;
+    }
+
+    @Unique
+    private static void quality_food$handle(final ItemStack result, final SimpleContainer container, final Recipe<?> recipe, final BasinBlockEntity basin) {
         RecipeHolder<?> holder = RecipeMapping.RECIPES.get(recipe);
 
-        if (holder == null) {
-            return stacks;
+        if (holder == null || basin.getLevel() == null) {
+            return;
         }
 
-        for (ItemStack stack : stacks) {
-            //noinspection DataFlowIssue -> level is present
-            RegistryAccess access = basin.getLevel().registryAccess();
+        RegistryAccess access = basin.getLevel().registryAccess();
+        QualityUtils.handleConversion(result, container, holder, access);
 
-            QualityUtils.handleConversion(stack, container, holder, access);
+        if (!QualityUtils.hasQuality(result) && !ServerConfig.isNoQualityRecipe(holder, access)) {
+            QualityUtils.applyQuality(result, Utils.collectIngredients(container, container::getContainerSize), null, access);
+        }
+    }
 
-            if (!QualityUtils.hasQuality(stack) && !ServerConfig.isNoQualityRecipe(holder, access)) {
-                QualityUtils.applyQuality(stack, container.getIngredients(), null, access);
+    /**
+     * Mirrors what Create does for its remainder container (the extracted amount per slot) <br>
+     * The stacks are split up so that each item is counted individually (relevant for the storage block detection) </br>
+     * (DummyCraftingContainer is only present on 'simulate')
+     */
+    @Unique
+    private static SimpleContainer quality_food$toContainer(final IItemHandler availableItems, final int[] extractedItemsFromSlot) {
+        List<ItemStack> split = new ArrayList<>();
+
+        for (int slot = 0; slot < extractedItemsFromSlot.length && slot < availableItems.getSlots(); slot++) {
+            ItemStack stack = availableItems.getStackInSlot(slot);
+
+            if (stack.isEmpty()) {
+                continue;
+            }
+
+            for (int i = 0; i < extractedItemsFromSlot[slot]; i++) {
+                split.add(stack.copyWithCount(1));
             }
         }
 
-        return stacks;
+        return new SimpleContainer(split.toArray(ItemStack[]::new));
     }
 }

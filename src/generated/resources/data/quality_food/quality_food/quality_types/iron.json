@@ -12,6 +12,7 @@
     "translate": "quality_type.quality_food.iron"
   },
   "nutrition_multiplier": 1.5,
+  "potential_bonus": 0.025,
   "probability_multiplier": 1.25,
   "saturation_multiplier": 1.25,
   "weight": 1.0

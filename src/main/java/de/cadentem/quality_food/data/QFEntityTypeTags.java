@@ -5,10 +5,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +27,6 @@ public class QFEntityTypeTags extends EntityTypeTagsProvider {
 
     @SuppressWarnings("SameParameterValue") // ignore for clarity
     private static TagKey<EntityType<?>> key(final String path) {
-        return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(QualityFood.MODID, path));
+        return TagKey.create(Registries.ENTITY_TYPE, QualityFood.location(path));
     }
 }

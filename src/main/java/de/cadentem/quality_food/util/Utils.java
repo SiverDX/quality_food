@@ -13,7 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -153,7 +153,7 @@ public class Utils {
      * Collects quality-applicable items from the given inventory
      * @param maxSlotCheck To determine up to which slot the items should be considered
      */
-    public static Collection<ItemStack> collectIngredients(final SimpleContainer container, final Supplier<Integer> maxSlotCheck) {
+    public static Collection<ItemStack> collectIngredients(final Container container, final Supplier<Integer> maxSlotCheck) {
         return collectIngredients(container::getItem, maxSlotCheck);
     }
 
@@ -177,10 +177,12 @@ public class Utils {
      * Collects the cooking bonus from the ingredients and the lowest quality type present </br>
      * This is then added to the cooking queue which will be used to apply the cooking bonus / quality to the result item
      */
-    public static void incrementQuality(final BlockEntity blockEntity, @Unmodifiable final Collection<ItemStack> ingredients, int resultStackSize) {
-        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredients.isEmpty()) {
+    public static void incrementQuality(final BlockEntity blockEntity, @Unmodifiable final Collection<ItemStack> ingredients, @Unmodifiable final ItemStack result) {
+        if (blockEntity.getLevel() == null || blockEntity.getLevel().isClientSide() || ingredients.isEmpty() || !Utils.isValidItem(result)) {
             return;
         }
+
+        int resultStackSize = result.getCount();
 
         Set<Holder<QualityType>> qualities = new TreeSet<>(Comparator.comparingInt(quality -> quality.value().level()));
         double qualityBonus = 0;
