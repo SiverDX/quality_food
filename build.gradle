@@ -98,11 +98,11 @@ dependencies {
     compileOnly fg.deobf("curse.maven:harvest-with-ease-602171:5968744") // 9.4.0
 
     // https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=hide
-    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:8238726") // 3.24.53.1877
+    compileOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:9074417") // 3.26.7.2188
     // https://www.curseforge.com/minecraft/mc-mods/sophisticated-storage/files/all?page=1&pageSize=20&version=1.20.1&gameVersionTypeId=1&showAlphaFiles=hide
-    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:7603098") // 1.4.55.1832
+    compileOnly fg.deobf("curse.maven:sophisticated-storage-619320:9074497") // 1.5.1.2153
     // https://www.curseforge.com/minecraft/mc-mods/sophisticated-core/files/all?page=1&pageSize=20&gameVersionTypeId=1&showAlphaFiles=hide
-    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:8238725") // 1.3.50.2005
+    compileOnly fg.deobf("curse.maven:sophisticated-core-618298:9074374") // 1.5.5.2373
 
     compileOnly fg.deobf("curse.maven:toms-storage-378609:6418133") // 1.7.1
 
@@ -147,7 +147,7 @@ dependencies {
     implementation fg.deobf("curse.maven:tooltip-overhaul-1327508:7548782") // 1.4.2
 
     // https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-cookery/files/all?page=1&pageSize=20&version=1.20.1&showAlphaFiles=hide
-    implementation fg.deobf("curse.maven:kaleidoscope-cookery-1309203:8231454")
+    implementation fg.deobf("curse.maven:kaleidoscope-cookery-1309203:9019240") // 1.6.0
 
     /* --- Compatibility (Farmer's Delight addons) --- */
     // https://www.curseforge.com/minecraft/mc-mods/farmers-delight/files/all?page=1&pageSize=20&gameVersionTypeId=1&showAlphaFiles=hide
