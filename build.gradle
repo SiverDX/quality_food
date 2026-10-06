@@ -131,6 +131,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:fastworkbench-288885:5101229") // 8.0.4
     compileOnly fg.deobf("curse.maven:placebo-283644:5414631") // 8.6.2
 
+    // Fruitful Fun
     compileOnly fg.deobf("curse.maven:fruit-trees-355467:7372142") // 7.8.5
     compileOnly fg.deobf("curse.maven:kiwi-303657:7514218") // 11.10.01
     compileOnly fg.deobf("curse.maven:lychee-567403:7437062") // 5.1.24

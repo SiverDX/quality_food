@@ -92,16 +92,18 @@ public class Utils {
         return isValidBlock(block, true);
     }
 
-    @SuppressWarnings({"deprecation", "RedundantIfStatement"}) // ignore for clarity
+    @SuppressWarnings("deprecation") // ignore for clarity
     public static boolean isValidBlock(final Block block, boolean checkItem) {
         if (block.builtInRegistryHolder().is(QFBlockTags.QUALITY_BLOCKS)) {
             return true;
-        } else if (checkItem) {
-            return isValidItem(block.asItem().getDefaultInstance(), false);
         }
 
         if (Compat.Mod.FARMERSDELIGHT.isLoaded() && block instanceof PieBlock) {
             return true;
+        }
+
+        if (checkItem) {
+            return isValidItem(block.asItem().getDefaultInstance(), false);
         }
 
         return false;

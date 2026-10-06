@@ -41,6 +41,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addTag(Tags.Items.MUSHROOMS)
                 .addOptionalTag(Compat.forge("dough")) // Farmer's Delight
                 .addOptionalTag(Compat.forge("flour")) // Farmer's Delight
+                .addOptionalTag(Compat.forge("dough")) // Kaleidoscope Cookery
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops"))
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "pies"))
                 .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "mushroom_colonies"))
@@ -53,6 +54,7 @@ public class QFItemTags extends ItemTagsProvider {
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "hibiscus"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "lavender_blossom"))
                 .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "green_tea_leaf"))
+                .addOptional(Compat.location(Compat.Mod.KALEIDOSCOPE_COOKERY.modid(), "rice_panicle"))
                 .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "cheese_wheel"))
                 .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "oat"))
                 .addOptional(Compat.location("hearthandharvest", "unripe_cheddar_cheese_wheel"))
