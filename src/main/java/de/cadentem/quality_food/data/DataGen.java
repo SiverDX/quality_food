@@ -5,13 +5,10 @@ import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Optional;
@@ -20,17 +17,14 @@ import java.util.Set;
 @EventBusSubscriber
 public class DataGen {
     @SubscribeEvent
-    public static void configureDataGen(final GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        ExistingFileHelper helper = event.getExistingFileHelper();
-
-        QFBlockTags blockTags = new QFBlockTags(generator.getPackOutput(), event.getLookupProvider(), helper);
-        generator.addProvider(event.includeServer(), blockTags);
-        generator.addProvider(event.includeServer(), new QFItemTags(generator.getPackOutput(), event.getLookupProvider(), blockTags.contentsGetter(), helper));
-        generator.addProvider(event.includeServer(), new QFLootModifiers(generator.getPackOutput(), event.getLookupProvider()));
-        generator.addProvider(event.includeServer(), new QFEffectTags(generator.getPackOutput(), event.getLookupProvider(), helper));
-        generator.addProvider(event.includeServer(), new QFEntityTypeTags(generator.getPackOutput(), event.getLookupProvider(), helper));
-        generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(generator.getPackOutput(), event.getLookupProvider(), createProvider(), Set.of(QualityFood.MODID)));
+    public static void configureDataGen(final GatherDataEvent.Client event) {
+        QFBlockTags blockTags = new QFBlockTags(event.getGenerator().getPackOutput(), event.getLookupProvider());
+        event.getGenerator().addProvider(event.includeServer(), blockTags);
+        event.getGenerator().addProvider(event.includeServer(), new QFItemTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(event.includeServer(), new QFLootModifiers(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(event.includeServer(), new QFEffectTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(event.includeServer(), new QFEntityTypeTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.createDatapackRegistryObjects(createProvider(), Set.of(QualityFood.MODID));
     }
 
     private static RegistrySetBuilder createProvider() {

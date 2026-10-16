@@ -3,26 +3,24 @@ package de.cadentem.quality_food.data;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-public class QFItemTags extends ItemTagsProvider {
+public class QFItemTags extends IntrinsicHolderTagsProvider<Item> {
     public static final TagKey<Item> MATERIAL_WHITELIST = ItemTags.create(QualityFood.location("material_whitelist"));
     public static final TagKey<Item> BLACKLIST = ItemTags.create(QualityFood.location("blacklist"));
 
-    public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, final CompletableFuture<TagLookup<Block>> blockTags, @Nullable final ExistingFileHelper helper) {
-        super(output, provider, blockTags, QualityFood.MODID, helper);
+    public QFItemTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, Registries.ITEM, provider, item -> item.builtInRegistryHolder().key(), QualityFood.MODID);
     }
 
     @Override

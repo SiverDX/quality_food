@@ -1,8 +1,7 @@
 {
   "pack": {
     "description": "Quality Food resources",
-    "pack_format": 10,
-    "forge:resource_pack_format": 9,
-    "forge:data_pack_format": 10
+    "min_format": [84, 0],
+    "max_format": [101, 1]
   }
 }

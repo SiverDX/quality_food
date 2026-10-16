@@ -8,9 +8,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -28,8 +26,8 @@ import static de.cadentem.quality_food.compat.Compat.location;
 public class QFBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> QUALITY_BLOCKS = BlockTags.create(QualityFood.location("quality_blocks"));
 
-    public QFBlockTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper helper) {
-        super(output, provider, QualityFood.MODID, helper);
+    public QFBlockTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, provider, QualityFood.MODID);
     }
 
     @Override

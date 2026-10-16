@@ -7,17 +7,15 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public class QFEntityTypeTags extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> ANIMAL_DATA_BLACKLIST = key("animal_data_blacklist");
 
-    public QFEntityTypeTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider, @Nullable final ExistingFileHelper helper) {
-        super(output, provider, QualityFood.MODID, helper);
+    public QFEntityTypeTags(final PackOutput output, final CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, provider, QualityFood.MODID);
     }
 
     @Override
