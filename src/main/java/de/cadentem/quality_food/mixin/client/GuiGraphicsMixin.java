@@ -21,6 +21,7 @@ public abstract class GuiGraphicsMixin {
             return;
         }
         GuiGraphicsExtractor graphics = (GuiGraphicsExtractor) (Object) this;
+        graphics.nextStratum();
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, quality.getType().value().icon(), x, y, 16, 16);
     }
 }

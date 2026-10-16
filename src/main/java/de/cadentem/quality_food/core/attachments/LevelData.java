@@ -82,7 +82,7 @@ public class LevelData implements ValueIOSerializable {
 
     @Override
     public void serialize(final ValueOutput output) {
-        Map<String, Quality> entries = new java.util.HashMap<>();
+        Map<String, Quality> entries = new HashMap<>();
         qualities.forEach((position, quality) -> entries.put(position.toString(), quality));
         output.store("qualities", Codec.unboundedMap(Codec.STRING, Quality.CODEC), entries);
     }
@@ -93,5 +93,4 @@ public class LevelData implements ValueIOSerializable {
         input.read("qualities", Codec.unboundedMap(Codec.STRING, Quality.CODEC)).orElseThrow()
                 .forEach((position, quality) -> qualities.put(Long.parseLong(position), quality));
     }
-
 }

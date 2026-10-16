@@ -29,7 +29,6 @@
     "SidedInvWrapperMixin",
     "StemBlockMixin",
     "SugarCaneBlockMixin",
-    "SweetBerryBushBlockMixin",
     "ThrownEggMixin",
     "fastbench.CraftResultSlotExtMixin",
     "fastbench.FastBenchUtilMixin",

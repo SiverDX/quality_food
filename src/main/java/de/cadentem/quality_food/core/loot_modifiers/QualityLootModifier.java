@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -47,7 +48,8 @@ public class QualityLootModifier extends LootModifier {
             return generatedLoot;
         }
 
-        Player playerReference = context.getOptionalParameter(LootContextParams.THIS_ENTITY) instanceof Player player ? player : null;
+        Entity source = context.getOptionalParameter(context.hasParameter(LootContextParams.INTERACTING_ENTITY) ? LootContextParams.INTERACTING_ENTITY : LootContextParams.THIS_ENTITY);
+        Player playerReference = source instanceof Player player ? player : null;
         BlockState state = context.getOptionalParameter(LootContextParams.BLOCK_STATE);
         Vec3 origin = context.getOptionalParameter(LootContextParams.ORIGIN);
 

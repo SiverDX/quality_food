@@ -40,7 +40,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Utils {
-    public static java.util.List<ItemStack> getRecipeResults(final Recipe<?> recipe, final RegistryAccess access) {
+    public static List<ItemStack> getRecipeResults(final Recipe<?> recipe, final RegistryAccess access) {
         ContextMap context = new ContextMap.Builder()
                 .withParameter(SlotDisplayContext.REGISTRIES, access)
                 .create(SlotDisplayContext.CONTEXT);

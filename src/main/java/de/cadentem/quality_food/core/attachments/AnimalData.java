@@ -5,8 +5,6 @@ import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.data.QFEntityTypeTags;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +17,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.mojang.serialization.Codec;
 import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -110,5 +107,4 @@ public class AnimalData implements ValueIOSerializable {
     public void deserialize(final ValueInput input) {
         potential = input.read("potential", Codec.DOUBLE).orElseThrow();
     }
-
 }

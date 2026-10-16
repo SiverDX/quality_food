@@ -10,7 +10,7 @@ Quality can:
 
 ---
 
-Quality Types are defined per datapack (`data/<namespace>/quality_types/`), syntax example:
+Quality Types are defined per datapack (`data/<namespace>/quality_food/quality_types/`), syntax example:
 
 ```json
 {
@@ -67,7 +67,12 @@ Quality Types are defined per datapack (`data/<namespace>/quality_types/`), synt
   "level": 1,
   "nutrition_multiplier": 1.5,
   "probability_multiplier": 1.25,
-  "saturation_multiplier": 1.25
+  "saturation_multiplier": 1.25,
+  "weight": 1,
+  "min_weight": 0,
+  "name": {
+    "translate": "quality_type.quality_food.iron"
+  }
 }
 ```
 - `level`: The level of the effect - higher level ones will be rolled first
