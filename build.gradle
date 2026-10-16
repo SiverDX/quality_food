@@ -16,9 +16,8 @@ group = mod_group_id
 repositories {
     mavenLocal()
     flatDir { dirs 'libs' }
-    maven { url = "https://jitpack.io" } // Mixin Squared
     maven { url = "https://www.cursemaven.com" } // CurseForge
-    maven { url = "https://maven.createmod.net" } // Create
+    maven { url = "https://api.modrinth.com/maven" }
 }
 
 base {
@@ -61,116 +60,16 @@ configurations {
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    /* --- Compatibility --- */
-    implementation "curse.maven:jade-324717:7545219" // 15.10.5
+    implementation "curse.maven:jade-324717:9156414"
+    compileOnly "curse.maven:harvest-with-ease-602171:8009541"
+    compileOnly "maven.modrinth:cobweb:ZaMjT9X9"
+    compileOnly "curse.maven:sophisticated-core-618298:9201364"
+    compileOnly "maven.modrinth:toms-storage:6dinsQOX"
+    compileOnly "maven.modrinth:rightclickharvest:33nxkOzf"
+    compileOnly "maven.modrinth:jamlib:6aLAUjUv"
+    compileOnly "maven.modrinth:fastworkbench:5a0ClntQ"
+    compileOnly "maven.modrinth:placebo:c4uzJQYp"
 
-//    compileOnly fg.deobf("curse.maven:fastentitytransfer-828407:5202591") // 1.3.1
-
-    compileOnly "curse.maven:harvest-with-ease-602171:7401545" // 9.4.0
-    compileOnly "curse.maven:cobweb-968456:7355650" // 1.4.0
-
-    // https://www.curseforge.com/minecraft/mc-mods/sophisticated-backpacks/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:sophisticated-backpacks-422301:8238750" // 3.25.58.1880
-    // https://www.curseforge.com/minecraft/mc-mods/sophisticated-storage/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:sophisticated-storage-619320:8238761" // 1.5.58.1835
-    // https://www.curseforge.com/minecraft/mc-mods/sophisticated-core/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:sophisticated-core-618298:8238703" // 1.4.54.2004
-
-    // https://www.curseforge.com/minecraft/mc-mods/toms-storage/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:toms-storage-378609:7917007" // 2.3.2
-
-    // https://www.curseforge.com/minecraft/mc-mods/create/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:create-328085:7963363" // 6.0.10
-    implementation "net.createmod.ponder:ponder-neoforge:${ponder_version}"
-
-//    compileOnly fg.deobf("curse.maven:wonderful-enchantments-417439:5114391") // 1.10.7
-//    compileOnly fg.deobf("curse.maven:majrusz-library-437409:5085683") // 7.0.5
-
-    // https://www.curseforge.com/minecraft/mc-mods/lets-do-farm-charm/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:lets-do-farm-charm-1038103:7959521" // 1.1.22
-    // https://www.curseforge.com/minecraft/mc-mods/lets-do-vinery/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:lets-do-vinery-704465:7539914" // 1.5.3
-    // https://www.curseforge.com/minecraft/mc-mods/lets-do-herbal-brews/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:lets-do-herbal-brews-951221:7657017" // 1.1.3
-    implementation "curse.maven:do-api-864599:5730908" // 1.3.0
-    implementation "curse.maven:architectury-api-419699:5786327" // 13.0.8
-
-    // https://www.curseforge.com/minecraft/mc-mods/quark/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:quark-243121:8146177" // 4.1-480
-    // https://www.curseforge.com/minecraft/mc-mods/zeta/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:zeta-968868:7980010" // 1.1-40
-
-    // https://www.curseforge.com/minecraft/mc-mods/rightclickharvest/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:rightclickharvest-452834:7508749" // 4.6.1
-    compileOnly "curse.maven:architectury-api-419699:5786327" // 13.0.8
-    compileOnly "curse.maven:jamlib-623764:6421954" // 1.3.5
-
-    // https://www.curseforge.com/minecraft/mc-mods/supplementaries/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:supplementaries-412082:8194573" // 3.6.7
-    compileOnly "curse.maven:selene-499980:7522321" // 2.29.16
-
-    // https://www.curseforge.com/minecraft/mc-mods/fastworkbench/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:fastworkbench-288885:6751534" // 9.1.3
-    // https://www.curseforge.com/minecraft/mc-mods/placebo/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:placebo-283644:6926281" // 9.9.1
-
-    // Fruitful Fun 🍊
-//    compileOnly fg.deobf("curse.maven:fruit-trees-355467:7372142") // 7.8.5
-//    compileOnly fg.deobf("curse.maven:kiwi-303657:7514218") // 11.10.01
-//    compileOnly fg.deobf("curse.maven:lychee-567403:7437062") // 5.1.24
-
-//    implementation fg.deobf("curse.maven:collectors-reap-807101:7457274") // 1.5.5
-//    implementation fg.deobf("curse.maven:blueprint-382216:6408581") // 7.1.3
-
-    // https://www.curseforge.com/minecraft/mc-mods/smarter-farmers-farmers-replant/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:smarter-farmers-farmers-replant-491290:7120722" // 2.2.4
-    compileOnly "curse.maven:selene-499980:7522321" // 2.29.16
-
-    compileOnly "curse.maven:visual-workbench-500273:6798196" // 21.1.1
-    compileOnly "curse.maven:puzzles-lib-495476:7140307" // 21.1.39
-
-    // https://www.curseforge.com/minecraft/mc-mods/tooltip-overhaul/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:tooltip-overhaul-1327508:7907475" // 1.4.4
-
-    // https://www.curseforge.com/minecraft/mc-mods/kaleidoscope-cookery/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:kaleidoscope-cookery-1309203:9019242" // 1.6.0
-
-    /* --- Compatibility (Farmer's Delight addons) --- */
-    // https://www.curseforge.com/minecraft/mc-mods/farmers-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:farmers-delight-398521:8083481" // 1.3.2
-
-    // https://www.curseforge.com/minecraft/mc-mods/miners-delight-plus/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:miners-delight-plus-689630:8011049" // 1.4.5
-    compileOnly "curse.maven:lodestone-616457:7264731" // 1.8.2
-
-    // https://www.curseforge.com/minecraft/mc-mods/display-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    compileOnly "curse.maven:display-delight-1144296:8188789" // 1.6.1
-
-    // https://www.curseforge.com/minecraft/mc-mods/corn-delight/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:corn-delight-577805:8021963" // 1.2.10
-    // https://www.curseforge.com/minecraft/mc-mods/mysterious-mountain-lib/files/all?page=1&pageSize=20&version=1.21.1&gameVersionTypeId=6&showAlphaFiles=hide
-    implementation "curse.maven:mysterious-mountain-lib-368098:7878548" // 1.2.15
-
-    /* --- Compatibility Test --- */
-    implementation "curse.maven:croptopia-415438:6788725" // 4.2.1
-    implementation "curse.maven:epherolib-885449:5872111" // 1.2.0
-
-    implementation "curse.maven:crate-delight-forge-958291:7024451" // 25.09.22
-
-    implementation "curse.maven:hearth-and-harvest-1212197:8837088" // 1.3.4
-
-    // https://www.curseforge.com/minecraft/mc-mods/vintage-delight-kots/files/all?page=1&pageSize=20&showAlphaFiles=hide
-    implementation "curse.maven:vintage-delight-kots-1569514:8338764"
-
-//    implementation fg.deobf("curse.maven:vintage-delight-949719:5847856")
-
-    // https://www.curseforge.com/minecraft/mc-mods/minecolonies/files/all?page=1&pageSize=20&version=1.21.1&showAlphaFiles=show
-    compileOnly "curse.maven:minecolonies-245506:9058295" // 1.1.1403
-
-    /* --- Test --- */
-    implementation "curse.maven:appleskin-248787:7517379" // 3.0.8
-    runtimeOnly "curse.maven:emi-580555:6420931" // 1.1.22
-    runtimeOnly "curse.maven:tmrv-1194921:7410429" // 0.7.1
 }
 
 tasks.withType(ProcessResources).configureEach {
