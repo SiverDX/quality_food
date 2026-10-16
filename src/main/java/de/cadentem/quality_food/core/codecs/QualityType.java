@@ -8,9 +8,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public record QualityType(
         double seedMultiplier,
         double potentialBonus,
         Optional<List<Effect>> effects,
-        ResourceLocation icon,
+        Identifier icon,
         Component name
 ) {
     public static final QualityType NONE = new QualityType(0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, Optional.empty(), QualityFood.location("none"), Component.empty());
@@ -58,7 +58,7 @@ public record QualityType(
                     ).forGetter(type -> Pair.of(type.cropMultiplier(), type.seedMultiplier())),
                     Codec.doubleRange(0, 1).optionalFieldOf("potential_bonus", 0d).forGetter(QualityType::potentialBonus),
                     Effect.CODEC.listOf().optionalFieldOf("effects").forGetter(QualityType::effects),
-                    ResourceLocation.CODEC.fieldOf("icon").forGetter(QualityType::icon),
+                    Identifier.CODEC.fieldOf("icon").forGetter(QualityType::icon),
                     ComponentSerialization.CODEC.fieldOf("name").forGetter(QualityType::name))
             .apply(builder, QualityType::create));
 
@@ -77,7 +77,7 @@ public record QualityType(
             final Pair<Double, Double> cropAndSeedMultiplier,
             double potentialBonus,
             final Optional<List<Effect>> effects,
-            final ResourceLocation icon,
+            final Identifier icon,
             final Component name
     ) {
         return new QualityType(level, chance, weight, minWeight, durationMultiplier, probabilityMultiplier, amplifierModifier, nutritionMultiplier, saturationMultiplier, craftingBonus, cookingBonus, cropAndSeedMultiplier.getFirst(), cropAndSeedMultiplier.getSecond(), potentialBonus, effects, icon, name);
@@ -87,7 +87,7 @@ public record QualityType(
      * @param stack Used to determine which effects are applicable for this quality
      */
     public static Quality createQuality(final Holder<QualityType> holder, final ItemStack stack) {
-        List<FoodProperties.PossibleEffect> effectsToApply = null;
+        List<ConsumeEffect> effectsToApply = null;
         QualityType type = holder.value();
 
         if (type.effects().isPresent()) {
@@ -111,7 +111,7 @@ public record QualityType(
         Optional<ResourceKey<QualityType>> optional = holder.unwrapKey();
 
         if (optional.isPresent()) {
-            return new Quality(optional.get().location(), type.level(), Optional.ofNullable(effectsToApply));
+            return new Quality(optional.get().identifier(), type.level(), Optional.ofNullable(effectsToApply));
         } else {
             return Quality.NONE;
         }

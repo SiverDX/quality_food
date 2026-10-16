@@ -9,8 +9,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.CommonHooks;
 
@@ -19,20 +19,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public record Quality(ResourceLocation type, int level, Optional<List<FoodProperties.PossibleEffect>> effects) {
+public record Quality(Identifier type, int level, Optional<List<ConsumeEffect>> effects) {
     public static final Quality NONE = new Quality(QualityFood.location("none"), 0, Optional.empty());
     public static final Quality PLAYER_PLACED = new Quality(QualityFood.location("player_placed"), -1, Optional.empty());
 
     public static final Codec<Quality> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                    ResourceLocation.CODEC.fieldOf("type").forGetter(Quality::type),
+                    Identifier.CODEC.fieldOf("type").forGetter(Quality::type),
                     Codec.INT.fieldOf("level").forGetter(Quality::level),
-                    FoodProperties.PossibleEffect.CODEC.listOf().optionalFieldOf("effects").forGetter(Quality::effects))
+                    ConsumeEffect.CODEC.listOf().optionalFieldOf("effects").forGetter(Quality::effects))
             .apply(builder, Quality::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Quality> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, Quality::type,
+            Identifier.STREAM_CODEC, Quality::type,
             ByteBufCodecs.INT, Quality::level,
-            ByteBufCodecs.optional(FoodProperties.PossibleEffect.STREAM_CODEC.apply(ByteBufCodecs.list())), Quality::effects,
+            ByteBufCodecs.optional(ConsumeEffect.STREAM_CODEC.apply(ByteBufCodecs.list())), Quality::effects,
             Quality::new
     );
 

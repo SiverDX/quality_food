@@ -13,7 +13,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class QualityTypeArgument implements ArgumentType<Holder<QualityType>> {
 
     @Override
     public @Nullable Holder<QualityType> parse(final StringReader reader) throws CommandSyntaxException {
-        Optional<Holder.Reference<QualityType>> optional = lookup.get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.read(reader)));
+        Optional<Holder.Reference<QualityType>> optional = lookup.get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, Identifier.read(reader)));
 
         if (optional.isPresent()) {
             return optional.get();
@@ -47,7 +47,7 @@ public class QualityTypeArgument implements ArgumentType<Holder<QualityType>> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
         List<String> suggestions = new ArrayList<>();
-        lookup.listElementIds().forEach(element -> suggestions.add(element.location().toString()));
+        lookup.listElementIds().forEach(element -> suggestions.add(element.identifier().toString()));
         return SharedSuggestionProvider.suggest(suggestions, builder);
     }
 }

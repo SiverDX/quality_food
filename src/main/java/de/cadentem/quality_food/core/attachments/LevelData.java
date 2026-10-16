@@ -1,25 +1,24 @@
 package de.cadentem.quality_food.core.attachments;
 
+import java.util.Map;
+import de.cadentem.quality_food.mixin.LevelMixin;
 import com.mojang.datafixers.util.Pair;
-import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.codecs.Quality;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
-import java.util.Optional;
 
 @ParametersAreNonnullByDefault
-public class LevelData implements INBTSerializable<CompoundTag> {
+public class LevelData implements ValueIOSerializable {
     private final HashMap<Long, Quality> qualities = new HashMap<>();
     private @Nullable Pair<Long, Quality> lastRemoved;
 
@@ -54,7 +53,7 @@ public class LevelData implements INBTSerializable<CompoundTag> {
         }
     }
 
-    /** @return The stored quality or the last removed quality (since {@link de.cadentem.quality_food.mixin.LevelMixin} happens before the loot drops) if the flag is set to true */
+    /** @return The stored quality or the last removed quality (since {@link LevelMixin} happens before the loot drops) if the flag is set to true */
     public static @NotNull Quality get(final LevelAccessor level, final BlockPos position, boolean queryLastRemoved) {
         Quality result = Quality.NONE;
 
@@ -82,24 +81,17 @@ public class LevelData implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-
-        for (Long key : qualities.keySet()) {
-            Optional<Tag> qualityTag = Quality.CODEC.encodeStart(NbtOps.INSTANCE, qualities.get(key)).resultOrPartial(QualityFood.LOG::error);
-            qualityTag.ifPresent(value -> tag.put(String.valueOf(key), value));
-        }
-
-        return tag;
+    public void serialize(final ValueOutput output) {
+        Map<String, Quality> entries = new java.util.HashMap<>();
+        qualities.forEach((position, quality) -> entries.put(position.toString(), quality));
+        output.store("qualities", Codec.unboundedMap(Codec.STRING, Quality.CODEC), entries);
     }
 
     @Override
-    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
+    public void deserialize(final ValueInput input) {
         qualities.clear();
-
-        tag.getAllKeys().forEach(key -> {
-            Quality quality = Quality.CODEC.parse(NbtOps.INSTANCE, tag.getCompound(key)).resultOrPartial(QualityFood.LOG::error).orElse(Quality.NONE);
-            qualities.put(Long.parseLong(key), quality);
-        });
+        input.read("qualities", Codec.unboundedMap(Codec.STRING, Quality.CODEC)).orElseThrow()
+                .forEach((position, quality) -> qualities.put(Long.parseLong(position), quality));
     }
+
 }

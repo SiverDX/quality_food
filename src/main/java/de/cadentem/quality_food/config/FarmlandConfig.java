@@ -2,7 +2,7 @@ package de.cadentem.quality_food.config;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,23 +25,23 @@ public class FarmlandConfig {
         index = Integer.parseInt(data[INDEX]);
 
         if (data[CROP].startsWith("#")) {
-            TagKey<Block> testCrop = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(data[CROP].substring(1)));
+            TagKey<Block> testCrop = TagKey.create(Registries.BLOCK, Identifier.tryParse(data[CROP].substring(1)));
 
             if (data[FARMLAND].startsWith("#")) {
-                TagKey<Block> testFarmland = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(data[FARMLAND].substring(1)));
+                TagKey<Block> testFarmland = TagKey.create(Registries.BLOCK, Identifier.tryParse(data[FARMLAND].substring(1)));
                 predicate = (crop, farmland) -> crop.is(testCrop) && farmland.is(testFarmland);
             } else {
-                Block testFarmland = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(data[FARMLAND]));
+                Block testFarmland = BuiltInRegistries.BLOCK.get(Identifier.parse(data[FARMLAND])).orElseThrow().value();
                 predicate = (crop, farmland) -> crop.is(testCrop) && farmland.getBlock() == testFarmland;
             }
         } else {
-            Block testCrop = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(data[CROP]));
+            Block testCrop = BuiltInRegistries.BLOCK.get(Identifier.parse(data[CROP])).orElseThrow().value();
 
             if (data[FARMLAND].startsWith("#")) {
-                TagKey<Block> testFarmland = TagKey.create(Registries.BLOCK, ResourceLocation.tryParse(data[FARMLAND].substring(1)));
+                TagKey<Block> testFarmland = TagKey.create(Registries.BLOCK, Identifier.tryParse(data[FARMLAND].substring(1)));
                 predicate = (crop, farmland) -> crop.getBlock() == testCrop && farmland.is(testFarmland);
             } else {
-                Block testFarmland = BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(data[FARMLAND]));
+                Block testFarmland = BuiltInRegistries.BLOCK.get(Identifier.parse(data[FARMLAND])).orElseThrow().value();
                 predicate = (crop, farmland) -> crop.getBlock() == testCrop && farmland.getBlock() == testFarmland;
             }
         }

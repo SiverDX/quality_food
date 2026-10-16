@@ -17,6 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.ArrayList;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import java.util.Optional;
 
 public class FoodUtils {
@@ -33,41 +37,47 @@ public class FoodUtils {
         }
 
         FoodProperties.Builder builder = getBuilder(original, type);
-        List<FoodProperties.PossibleEffect> originalEffects = original.effects();
-        Optional<HolderSet.Named<MobEffect>> blacklist = BuiltInRegistries.MOB_EFFECT.getTag(QFEffectTags.BLACKLIST);
-
-        originalEffects.forEach(originalData -> {
-            Optional<MobEffectInstance> optional = modifyEffect(originalData.effect(), type, blacklist);
-
-            optional.ifPresent(instance -> {
-                float probability = originalData.probability();
-
-                if (blacklist.isEmpty() || !blacklist.get().contains(instance.getEffect())) {
-                    if (instance.getEffect().value().isBeneficial()) {
-                        probability = (float) (probability * type.probabilityMultiplier());
-                    } else if (instance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
-                        if (type.probabilityMultiplier() == 0) {
-                            probability = 0;
-                        } else {
-                            probability = (float) (probability / type.probabilityMultiplier());
-                        }
-                    }
-                }
-
-                if (probability > 0) {
-                    builder.effect(() -> instance, Mth.clamp(probability, 0, 1));
-                }
-            });
-        });
-
-        Optional<List<FoodProperties.PossibleEffect>> effects = FoodUtils.getEffects(stack);
-        effects.ifPresent(entries -> entries.forEach(entry -> builder.effect(entry::effect, entry.probability())));
-
         return builder.build();
     }
 
+    public static @Nullable Consumable handleConsumable(final ItemStack stack, @Nullable final Consumable original) {
+        if (original == null || !QualityUtils.hasQuality(stack)) {
+            return original;
+        }
+        QualityType type = QualityUtils.getType(stack).value();
+        if (type == QualityType.NONE) {
+            return original;
+        }
+
+        List<ConsumeEffect> effects = new ArrayList<>();
+        Optional<HolderSet.Named<MobEffect>> blacklist = BuiltInRegistries.MOB_EFFECT.get(QFEffectTags.BLACKLIST);
+        for (ConsumeEffect effect : original.onConsumeEffects()) {
+            if (!(effect instanceof ApplyStatusEffectsConsumeEffect status)) {
+                effects.add(effect);
+                continue;
+            }
+            for (MobEffectInstance instance : status.effects()) {
+                modifyEffect(instance, type, blacklist).ifPresent(modified -> {
+                    float probability = status.probability();
+                    if (blacklist.isEmpty() || !blacklist.get().contains(instance.getEffect())) {
+                        if (instance.getEffect().value().isBeneficial()) {
+                            probability = (float) (probability * type.probabilityMultiplier());
+                        } else if (instance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
+                            probability = type.probabilityMultiplier() == 0 ? 0 : (float) (probability / type.probabilityMultiplier());
+                        }
+                    }
+                    if (probability > 0) {
+                        effects.add(new ApplyStatusEffectsConsumeEffect(List.of(modified), Mth.clamp(probability, 0, 1)));
+                    }
+                });
+            }
+        }
+        getEffects(stack).ifPresent(effects::addAll);
+        return new Consumable(original.consumeSeconds(), original.animation(), original.sound(), original.hasConsumeParticles(), effects);
+    }
+
     public static Optional<MobEffectInstance> modifyEffect(final MobEffectInstance instance, final QualityType type) {
-        return modifyEffect(instance, type, BuiltInRegistries.MOB_EFFECT.getTag(QFEffectTags.BLACKLIST));
+        return modifyEffect(instance, type, BuiltInRegistries.MOB_EFFECT.get(QFEffectTags.BLACKLIST));
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -106,7 +116,7 @@ public class FoodUtils {
         return Optional.of(instance);
     }
 
-    public static Optional<List<FoodProperties.PossibleEffect>> getEffects(@Nullable final ItemStack stack) {
+    public static Optional<List<ConsumeEffect>> getEffects(@Nullable final ItemStack stack) {
         if (stack == null) {
             return Optional.empty();
         }
@@ -130,7 +140,6 @@ public class FoodUtils {
         builder.saturationModifier(saturationModifier);
 
         if (original.canAlwaysEat()) builder.alwaysEdible();
-        if (original.eatSeconds() == 0.8f) builder.fast();
 
         return builder;
     }

@@ -14,7 +14,10 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.mojang.serialization.Codec;
 import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /** Stores the quality potential (0 - 1) of an animal, which increases the odds for quality on its drops / produce */
 @ParametersAreNonnullByDefault
 @EventBusSubscriber
-public class AnimalData implements INBTSerializable<CompoundTag> {
+public class AnimalData implements ValueIOSerializable {
     public double potential;
 
     // TODO :: Also store applied qualities to have a bias for the highest applied
@@ -35,7 +38,7 @@ public class AnimalData implements INBTSerializable<CompoundTag> {
             return null;
         }
 
-        if (mob.getType().is(QFEntityTypeTags.ANIMAL_DATA_BLACKLIST)) {
+        if (mob.getType().builtInRegistryHolder().is(QFEntityTypeTags.ANIMAL_DATA_BLACKLIST)) {
             return null;
         }
 
@@ -99,14 +102,13 @@ public class AnimalData implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        tag.putDouble("potential", potential);
-        return tag;
+    public void serialize(final ValueOutput output) {
+        output.putDouble("potential", potential);
     }
 
     @Override
-    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
-        potential = tag.getDouble("potential");
+    public void deserialize(final ValueInput input) {
+        potential = input.read("potential", Codec.DOUBLE).orElseThrow();
     }
+
 }
