@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Allow material (with quality) to grant its bonus when shift-clicking the crafting result */
 @Mixin(AbstractFurnaceMenu.class)
-public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<SingleRecipeInput, AbstractCookingRecipe> {
+public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu {
     @Shadow @Final private Container container;
     @Shadow @Final protected Level level;
 

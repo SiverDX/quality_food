@@ -24,7 +24,7 @@ public abstract class CraftingTerminalBlockEntityMixin extends BlockEntity {
     @Shadow(remap = false) @Final private CraftingContainer craftMatrix;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @Shadow private Optional<RecipeHolder<CraftingRecipe>> currentRecipe;
+    @Shadow(remap = false) private Optional<RecipeHolder<CraftingRecipe>> currentRecipe;
 
     public CraftingTerminalBlockEntityMixin(final BlockEntityType<?> type, final BlockPos position, final BlockState state) {
         super(type, position, state);

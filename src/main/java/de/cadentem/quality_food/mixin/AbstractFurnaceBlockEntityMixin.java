@@ -1,23 +1,19 @@
 package de.cadentem.quality_food.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -29,19 +25,12 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
 
     /** Display particles to show how much quality the block has stored */
     @Inject(method = "serverTick", at = @At("TAIL"))
-    private static void quality_food$handleParticles(final Level level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity furnace, final CallbackInfo callback) {
-        if (level instanceof ServerLevel serverLevel) {
-            Utils.sendParticles(serverLevel, furnace, position);
-        }
+    private static void quality_food$handleParticles(final ServerLevel level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity furnace, final CallbackInfo callback) {
+        Utils.sendParticles(level, furnace, position);
     }
 
-    /** Increment quality after cooking an item */
-    @Inject(method = "burn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V", shift = At.Shift.BEFORE))
-    private static void quality_food$incrementQuality(final RegistryAccess access, @Nullable final RecipeHolder<?> recipe, final NonNullList<ItemStack> inventory, int maxStackSize, final AbstractFurnaceBlockEntity furnace, final CallbackInfoReturnable<Boolean> callback) {
-        if (recipe == null) {
-            return;
-        }
-
-        Utils.incrementQuality(furnace, List.of(inventory.getFirst()), recipe.value().getResultItem(access));
+    @Inject(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;burn(Lnet/minecraft/core/NonNullList;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)V"))
+    private static void quality_food$incrementQuality(final ServerLevel level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity furnace, final CallbackInfo callback, @Local(name = "burnResult") final ItemStack result) {
+        Utils.incrementQuality(furnace, List.of(furnace.getItem(0)), result);
     }
 }

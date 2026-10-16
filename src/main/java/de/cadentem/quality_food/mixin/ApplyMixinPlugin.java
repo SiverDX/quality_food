@@ -1,6 +1,6 @@
 package de.cadentem.quality_food.mixin;
 
-import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -26,7 +26,7 @@ public class ApplyMixinPlugin implements IMixinConfigPlugin {
         String[] elements = modid.split("\\.");
 
         if (elements.length == 2) {
-            return LoadingModList.get().getModFileById(elements[0]) != null;
+            return FMLLoader.getCurrent().getLoadingModList().getModFileById(elements[0]) != null;
         }
 
         return true;

@@ -21,7 +21,7 @@
     "CraftingMenuMixin",
     "EntityMixin",
     "FurnaceResultSlotMixin",
-    "IItemExtensionMixin",
+    "DataComponentHolderMixin",
     "InventoryMenuMixin",
     "LevelMixin",
     "RecipeHolderMixin",

@@ -20,7 +20,7 @@ public abstract class CraftResultSlotExtMixin extends ResultSlot {
         super(player, craftSlots, container, slot, x, y);
     }
 
-    @Inject(method = "checkTakeAchievements", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onCraftedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;I)V", shift = At.Shift.AFTER))
+    @Inject(method = "checkTakeAchievements", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onCraftedBy(Lnet/minecraft/world/entity/player/Player;I)V", shift = At.Shift.AFTER))
     private void quality_food$applyQuality(final ItemStack stack, final CallbackInfo callback) {
         ResultSlotAccess access = (ResultSlotAccess) this;
         Player player = access.quality_food$getPlayer();

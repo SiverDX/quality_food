@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.AbstractCraftingMenu;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -21,12 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Apply quality when crafting with shift-click */
 @Mixin(InventoryMenu.class)
-public abstract class InventoryMenuMixin extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
-    @Shadow @Final private ResultContainer resultSlots;
-    @Shadow @Final private CraftingContainer craftSlots;
+public abstract class InventoryMenuMixin extends AbstractCraftingMenu {
 
-    public InventoryMenuMixin(final MenuType<?> type, int containerId) {
-        super(type, containerId);
+    public InventoryMenuMixin(final MenuType<?> type, int containerId, int width, int height) {
+        super(type, containerId, width, height);
     }
 
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/InventoryMenu;moveItemStackTo(Lnet/minecraft/world/item/ItemStack;IIZ)Z", ordinal = 0, shift = At.Shift.BEFORE))

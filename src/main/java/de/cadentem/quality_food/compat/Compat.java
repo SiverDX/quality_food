@@ -1,8 +1,8 @@
 package de.cadentem.quality_food.compat;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.fml.loading.FMLLoader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +13,12 @@ public class Compat {
     private static final Map<String, List<String>> ALIAS = Map.of();
     private static final Map<String, Boolean> MODS = new HashMap<>();
 
-    public static ResourceLocation common(final String path) {
+    public static Identifier common(final String path) {
         return location("c", path);
     }
 
-    public static ResourceLocation location(final String namespace, final String path) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+    public static Identifier location(final String namespace, final String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
     private static boolean isModLoaded(final String mod) {
@@ -44,7 +44,7 @@ public class Compat {
             return true;
         }
 
-        return LoadingModList.get().getModFileById(modid) != null;
+        return FMLLoader.getCurrent().getLoadingModList().getModFileById(modid) != null;
     }
 
     public enum Mod {

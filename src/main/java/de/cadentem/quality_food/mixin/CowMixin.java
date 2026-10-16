@@ -5,7 +5,7 @@ import de.cadentem.quality_food.core.attachments.AnimalData;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.cow.AbstractCow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 /** Apply quality to the milk bucket (taking the potential of the cow into account) */
-@Mixin(Cow.class)
+@Mixin(AbstractCow.class)
 public abstract class CowMixin extends Animal {
     protected CowMixin(final EntityType<? extends Animal> type, final Level level) {
         super(type, level);
     }
 
-    @ModifyVariable(method = "mobInteract", at = @At("STORE"), ordinal = 1)
+    @ModifyVariable(method = "mobInteract", at = @At("STORE"), name = "bucketOrMilkBucket")
     private ItemStack quality_food$applyQuality(final ItemStack milkBucket, @Local(argsOnly = true) final Player player) {
         if (!level().isClientSide()) {
             QualityUtils.applyQuality(milkBucket, player, AnimalData.getPotential(this), registryAccess());
