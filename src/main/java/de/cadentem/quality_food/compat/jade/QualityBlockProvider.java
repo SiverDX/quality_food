@@ -1,22 +1,18 @@
 package de.cadentem.quality_food.compat.jade;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.core.attachments.AttachmentHandler;
-import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.registry.QFComponents;
-import de.cadentem.quality_food.util.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
-import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 import snownee.jade.api.ui.JadeUI;
 
-public class QualityBlockProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+public class QualityBlockProvider implements IBlockComponentProvider {
     private static final Identifier ID = QualityFood.location("quality_block");
 
     @Override
@@ -44,18 +40,4 @@ public class QualityBlockProvider implements IBlockComponentProvider, IServerDat
         return ID;
     }
 
-    @Override
-    public void appendServerData(final CompoundTag tag, final BlockAccessor accessor) {
-        Quality quality = accessor.getLevel().getData(AttachmentHandler.LEVEL_DATA).get(accessor.getPosition());
-
-        if (quality != Quality.NONE) {
-            tag.putString(QualityFood.concat("type"), quality.type().toString());
-            tag.putInt(QualityFood.concat("level"), quality.level());
-        }
-    }
-
-    @Override
-    public boolean shouldRequestData(final BlockAccessor accessor) {
-        return Utils.isValidBlock(accessor.getBlock());
-    }
 }

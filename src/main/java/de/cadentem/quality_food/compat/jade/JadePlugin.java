@@ -12,8 +12,8 @@ import snownee.jade.api.WailaPlugin;
 public class JadePlugin implements IWailaPlugin {
     @Override
     public void register(final IWailaCommonRegistration registration) {
-        registration.registerBlockDataProvider(new QualityBlockProvider(), Block.class);
-        registration.registerEntityDataProvider(new QualityMobProvider(), Mob.class);
+        registration.registerBlockDataProvider(new QualityBlockDataProvider(), Block.class);
+        registration.registerEntityDataProvider(new QualityMobDataProvider(), Mob.class);
     }
 
     @Override

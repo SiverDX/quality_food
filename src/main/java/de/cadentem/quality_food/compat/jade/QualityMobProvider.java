@@ -1,20 +1,17 @@
 package de.cadentem.quality_food.compat.jade;
 
 import de.cadentem.quality_food.QualityFood;
-import de.cadentem.quality_food.core.attachments.AnimalData;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
-import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
 import java.text.NumberFormat;
 
-public class QualityMobProvider implements IEntityComponentProvider, IServerDataProvider<EntityAccessor> {
+public class QualityMobProvider implements IEntityComponentProvider {
     private static final Identifier ID = QualityFood.location("quality_mob");
     private static final String POTENTIAL = QualityFood.concat("potential");
 
@@ -42,17 +39,4 @@ public class QualityMobProvider implements IEntityComponentProvider, IServerData
         return ID;
     }
 
-    @Override
-    public void appendServerData(final CompoundTag tag, final EntityAccessor accessor) {
-        AnimalData data = AnimalData.get(accessor.getEntity());
-
-        if (data != null) {
-            tag.putDouble(POTENTIAL, data.potential);
-        }
-    }
-
-    @Override
-    public boolean shouldRequestData(final EntityAccessor accessor) {
-        return accessor.getEntity() instanceof Mob;
-    }
 }
