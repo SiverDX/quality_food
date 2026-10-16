@@ -24,8 +24,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static Compat.*;
-import static Compat.Mod.*;
+import static de.cadentem.quality_food.compat.Compat.*;
+import static de.cadentem.quality_food.compat.Compat.Mod.*;
 
 @EventBusSubscriber
 public class ServerConfig {

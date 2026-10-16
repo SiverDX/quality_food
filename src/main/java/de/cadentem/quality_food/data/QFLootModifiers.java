@@ -16,6 +16,6 @@ public class QFLootModifiers extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
-        add(QualityLootModifier.ID, new QualityLootModifier(new LootItemCondition[]{}));
+        add(QualityLootModifier.ID, new QualityLootModifier(new LootItemCondition[]{}, 0));
     }
 }

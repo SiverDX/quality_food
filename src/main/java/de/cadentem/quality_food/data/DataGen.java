@@ -19,11 +19,11 @@ public class DataGen {
     @SubscribeEvent
     public static void configureDataGen(final GatherDataEvent.Client event) {
         QFBlockTags blockTags = new QFBlockTags(event.getGenerator().getPackOutput(), event.getLookupProvider());
-        event.getGenerator().addProvider(event.includeServer(), blockTags);
-        event.getGenerator().addProvider(event.includeServer(), new QFItemTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
-        event.getGenerator().addProvider(event.includeServer(), new QFLootModifiers(event.getGenerator().getPackOutput(), event.getLookupProvider()));
-        event.getGenerator().addProvider(event.includeServer(), new QFEffectTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
-        event.getGenerator().addProvider(event.includeServer(), new QFEntityTypeTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(true, blockTags);
+        event.getGenerator().addProvider(true, new QFItemTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(true, new QFLootModifiers(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(true, new QFEffectTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
+        event.getGenerator().addProvider(true, new QFEntityTypeTags(event.getGenerator().getPackOutput(), event.getLookupProvider()));
         event.createDatapackRegistryObjects(createProvider(), Set.of(QualityFood.MODID));
     }
 

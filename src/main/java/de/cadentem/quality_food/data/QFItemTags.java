@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.data;
 
+import net.minecraft.tags.TagEntry;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.compat.Compat;
 import net.minecraft.core.HolderLookup;
@@ -37,38 +38,38 @@ public class QFItemTags extends IntrinsicHolderTagsProvider<Item> {
                 .addTag(Tags.Items.CROPS)
                 .addTag(Tags.Items.FOODS)
                 .addTag(Tags.Items.MUSHROOMS)
-                .addOptionalTag(Compat.common("flours")) // Create
-                .addOptionalTag(Compat.common("doughs")) // Create
-                .addOptionalTag(Compat.common("dough")) // Kaleidoscope Cookery
-                .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops"))
-                .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "pies"))
-                .addOptionalTag(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "mushroom_colonies"))
-                .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "rice_panicle"))
-                .addOptional(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "debug_pumpkin_pie"))
-                .addOptional(Compat.location(Compat.Mod.FRUITFUL_FUN.modid(), "lemon_roast_chicken_block"))
-                .addOptional(Compat.location(Compat.Mod.COLLECTORS_REAP.modid(), "pomegranate"))
-                .addOptional(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "barley"))
-                .addOptional(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "oat"))
-                .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "hibiscus"))
-                .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "lavender_blossom"))
-                .addOptional(Compat.location(Compat.Mod.HERALBREWS.modid(), "green_tea_leaf"))
-                .addOptional(Compat.location(Compat.Mod.KALEIDOSCOPE_COOKERY.modid(), "rice_panicle"))
-                .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "cheese_wheel"))
-                .addOptional(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "oat"))
-                .addOptional(Compat.location("hearthandharvest", "unripe_cheddar_cheese_wheel"))
-                .addOptional(Compat.location("hearthandharvest", "cheddar_cheese_wheel"))
-                .addOptional(Compat.location("hearthandharvest", "unripe_goat_cheese_wheel"))
-                .addOptional(Compat.location("hearthandharvest", "goat_cheese_wheel"))
-                .addOptional(Compat.location("hearthandharvest", "blueberry_pie"))
-                .addOptional(Compat.location("hearthandharvest", "raspberry_pie"))
-                .addOptional(Compat.location("hearthandharvest", "grape_pie"))
-                .addOptional(Compat.location("hearthandharvest", "peanut_butter_pie"))
-                .addOptional(Compat.location("hearthandharvest", "chicken_pot_pie"))
-                .addOptional(Compat.location("hearthandharvest", "carrot_cake"))
+                .addOptionalTag(TagKey.create(Registries.ITEM, Compat.common("flours"))) // Create
+                .addOptionalTag(TagKey.create(Registries.ITEM, Compat.common("doughs"))) // Create
+                .addOptionalTag(TagKey.create(Registries.ITEM, Compat.common("dough"))) // Kaleidoscope Cookery
+                .addOptionalTag(TagKey.create(Registries.ITEM, Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "wild_crops")))
+                .addOptionalTag(TagKey.create(Registries.ITEM, Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "pies")))
+                .addOptionalTag(TagKey.create(Registries.ITEM, Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "mushroom_colonies")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "rice_panicle")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.FARMERSDELIGHT.modid(), "debug_pumpkin_pie")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.FRUITFUL_FUN.modid(), "lemon_roast_chicken_block")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.COLLECTORS_REAP.modid(), "pomegranate")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "barley")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.FARM_AND_CHARM.modid(), "oat")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.HERALBREWS.modid(), "hibiscus")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.HERALBREWS.modid(), "lavender_blossom")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.HERALBREWS.modid(), "green_tea_leaf")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.KALEIDOSCOPE_COOKERY.modid(), "rice_panicle")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "cheese_wheel")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.VINTAGEDELIGHT.modid(), "oat")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "unripe_cheddar_cheese_wheel")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "cheddar_cheese_wheel")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "unripe_goat_cheese_wheel")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "goat_cheese_wheel")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "blueberry_pie")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "raspberry_pie")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "grape_pie")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "peanut_butter_pie")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "chicken_pot_pie")))
+                .add(TagEntry.optionalElement(Compat.location("hearthandharvest", "carrot_cake")))
         ;
 
         tag(BLACKLIST)
-                .addOptional(Compat.location(Compat.Mod.SUPPLEMENTARIES.modid(), "flax"))
-                .addOptional(Compat.location(Compat.Mod.SUPPLEMENTARIES.modid(), "flax_seeds"));
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.SUPPLEMENTARIES.modid(), "flax")))
+                .add(TagEntry.optionalElement(Compat.location(Compat.Mod.SUPPLEMENTARIES.modid(), "flax_seeds")));
     }
 }

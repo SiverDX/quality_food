@@ -20,6 +20,6 @@ public class QFEffectTags extends TagsProvider<MobEffect> {
 
     @Override
     protected void addTags(@NotNull final HolderLookup.Provider provider) {
-        tag(BLACKLIST);
+        getOrCreateRawBuilder(BLACKLIST);
     }
 }
