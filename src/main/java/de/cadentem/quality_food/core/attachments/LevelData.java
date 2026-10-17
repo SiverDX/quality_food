@@ -44,7 +44,8 @@ public class LevelData implements INBTSerializable<CompoundTag> {
 
     public void remove(final BlockPos position) {
         long key = position.asLong();
-        lastRemoved = Pair.of(key, qualities.remove(key));
+        Quality removed = qualities.remove(key);
+        lastRemoved = Pair.of(key, removed == null ? Quality.NONE : removed);
     }
 
     public static void set(final LevelAccessor level, final BlockPos position, final Quality quality) {
