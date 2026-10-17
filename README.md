@@ -178,5 +178,3 @@ This is mostly about block interaction / quality application through crafting
 ![Example](https://i.imgur.com/hUnpNUh.png)
 
 Credits for the quality icons go to https://twitter.com/concernedape
-
-The 26.1.2 port includes integrations for Jade, Harvest with Ease, Sophisticated Core, Tom's Storage, RightClickHarvest, and FastWorkbench. Integrations without a 26.1.2 release are omitted.

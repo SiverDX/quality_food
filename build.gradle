@@ -16,7 +16,7 @@ group = mod_group_id
 repositories {
     mavenLocal()
     flatDir { dirs 'libs' }
-    maven { url = "https://www.cursemaven.com" } // CurseForge
+    maven { url = "https://www.cursemaven.com" }
     maven { url = "https://api.modrinth.com/maven" }
 }
 
@@ -70,6 +70,8 @@ dependencies {
     compileOnly "maven.modrinth:fastworkbench:5a0ClntQ"
     compileOnly "maven.modrinth:placebo:c4uzJQYp"
 
+    // Test
+    implementation "maven.modrinth:appleskin:3.0.9+mc26.1"
 }
 
 tasks.withType(ProcessResources).configureEach {
