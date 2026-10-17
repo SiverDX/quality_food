@@ -8,8 +8,6 @@ import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Final;
@@ -21,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Allow material (with quality) to grant its bonus when shift-clicking the crafting result */
 @Mixin(AbstractFurnaceMenu.class)
-public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu<SingleRecipeInput, AbstractCookingRecipe> {
+public abstract class AbstractFurnaceMenuMixin extends RecipeBookMenu {
     @Shadow @Final private Container container;
     @Shadow @Final protected Level level;
 

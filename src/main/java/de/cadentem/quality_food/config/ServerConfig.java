@@ -1,10 +1,11 @@
 package de.cadentem.quality_food.config;
 
+import de.cadentem.quality_food.util.Utils;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.util.RecipeExtension;
 import de.cadentem.quality_food.util.StorageRecipeCache;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
@@ -145,11 +146,11 @@ public class ServerConfig {
         RecipeExtension extension = (RecipeExtension) (Object) recipe;
 
         if (extension.quality_food$getStatus() == RecipeExtension.QualityFoodStatus.NOT_INITIALIZED) {
-            boolean isNoQualityRecipe = NO_QUALITY_RECIPES.get().contains(recipe.id().toString());
-            boolean isRetainQualityRecipe = RETAIN_QUALITY_RECIPES.get().contains(recipe.id().toString());
+            boolean isNoQualityRecipe = NO_QUALITY_RECIPES.get().contains(recipe.id().identifier().toString());
+            boolean isRetainQualityRecipe = RETAIN_QUALITY_RECIPES.get().contains(recipe.id().identifier().toString());
 
             if (!isRetainQualityRecipe && access != null) {
-                isRetainQualityRecipe = recipe.value().getResultItem(access).is(Tags.Items.SEEDS);
+                isRetainQualityRecipe = Utils.getRecipeResults(recipe.value(), access).stream().anyMatch(result -> result.is(Tags.Items.SEEDS));
             }
 
             if (isNoQualityRecipe && isRetainQualityRecipe) {
@@ -180,7 +181,7 @@ public class ServerConfig {
 
     private static boolean validateRecipe(final Object object) {
         if (object instanceof String string) {
-            return ResourceLocation.tryParse(string) != null;
+            return Identifier.tryParse(string) != null;
         }
 
         return false;
@@ -200,13 +201,13 @@ public class ServerConfig {
 
             String crop = data[FarmlandConfig.CROP];
 
-            if (ResourceLocation.tryParse(crop.startsWith("#") ? crop.substring(1) : crop) == null) {
+            if (Identifier.tryParse(crop.startsWith("#") ? crop.substring(1) : crop) == null) {
                 return false;
             }
 
             String farmland = data[FarmlandConfig.FARMLAND];
 
-            if (ResourceLocation.tryParse(farmland.startsWith("#") ? farmland.substring(1) : farmland) == null) {
+            if (Identifier.tryParse(farmland.startsWith("#") ? farmland.substring(1) : farmland) == null) {
                 return false;
             }
 

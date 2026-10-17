@@ -46,7 +46,7 @@ public class QFCommands {
     public static void registerCommands(final RegisterCommandsEvent event) {
         event.getDispatcher().register(
                 Commands.literal(QualityFood.MODID)
-                        .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(source -> Commands.LEVEL_GAMEMASTERS.check(source.permissions()))
                         .then(
                                 Commands.literal("give")
                                         .then(
@@ -131,7 +131,7 @@ public class QFCommands {
             return 0;
         }
 
-        ItemStack tempStack = input.createItemStack(1, false);
+        ItemStack tempStack = input.createItemStack(1);
         int maxStackSize = tempStack.getMaxStackSize();
         int maxCount = maxStackSize * GiveCommand.MAX_ALLOWED_ITEMSTACKS;
 
@@ -152,7 +152,7 @@ public class QFCommands {
                 int min = Math.min(toGive, maxStackSize);
                 toGive -= min;
 
-                ItemStack stack = input.createItemStack(min, false);
+                ItemStack stack = input.createItemStack(min);
                 QualityUtils.applyQuality(stack, type);
                 boolean wasAdded = player.getInventory().add(stack);
 

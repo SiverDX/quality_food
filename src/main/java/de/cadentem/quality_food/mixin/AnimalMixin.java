@@ -23,7 +23,7 @@ public abstract class AnimalMixin extends AgeableMob {
     }
 
     @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Animal;usePlayerItem(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
-    private void quality_food$improvePotential(final Player player, final InteractionHand hand, final CallbackInfoReturnable<InteractionResult> callback, @Local(name = "itemstack") final ItemStack food) {
+    private void quality_food$improvePotential(final Player player, final InteractionHand hand, final CallbackInfoReturnable<InteractionResult> callback, @Local(name = "itemStack") final ItemStack food) {
         AnimalData.feed(food, this);
     }
 }

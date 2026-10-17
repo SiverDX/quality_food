@@ -1,14 +1,16 @@
 # General
+This branch targets Minecraft 26.1.2 with NeoForge and Java 25.
+
 This mod adds quality to food and certain food-related material (e.g. crops) through data components
 
 Quality can:
 - Increase nutrition and saturation
 - Improve positive effects and diminish (or outright remove) negative effects gained from eating food
-- Impact the result of crafted (quality applicable) items (the `minecraft:generic.luck` will increase the amount of rolls)
+- Impact the result of crafted (quality applicable) items (the `minecraft:luck` will increase the amount of rolls)
 
 ---
 
-Quality Types are defined per datapack (`/<namespace>/quality_types/`), syntax example:
+Quality Types are defined per datapack (`data/<namespace>/quality_food/quality_types/`), syntax example:
 
 ```json
 {
@@ -23,32 +25,38 @@ Quality Types are defined per datapack (`/<namespace>/quality_types/`), syntax e
       "effects": [
         {
           "effect": {
-            "effect": {
-              "amplifier": 2,
-              "duration": 100,
-              "id": "minecraft:absorption",
-              "neoforge:cures": [
-                "protected_by_totem",
-                "milk"
-              ],
-              "show_icon": true
-            },
-            "probability": 0.6
+            "probability": 0.6,
+            "type": "minecraft:apply_effects",
+            "effects": [
+              {
+                "amplifier": 2,
+                "duration": 100,
+                "id": "minecraft:absorption",
+                "neoforge:cures": [
+                  "protected_by_totem",
+                  "milk"
+                ],
+                "show_icon": true
+              }
+            ]
           },
           "chance": 0.5
         },
         {
           "effect": {
-            "effect": {
-              "duration": 40,
-              "id": "minecraft:regeneration",
-              "neoforge:cures": [
-                "protected_by_totem",
-                "milk"
-              ],
-              "show_icon": true
-            },
-            "probability": 0.2
+            "probability": 0.2,
+            "type": "minecraft:apply_effects",
+            "effects": [
+              {
+                "duration": 40,
+                "id": "minecraft:regeneration",
+                "neoforge:cures": [
+                  "protected_by_totem",
+                  "milk"
+                ],
+                "show_icon": true
+              }
+            ]
           },
           "chance": 1
         }
@@ -59,7 +67,12 @@ Quality Types are defined per datapack (`/<namespace>/quality_types/`), syntax e
   "level": 1,
   "nutrition_multiplier": 1.5,
   "probability_multiplier": 1.25,
-  "saturation_multiplier": 1.25
+  "saturation_multiplier": 1.25,
+  "weight": 1,
+  "min_weight": 0,
+  "name": {
+    "translate": "quality_type.quality_food.iron"
+  }
 }
 ```
 - `level`: The level of the effect - higher level ones will be rolled first
@@ -165,3 +178,5 @@ This is mostly about block interaction / quality application through crafting
 ![Example](https://i.imgur.com/hUnpNUh.png)
 
 Credits for the quality icons go to https://twitter.com/concernedape
+
+The 26.1.2 port includes integrations for Jade, Harvest with Ease, Sophisticated Core, Tom's Storage, RightClickHarvest, and FastWorkbench. Integrations without a 26.1.2 release are omitted.

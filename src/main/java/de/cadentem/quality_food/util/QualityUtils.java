@@ -18,10 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import vectorwing.farmersdelight.common.block.WildCropBlock;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -62,7 +60,7 @@ public class QualityUtils {
         Holder<QualityType> selected = null;
         double averageWeight = totalWeight / validIngredients;
 
-        for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+        for (Holder<QualityType> type : access.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).listElements().toList()) {
             if (selected != null && type.value().level() <= selected.value().level()) {
                 continue;
             }
@@ -110,7 +108,7 @@ public class QualityUtils {
         if (isRelevantCrop(state)) {
             Holder<QualityType> selected = null;
 
-            for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+            for (Holder<QualityType> type : access.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).listElements().toList()) {
                 if (selected != null && type.value().level() <= selected.value().level()) {
                     continue;
                 }
@@ -179,7 +177,7 @@ public class QualityUtils {
     public static void applyQuality(final ItemStack stack, @Nullable final Player player, double potential, int maxLevel, final RegistryAccess access) {
         Holder<QualityType> selected = null;
 
-        for (Holder<QualityType> type : access.registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+        for (Holder<QualityType> type : access.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).listElements().toList()) {
             if (selected != null && type.value().level() <= selected.value().level()) {
                 continue;
             }
@@ -255,10 +253,6 @@ public class QualityUtils {
         }
 
         if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
-            return true;
-        }
-
-        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && state.getBlock() instanceof WildCropBlock) {
             return true;
         }
 

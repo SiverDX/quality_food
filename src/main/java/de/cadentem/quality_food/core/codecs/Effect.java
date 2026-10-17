@@ -1,5 +1,6 @@
 package de.cadentem.quality_food.core.codecs;
 
+import net.minecraft.core.component.DataComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderSet;
@@ -18,7 +19,7 @@ public record Effect(Optional<HolderSet<Item>> applicableTo, List<ChanceEffect> 
             .apply(builder, Effect::new));
 
     public boolean test(final ItemStack stack) {
-        if (stack.getFoodProperties(null) == null) {
+        if (stack.get(DataComponents.FOOD) == null) {
             return false;
         }
 

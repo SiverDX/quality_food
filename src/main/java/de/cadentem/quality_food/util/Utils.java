@@ -1,6 +1,10 @@
 package de.cadentem.quality_food.util;
 
-import de.cadentem.quality_food.compat.Compat;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.util.context.ContextMap;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.attachments.BlockData;
 import de.cadentem.quality_food.core.attachments.LevelData;
@@ -23,10 +27,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.ribs.vintagedelight.block.CheeseMoldBlock;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import vectorwing.farmersdelight.common.block.PieBlock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,6 +40,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Utils {
+    public static List<ItemStack> getRecipeResults(final Recipe<?> recipe, final RegistryAccess access) {
+        ContextMap context = new ContextMap.Builder()
+                .withParameter(SlotDisplayContext.REGISTRIES, access)
+                .create(SlotDisplayContext.CONTEXT);
+        return recipe.display().stream().flatMap(display -> display.result().resolveForStacks(context).stream()).toList();
+    }
+
     public static boolean isValidItem(final ItemStack stack) {
         return isValidItem(stack, true);
     }
@@ -51,7 +60,7 @@ public class Utils {
             return false;
         }
 
-        FoodProperties properties = stack.getFoodProperties(null);
+        FoodProperties properties = stack.get(DataComponents.FOOD);
 
         if (properties != null && (properties.nutrition() > 0 || properties.saturation() > 0)) {
             return true;
@@ -74,22 +83,8 @@ public class Utils {
             return true;
         }
 
-        if (Compat.Mod.FARMERSDELIGHT.isLoaded() && block instanceof PieBlock) {
-            return true;
-        }
-
         if (checkItem) {
             return isValidItem(block.asItem().getDefaultInstance(), false);
-        }
-
-        return false;
-    }
-
-    /** Blocks that should not store quality themselves */
-    @SuppressWarnings("RedundantIfStatement") // ignore for clarity
-    public static boolean isBlockException(final BlockState state) {
-        if (Compat.Mod.VINTAGEDELIGHT.isLoaded() && state.getBlock() instanceof CheeseMoldBlock) {
-            return true;
         }
 
         return false;

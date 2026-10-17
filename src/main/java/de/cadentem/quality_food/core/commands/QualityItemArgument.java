@@ -7,7 +7,7 @@ import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +24,7 @@ public class QualityItemArgument extends ItemArgument {
     @Override
     public <S> @NotNull CompletableFuture<Suggestions> listSuggestions(@NotNull final CommandContext<S> context, @NotNull final SuggestionsBuilder builder) {
         return super.listSuggestions(context, builder).thenApply(suggestions -> {
-            suggestions.getList().removeIf(entry -> QualityUtils.isInvalidItem(BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(entry.getText())).getDefaultInstance()));
+            suggestions.getList().removeIf(entry -> QualityUtils.isInvalidItem(BuiltInRegistries.ITEM.get(Identifier.parse(entry.getText())).orElseThrow().value().getDefaultInstance()));
             return suggestions;
         });
     }

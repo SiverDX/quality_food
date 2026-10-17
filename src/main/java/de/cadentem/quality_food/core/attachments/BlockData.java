@@ -5,29 +5,26 @@ import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.QualityUtils;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
 @ParametersAreNonnullByDefault
-public class BlockData implements INBTSerializable<CompoundTag> {
+public class BlockData implements ValueIOSerializable {
     private final Deque<CookingEntry> cookingQueue = new ArrayDeque<>();
 
     public void useQuality(final ItemStack stack, @Nullable final Player player, final Level level) {
@@ -57,7 +54,7 @@ public class BlockData implements INBTSerializable<CompoundTag> {
             QualityUtils.applyQuality(stack, selected);
         }
 
-        for (Holder<QualityType> type : level.registryAccess().registryOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).holders().toList()) {
+        for (Holder<QualityType> type : level.registryAccess().lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).listElements().toList()) {
             if (selected != null && type.value().level() <= selected.value().level()) {
                 continue;
             }
@@ -85,31 +82,22 @@ public class BlockData implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(final HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        ListTag queue = new ListTag();
-
+    public void serialize(final ValueOutput output) {
+        ValueOutput.ValueOutputList queue = output.childrenList("cooking_queue");
         for (CookingEntry entry : cookingQueue) {
-            CompoundTag entryTag = new CompoundTag();
-            entry.type().unwrapKey().ifPresent(key -> entryTag.putString("type", key.location().toString()));
-            entryTag.putDouble("bonus", entry.bonus());
-            queue.add(entryTag);
+            ValueOutput entryOutput = queue.addChild();
+            entryOutput.putString("type", entry.type().unwrapKey().orElseThrow().identifier().toString());
+            entryOutput.putDouble("bonus", entry.bonus());
         }
-
-        tag.put("cooking_queue", queue);
-        return tag;
     }
 
     @Override
-    public void deserializeNBT(final HolderLookup.Provider provider, final CompoundTag tag) {
+    public void deserialize(final ValueInput input) {
         cookingQueue.clear();
-
-        ListTag queue = tag.getList("cooking_queue", Tag.TAG_COMPOUND);
-
-        for (int i = 0; i < queue.size(); i++) {
-            CompoundTag entryTag = queue.getCompound(i);
-            Optional<Holder.Reference<QualityType>> optional = provider.lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).get(ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, ResourceLocation.parse(entryTag.getString("type"))));
-            optional.ifPresent(type -> cookingQueue.add(new CookingEntry(type, entryTag.getDouble("bonus"))));
+        for (ValueInput entry : input.childrenList("cooking_queue").orElseThrow()) {
+            ResourceKey<QualityType> key = ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, Identifier.parse(entry.getString("type").orElseThrow()));
+            Holder<QualityType> type = input.lookup().lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).getOrThrow(key);
+            cookingQueue.add(new CookingEntry(type, entry.read("bonus", Codec.DOUBLE).orElseThrow()));
         }
     }
 

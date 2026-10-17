@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -31,7 +31,7 @@ public abstract class FastBenchUtilMixin {
     }
 
     @ModifyVariable(method = "slotChangedCraftingGrid", at = @At(value = "STORE", ordinal = 1), name = "itemstack")
-    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final Level level, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots, @Local(name = "recipe") final RecipeHolder<?> recipe) {
+    private static ItemStack quality_food$handleConversion(final ItemStack result, @Local(argsOnly = true) final ServerLevel level, @Local(argsOnly = true) final CraftingInventoryExt craftSlots, @Local(argsOnly = true) final ResultContainer resultSlots, @Local(name = "recipe") final RecipeHolder<?> recipe) {
         QualityUtils.handleConversion(result, craftSlots, recipe, level.registryAccess());
         return result;
     }

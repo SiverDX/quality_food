@@ -2,11 +2,11 @@ package de.cadentem.quality_food.core.codecs;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 
-public record ChanceEffect(FoodProperties.PossibleEffect effect, double chance) {
+public record ChanceEffect(ConsumeEffect effect, double chance) {
     public static Codec<ChanceEffect> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-                    FoodProperties.PossibleEffect.CODEC.fieldOf("effect").forGetter(ChanceEffect::effect),
+                    ConsumeEffect.CODEC.fieldOf("effect").forGetter(ChanceEffect::effect),
                     Codec.DOUBLE.optionalFieldOf("chance", 1d).forGetter(ChanceEffect::chance))
             .apply(builder, ChanceEffect::new));
 }

@@ -3,7 +3,7 @@ package de.cadentem.quality_food.util;
 import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.config.ServerConfig;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.Item;
@@ -14,13 +14,12 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,16 +36,16 @@ public class StorageRecipeCache {
      */
     public record Entry(int size, boolean packing) {}
 
-    private static @Nullable Map<ResourceLocation, Entry> cache;
+    private static @Nullable Map<Identifier, Entry> cache;
 
-    private record Candidate(ResourceLocation id, Set<Item> inputs, Item output, int size) {}
+    private record Candidate(Identifier id, Set<Item> inputs, Item output, int size) {}
 
     public static @Nullable Entry get(@Nullable final RecipeHolder<?> recipe) {
         if (recipe == null) {
             return null;
         }
 
-        Map<ResourceLocation, Entry> entries = cache;
+        Map<Identifier, Entry> entries = cache;
 
         if (entries == null) {
             // Fallback in case the cache was invalidated in the meantime (e.g. config reload)
@@ -63,7 +62,7 @@ public class StorageRecipeCache {
             cache = entries;
         }
 
-        return entries.get(recipe.id());
+        return entries.get(recipe.id().identifier());
     }
 
     public static boolean isStorageRecipe(@Nullable final RecipeHolder<?> recipe) {
@@ -76,10 +75,10 @@ public class StorageRecipeCache {
 
     /** Server-side (re)load of the datapacks - the listener is appended after the vanilla ones, meaning the recipes are already parsed */
     @SubscribeEvent
-    public static void rebuildOnReload(final AddReloadListenerEvent event) {
+    public static void rebuildOnReload(final AddServerReloadListenersEvent event) {
         RecipeManager manager = event.getServerResources().getRecipeManager();
         RegistryAccess access = event.getRegistryAccess();
-        event.addListener((ResourceManagerReloadListener) (final ResourceManager ignored) -> {
+        event.addListener(QualityFood.location("storage_recipes"), (ResourceManagerReloadListener) (final ResourceManager ignored) -> {
             if (!ServerConfig.SPEC.isLoaded()) {
                 QualityFood.LOG.info("Config is not yet loaded - skipping storage recipe cache reload");
                 return;
@@ -94,7 +93,7 @@ public class StorageRecipeCache {
         invalidate();
     }
 
-    private static Map<ResourceLocation, Entry> build(final RecipeManager manager, final RegistryAccess access) {
+    private static Map<Identifier, Entry> build(final RecipeManager manager, final RegistryAccess access) {
         List<Candidate> packing = new ArrayList<>();
         // Index by input item to avoid comparing every packing recipe against every unpacking recipe
         Map<Item, List<Candidate>> unpackingByInput = new HashMap<>();
@@ -106,14 +105,11 @@ public class StorageRecipeCache {
                 continue;
             }
 
-            ItemStack result;
-
-            try {
-                result = recipe.getResultItem(access);
-            } catch (Exception ignored) {
-                // Certain (modded) recipe types don't support being queried outside a crafting context
+            List<ItemStack> results = Utils.getRecipeResults(recipe, access);
+            if (results.size() != 1) {
                 continue;
             }
+            ItemStack result = results.getFirst();
 
             if (result == null || result.isEmpty() || !result.getComponentsPatch().isEmpty()) {
                 // A storage block should not carry any data
@@ -122,7 +118,7 @@ public class StorageRecipeCache {
 
             List<Ingredient> ingredients = new ArrayList<>();
 
-            for (Ingredient ingredient : recipe.getIngredients()) {
+            for (Ingredient ingredient : recipe.placementInfo().ingredients()) {
                 if (!ingredient.isEmpty()) {
                     ingredients.add(ingredient);
                 }
@@ -148,7 +144,7 @@ public class StorageRecipeCache {
                 }
 
                 if (inputs != null) {
-                    packing.add(new Candidate(holder.id(), inputs, result.getItem(), ingredients.size()));
+                    packing.add(new Candidate(holder.id().identifier(), inputs, result.getItem(), ingredients.size()));
                 }
             } else if (result.getCount() > 1 && ingredients.size() == 1) {
                 Set<Item> inputs = toItems(ingredients.get(0));
@@ -158,12 +154,12 @@ public class StorageRecipeCache {
                 }
 
                 for (Item input : inputs) {
-                    unpackingByInput.computeIfAbsent(input, key -> new ArrayList<>()).add(new Candidate(holder.id(), inputs, result.getItem(), result.getCount()));
+                    unpackingByInput.computeIfAbsent(input, key -> new ArrayList<>()).add(new Candidate(holder.id().identifier(), inputs, result.getItem(), result.getCount()));
                 }
             }
         }
 
-        Map<ResourceLocation, Entry> detected = new HashMap<>();
+        Map<Identifier, Entry> detected = new HashMap<>();
 
         for (Candidate pack : packing) {
             if (!isRelevant(pack)) {
@@ -223,7 +219,7 @@ public class StorageRecipeCache {
 
         for (Item input : inputs) {
             //noinspection deprecation -> ignore
-            if (input.hasCraftingRemainingItem()) {
+            if (input.getCraftingRemainder() != null) {
                 // Recipes with a remainder (bucket, bottle, ...) are not a plain conversion
                 return true;
             }
@@ -232,11 +228,11 @@ public class StorageRecipeCache {
         return false;
     }
 
-    private static boolean isAllowed(final ResourceLocation id) {
+    private static boolean isAllowed(final Identifier id) {
         return !ServerConfig.STORAGE_RECIPE_BLACKLIST.get().contains(id.toString());
     }
 
     private static Set<Item> toItems(final Ingredient ingredient) {
-        return Arrays.stream(ingredient.getItems()).map(ItemStack::getItem).collect(Collectors.toSet());
+        return ingredient.items().map(net.minecraft.core.Holder::value).collect(Collectors.toSet());
     }
 }
