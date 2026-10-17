@@ -100,7 +100,7 @@ public class LevelData {
     public void remove(final BlockPos position) {
         long key = position.asLong();
         Quality removed = qualities.remove(key);
-lastRemoved = Pair.of(key, removed == null ? Quality.NONE : removed);
+        lastRemoved = Pair.of(key, removed == null ? Quality.NONE : removed);
     }
 
     public CompoundTag serializeNBT() {
