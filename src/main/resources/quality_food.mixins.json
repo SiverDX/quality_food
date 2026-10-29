@@ -29,6 +29,7 @@
     "StemBlockMixin",
     "SugarCaneBlockMixin",
     "ThrownEggMixin",
+    "WorldlyContainerWrapperMixin",
     "fastbench.CraftResultSlotExtMixin",
     "fastbench.FastBenchUtilMixin",
     "fastbench.ResultSlotAccess",

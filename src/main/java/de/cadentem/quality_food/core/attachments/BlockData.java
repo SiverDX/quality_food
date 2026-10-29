@@ -1,6 +1,7 @@
 package de.cadentem.quality_food.core.attachments;
 
 import de.cadentem.quality_food.core.Modification;
+import de.cadentem.quality_food.core.codecs.Quality;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
 import de.cadentem.quality_food.util.QualityUtils;
@@ -26,11 +27,14 @@ import java.util.TreeSet;
 @ParametersAreNonnullByDefault
 public class BlockData implements ValueIOSerializable {
     private final Deque<CookingEntry> cookingQueue = new ArrayDeque<>();
+    private @Nullable Quality previewQuality;
 
     public void useQuality(final ItemStack stack, @Nullable final Player player, final Level level) {
         if (cookingQueue.isEmpty()) {
             return;
         }
+
+        previewQuality = null;
 
         Set<Holder<QualityType>> qualities = new TreeSet<>(Comparator.comparingInt(quality -> quality.value().level()));
         double qualityBonus = 0;
@@ -73,19 +77,56 @@ public class BlockData implements ValueIOSerializable {
         }
     }
 
+    public ItemStack previewQuality(final ItemStack stack, final Level level) {
+        if (cookingQueue.isEmpty() || stack.isEmpty()) {
+            return stack;
+        }
+
+        if (previewQuality == null) {
+            CookingEntry entry = cookingQueue.peek();
+            Holder<QualityType> selected = entry != null ? entry.type() : null;
+            double finalBonus = entry != null ? entry.bonus() : 0;
+
+            for (Holder<QualityType> type : level.registryAccess().lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).listElements().toList()) {
+                if (selected != null && type.value().level() <= selected.value().level()) {
+                    continue;
+                }
+
+                double chance = level.getRandom().nextDouble();
+                chance = Modification.additive((float) finalBonus / (type.value().level() * type.value().level())).apply(chance);
+
+                if (chance > 1 - type.value().chance()) {
+                    selected = type;
+                }
+            }
+
+            previewQuality = selected != null ? QualityType.createQuality(selected, stack) : Quality.NONE;
+        }
+
+        if (!QualityUtils.isValidQuality(previewQuality)) {
+            return stack;
+        }
+
+        ItemStack copy = stack.copy();
+        QualityUtils.applyQuality(copy, previewQuality, true);
+        return copy;
+    }
+
     public void consumeQuality(int count) {
         for (int i = 0; i < count; i++) {
             cookingQueue.poll();
         }
+        previewQuality = null;
     }
 
-    public List<CookingEntry> createSnapshot() {
-        return List.copyOf(cookingQueue);
+    public Snapshot createSnapshot() {
+        return new Snapshot(List.copyOf(cookingQueue), previewQuality);
     }
 
-    public void restoreSnapshot(final List<CookingEntry> snapshot) {
+    public void restoreSnapshot(final Snapshot snapshot) {
         cookingQueue.clear();
-        cookingQueue.addAll(snapshot);
+        cookingQueue.addAll(snapshot.entries());
+        previewQuality = snapshot.previewQuality();
     }
 
     public double getQueueSize() {
@@ -109,6 +150,7 @@ public class BlockData implements ValueIOSerializable {
     @Override
     public void deserialize(final ValueInput input) {
         cookingQueue.clear();
+        previewQuality = null;
         for (ValueInput entry : input.childrenListOrEmpty("cooking_queue")) {
             double bonus = entry.getDoubleOr("bonus", 0);
             Holder<QualityType> type = entry.getString("type")
@@ -122,4 +164,5 @@ public class BlockData implements ValueIOSerializable {
     }
 
     public record CookingEntry(Holder<QualityType> type, double bonus) { }
+    public record Snapshot(List<CookingEntry> entries, @Nullable Quality previewQuality) { }
 }

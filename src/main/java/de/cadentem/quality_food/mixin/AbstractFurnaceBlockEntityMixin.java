@@ -24,14 +24,14 @@ import java.util.List;
 @Mixin(AbstractFurnaceBlockEntity.class)
 public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlockEntity {
     @Unique
-    private final SnapshotJournal<List<BlockData.CookingEntry>> quality_food$cookingQueueJournal = new SnapshotJournal<>() {
+    private final SnapshotJournal<BlockData.Snapshot> quality_food$cookingQueueJournal = new SnapshotJournal<>() {
         @Override
-        protected List<BlockData.CookingEntry> createSnapshot() {
+        protected BlockData.Snapshot createSnapshot() {
             return getData(AttachmentHandler.BLOCK_DATA).createSnapshot();
         }
 
         @Override
-        protected void revertToSnapshot(final List<BlockData.CookingEntry> snapshot) {
+        protected void revertToSnapshot(final BlockData.Snapshot snapshot) {
             getData(AttachmentHandler.BLOCK_DATA).restoreSnapshot(snapshot);
         }
     };

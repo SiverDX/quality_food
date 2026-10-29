@@ -1,5 +1,7 @@
 package de.cadentem.quality_food.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import de.cadentem.quality_food.util.QualityUtils;
 import de.cadentem.quality_food.util.Utils;
 import net.minecraft.world.Container;
@@ -14,7 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Allow material (with quality) to grant its bonus when manually taking out the result item */
 @Mixin(FurnaceResultSlot.class)
@@ -25,14 +26,15 @@ public abstract class FurnaceResultSlotMixin extends Slot {
         super(container, slot, x, y);
     }
 
-    @Inject(method = "remove", at = @At("HEAD"))
-    private void quality_food$startRemoveByPlayer(int amount, final CallbackInfoReturnable<ItemStack> callback) {
+    @WrapMethod(method = "remove")
+    private ItemStack quality_food$remove(int amount, final Operation<ItemStack> original) {
         Utils.SKIP_ABSTRACT_FURNACE_REMOVE_QUALITY.set(Boolean.TRUE);
-    }
 
-    @Inject(method = "remove", at = @At("RETURN"))
-    private void quality_food$endRemoveByPlayer(int amount, final CallbackInfoReturnable<ItemStack> callback) {
-        Utils.SKIP_ABSTRACT_FURNACE_REMOVE_QUALITY.remove();
+        try {
+            return original.call(amount);
+        } finally {
+            Utils.SKIP_ABSTRACT_FURNACE_REMOVE_QUALITY.remove();
+        }
     }
 
     @Inject(method = "checkTakeAchievements", at = @At(value = "RETURN"))
