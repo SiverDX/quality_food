@@ -13,13 +13,13 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -73,6 +73,21 @@ public class BlockData implements ValueIOSerializable {
         }
     }
 
+    public void consumeQuality(int count) {
+        for (int i = 0; i < count; i++) {
+            cookingQueue.poll();
+        }
+    }
+
+    public List<CookingEntry> createSnapshot() {
+        return List.copyOf(cookingQueue);
+    }
+
+    public void restoreSnapshot(final List<CookingEntry> snapshot) {
+        cookingQueue.clear();
+        cookingQueue.addAll(snapshot);
+    }
+
     public double getQueueSize() {
         return cookingQueue.size();
     }
@@ -86,7 +101,7 @@ public class BlockData implements ValueIOSerializable {
         ValueOutput.ValueOutputList queue = output.childrenList("cooking_queue");
         for (CookingEntry entry : cookingQueue) {
             ValueOutput entryOutput = queue.addChild();
-            entryOutput.putString("type", entry.type().unwrapKey().orElseThrow().identifier().toString());
+            entry.type().unwrapKey().ifPresent(key -> entryOutput.putString("type", key.identifier().toString()));
             entryOutput.putDouble("bonus", entry.bonus());
         }
     }
@@ -94,10 +109,15 @@ public class BlockData implements ValueIOSerializable {
     @Override
     public void deserialize(final ValueInput input) {
         cookingQueue.clear();
-        for (ValueInput entry : input.childrenList("cooking_queue").orElseThrow()) {
-            ResourceKey<QualityType> key = ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, Identifier.parse(entry.getString("type").orElseThrow()));
-            Holder<QualityType> type = input.lookup().lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).getOrThrow(key);
-            cookingQueue.add(new CookingEntry(type, entry.read("bonus", Codec.DOUBLE).orElseThrow()));
+        for (ValueInput entry : input.childrenListOrEmpty("cooking_queue")) {
+            double bonus = entry.getDoubleOr("bonus", 0);
+            Holder<QualityType> type = entry.getString("type")
+                    .map(Identifier::tryParse)
+                    .map(id -> ResourceKey.create(QFComponents.QUALITY_TYPE_REGISTRY, id))
+                    .flatMap(key -> input.lookup().lookupOrThrow(QFComponents.QUALITY_TYPE_REGISTRY).get(key))
+                    .map(holder -> (Holder<QualityType>) holder)
+                    .orElseGet(() -> Holder.direct(QualityType.NONE));
+            cookingQueue.add(new CookingEntry(type, bonus));
         }
     }
 

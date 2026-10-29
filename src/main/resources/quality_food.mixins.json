@@ -26,7 +26,6 @@
     "LevelMixin",
     "RecipeHolderMixin",
     "ResultSlotMixin",
-    "SidedInvWrapperMixin",
     "StemBlockMixin",
     "SugarCaneBlockMixin",
     "ThrownEggMixin",

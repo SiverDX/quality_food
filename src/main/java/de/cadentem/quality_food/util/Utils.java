@@ -40,6 +40,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Utils {
+    public static final ThreadLocal<Boolean> SKIP_ABSTRACT_FURNACE_REMOVE_QUALITY = ThreadLocal.withInitial(() -> Boolean.FALSE);
     public static List<ItemStack> getRecipeResults(final Recipe<?> recipe, final RegistryAccess access) {
         ContextMap context = new ContextMap.Builder()
                 .withParameter(SlotDisplayContext.REGISTRIES, access)
