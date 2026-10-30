@@ -1,10 +1,5 @@
 package de.cadentem.quality_food.util;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.util.context.ContextMap;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import de.cadentem.quality_food.core.attachments.AttachmentHandler;
 import de.cadentem.quality_food.core.attachments.BlockData;
 import de.cadentem.quality_food.core.attachments.LevelData;
@@ -16,16 +11,19 @@ import de.cadentem.quality_food.network.SyncCookingParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Container;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -95,7 +93,13 @@ public class Utils {
         int tickOffset = serverLevel.getRandom().nextInt(-3, 3);
 
         if (serverLevel.getGameTime() % (10 + tickOffset) == 0) {
-            BlockData data = furnace.getData(AttachmentHandler.BLOCK_DATA);
+            // No data = no cooking queue, meaning no particles to send
+            BlockData data = furnace.getExistingDataOrNull(AttachmentHandler.BLOCK_DATA);
+
+            if (data == null) {
+                return;
+            }
+
             double queueSize = data.getQueueSize();
 
             if (queueSize > 0) {
@@ -135,22 +139,6 @@ public class Utils {
                 data.set(grownPosition, quality);
             }
         }
-    }
-
-    /**
-     * Collects quality-applicable items from the given inventory
-     * @param maxSlotCheck To determine up to which slot the items should be considered
-     */
-    public static Collection<ItemStack> collectIngredients(final ItemStackHandler handler, final Supplier<Integer> maxSlotCheck) {
-        return collectIngredients(handler::getStackInSlot, maxSlotCheck);
-    }
-
-    /**
-     * Collects quality-applicable items from the given inventory
-     * @param maxSlotCheck To determine up to which slot the items should be considered
-     */
-    public static Collection<ItemStack> collectIngredients(final Container container, final Supplier<Integer> maxSlotCheck) {
-        return collectIngredients(container::getItem, maxSlotCheck);
     }
 
     private static Collection<ItemStack> collectIngredients(final Function<Integer, ItemStack> itemSupplier, final Supplier<Integer> maxSlotCheck) {
@@ -203,7 +191,13 @@ public class Utils {
     }
 
     public static void useQuality(final BlockEntity block, final ItemStack stack, @Nullable final Player player) {
-        BlockData data = block.getData(AttachmentHandler.BLOCK_DATA);
+        // No data = no cooking queue, meaning no quality to consume
+        BlockData data = block.getExistingDataOrNull(AttachmentHandler.BLOCK_DATA);
+
+        if (data == null) {
+            return;
+        }
+
         //noinspection DataFlowIssue -> level is present
         data.useQuality(stack, player, block.getLevel());
         block.setChanged();

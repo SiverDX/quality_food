@@ -20,7 +20,13 @@ public abstract class HopperBlockEntityMixin {
             return original.call(hopper, container, slot, direction);
         }
 
-        BlockData data = furnace.getData(AttachmentHandler.BLOCK_DATA);
+        // No data = no cooking queue, meaning there is nothing to consume / restore
+        BlockData data = furnace.getExistingDataOrNull(AttachmentHandler.BLOCK_DATA);
+
+        if (data == null) {
+            return original.call(hopper, container, slot, direction);
+        }
+
         BlockData.Snapshot snapshot = data.createSnapshot();
         boolean result = original.call(hopper, container, slot, direction);
 

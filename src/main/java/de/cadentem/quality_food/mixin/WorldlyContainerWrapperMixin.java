@@ -14,6 +14,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = WorldlyContainerWrapper.class, remap = false)
 public abstract class WorldlyContainerWrapperMixin {
@@ -21,12 +22,21 @@ public abstract class WorldlyContainerWrapperMixin {
     @Shadow @Final private VanillaContainerWrapper wrapper;
     @Shadow protected abstract int convertSlot(int slot);
 
+    /** See {@link AbstractFurnaceBlockEntity#SLOT_RESULT} */
+    @Unique private static final int FURNACE_RESULT_SLOT = 2;
+
     @WrapMethod(method = "getResource(I)Lnet/neoforged/neoforge/transfer/item/ItemResource;")
     private ItemResource quality_food$getResource(int index, final Operation<ItemResource> original) {
         ItemResource resource = original.call(index);
 
-        if (!resource.isEmpty() && container instanceof AbstractFurnaceBlockEntity furnace && convertSlot(index) == 2 && furnace.hasLevel() && !furnace.getLevel().isClientSide()) {
-            BlockData data = furnace.getData(AttachmentHandler.BLOCK_DATA);
+        if (!resource.isEmpty() && container instanceof AbstractFurnaceBlockEntity furnace && convertSlot(index) == FURNACE_RESULT_SLOT && furnace.hasLevel() && !furnace.getLevel().isClientSide()) {
+            // No data = no cooking queue, meaning the resource would not be modified
+            BlockData data = furnace.getExistingDataOrNull(AttachmentHandler.BLOCK_DATA);
+
+            if (data == null) {
+                return resource;
+            }
+
             ItemStack preview = data.previewQuality(resource.toStack(), furnace.getLevel());
             return ItemResource.of(preview);
         }
@@ -36,11 +46,11 @@ public abstract class WorldlyContainerWrapperMixin {
 
     @WrapMethod(method = "extract(ILnet/neoforged/neoforge/transfer/item/ItemResource;ILnet/neoforged/neoforge/transfer/transaction/TransactionContext;)I")
     private int quality_food$extract(int index, ItemResource resource, int amount, final TransactionContext transaction, final Operation<Integer> original) {
-        if (!resource.isEmpty() && container instanceof AbstractFurnaceBlockEntity furnace && convertSlot(index) == 2 && furnace.hasLevel() && !furnace.getLevel().isClientSide()) {
+        if (!resource.isEmpty() && container instanceof AbstractFurnaceBlockEntity furnace && convertSlot(index) == FURNACE_RESULT_SLOT && furnace.hasLevel() && !furnace.getLevel().isClientSide()) {
             ItemResource currentResource = ((WorldlyContainerWrapper) (Object) this).getResource(index);
 
             if (resource.equals(currentResource)) {
-                resource = wrapper.getResource(2);
+                resource = wrapper.getResource(FURNACE_RESULT_SLOT);
             }
 
             // Known limitation: a caller-built resource without quality (e.g. an item filter template) still matches the slot
@@ -48,7 +58,14 @@ public abstract class WorldlyContainerWrapperMixin {
             // Rejecting it instead would block such extractions completely
 
             // The previewed quality only applies to the head entries which are identical
-            int headRunLength = furnace.getData(AttachmentHandler.BLOCK_DATA).getHeadRunLength();
+            // No data = no cooking queue, meaning the amount would not be modified
+            BlockData data = furnace.getExistingDataOrNull(AttachmentHandler.BLOCK_DATA);
+
+            if (data == null) {
+                return original.call(index, resource, amount, transaction);
+            }
+
+            int headRunLength = data.getHeadRunLength();
 
             if (headRunLength > 0) {
                 amount = Math.min(amount, headRunLength);
