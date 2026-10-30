@@ -26,7 +26,7 @@ public abstract class FurnaceResultSlotMixin extends Slot {
         super(container, slot, x, y);
     }
 
-    @WrapMethod(method = "remove")
+    @WrapMethod(method = "remove(I)Lnet/minecraft/world/item/ItemStack;")
     private ItemStack quality_food$remove(int amount, final Operation<ItemStack> original) {
         Utils.SKIP_ABSTRACT_FURNACE_REMOVE_QUALITY.set(Boolean.TRUE);
 

@@ -21,7 +21,7 @@ public abstract class WorldlyContainerWrapperMixin {
     @Shadow @Final private VanillaContainerWrapper wrapper;
     @Shadow protected abstract int convertSlot(int slot);
 
-    @WrapMethod(method = "getResource")
+    @WrapMethod(method = "getResource(I)Lnet/neoforged/neoforge/transfer/item/ItemResource;")
     private ItemResource quality_food$getResource(int index, final Operation<ItemResource> original) {
         ItemResource resource = original.call(index);
 
@@ -34,13 +34,24 @@ public abstract class WorldlyContainerWrapperMixin {
         return resource;
     }
 
-    @WrapMethod(method = "extract")
+    @WrapMethod(method = "extract(ILnet/neoforged/neoforge/transfer/item/ItemResource;ILnet/neoforged/neoforge/transfer/transaction/TransactionContext;)I")
     private int quality_food$extract(int index, ItemResource resource, int amount, final TransactionContext transaction, final Operation<Integer> original) {
         if (!resource.isEmpty() && container instanceof AbstractFurnaceBlockEntity furnace && convertSlot(index) == 2 && furnace.hasLevel() && !furnace.getLevel().isClientSide()) {
             ItemResource currentResource = ((WorldlyContainerWrapper) (Object) this).getResource(index);
 
             if (resource.equals(currentResource)) {
                 resource = wrapper.getResource(2);
+            }
+
+            // Known limitation: a caller-built resource without quality (e.g. an item filter template) still matches the slot
+            // The items are extracted without quality while the cooking queue is consumed
+            // Rejecting it instead would block such extractions completely
+
+            // The previewed quality only applies to the head entries which are identical
+            int headRunLength = furnace.getData(AttachmentHandler.BLOCK_DATA).getHeadRunLength();
+
+            if (headRunLength > 0) {
+                amount = Math.min(amount, headRunLength);
             }
         }
 

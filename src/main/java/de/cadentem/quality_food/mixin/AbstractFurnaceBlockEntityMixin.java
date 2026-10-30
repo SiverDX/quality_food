@@ -40,6 +40,16 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
         super(type, position, state);
     }
 
+    /** Keep the cooking queue aligned with the amount of result items */
+    @Inject(method = "serverTick", at = @At("TAIL"))
+    private static void quality_food$trimCookingQueue(final ServerLevel level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity furnace, final CallbackInfo callback) {
+        BlockData data = furnace.getExistingDataOrNull(AttachmentHandler.BLOCK_DATA);
+
+        if (data != null && data.trimQueue(furnace.getItem(2).getCount())) {
+            furnace.setChanged();
+        }
+    }
+
     /** Display particles to show how much quality the block has stored */
     @Inject(method = "serverTick", at = @At("TAIL"))
     private static void quality_food$handleParticles(final ServerLevel level, final BlockPos position, final BlockState state, final AbstractFurnaceBlockEntity furnace, final CallbackInfo callback) {
@@ -57,27 +67,5 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BaseContainerBlock
             quality_food$cookingQueueJournal.updateSnapshots(transaction);
             getData(AttachmentHandler.BLOCK_DATA).consumeQuality(-amountChange);
         }
-    }
-
-    @Override
-    public ItemStack removeItem(int slot, int count) {
-        ItemStack result = super.removeItem(slot, count);
-
-        if (slot == 2 && !result.isEmpty() && !Boolean.TRUE.equals(Utils.SKIP_ABSTRACT_FURNACE_REMOVE_QUALITY.get()) && hasLevel() && !getLevel().isClientSide()) {
-            Utils.useQuality(this, result, null);
-        }
-
-        return result;
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int slot) {
-        ItemStack result = super.removeItemNoUpdate(slot);
-
-        if (slot == 2 && !result.isEmpty() && hasLevel() && !getLevel().isClientSide()) {
-            Utils.useQuality(this, result, null);
-        }
-
-        return result;
     }
 }

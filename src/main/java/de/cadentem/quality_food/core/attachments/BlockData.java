@@ -34,6 +34,18 @@ public class BlockData implements ValueIOSerializable {
             return;
         }
 
+        // The rolled quality may have already been shown (e.g. through a storage terminal) - taking it out should not re-roll it
+        if (previewQuality != null && stack.getCount() <= getHeadRunLength()) {
+            Quality preview = previewQuality;
+            consumeQuality(stack.getCount());
+
+            if (QualityUtils.isValidQuality(preview)) {
+                QualityUtils.applyQuality(stack, preview, true);
+            }
+
+            return;
+        }
+
         previewQuality = null;
 
         Set<Holder<QualityType>> qualities = new TreeSet<>(Comparator.comparingInt(quality -> quality.value().level()));
@@ -112,6 +124,24 @@ public class BlockData implements ValueIOSerializable {
         return copy;
     }
 
+    /**
+     * Removes the oldest entries until the queue is no larger than the given size <br>
+     * The result slot can change without consuming the queue (e.g. recipe book, commands or other mods setting the slot directly)
+     * @return Whether entries were removed
+     */
+    public boolean trimQueue(int size) {
+        if (cookingQueue.size() <= size) {
+            return false;
+        }
+
+        while (cookingQueue.size() > size) {
+            cookingQueue.poll();
+        }
+
+        previewQuality = null;
+        return true;
+    }
+
     public void consumeQuality(int count) {
         for (int i = 0; i < count; i++) {
             cookingQueue.poll();
@@ -131,6 +161,27 @@ public class BlockData implements ValueIOSerializable {
 
     public double getQueueSize() {
         return cookingQueue.size();
+    }
+
+    /** The number of consecutive entries at the head of the queue which are equal to the head entry */
+    public int getHeadRunLength() {
+        CookingEntry head = cookingQueue.peek();
+
+        if (head == null) {
+            return 0;
+        }
+
+        int length = 0;
+
+        for (CookingEntry entry : cookingQueue) {
+            if (!head.isSameAs(entry)) {
+                break;
+            }
+
+            length++;
+        }
+
+        return length;
     }
 
     public void addQualityEntry(final Holder<QualityType> type, double bonus) {
@@ -163,6 +214,14 @@ public class BlockData implements ValueIOSerializable {
         }
     }
 
-    public record CookingEntry(Holder<QualityType> type, double bonus) { }
+    public record CookingEntry(Holder<QualityType> type, double bonus) {
+        public boolean isSameAs(final CookingEntry other) {
+            if (Double.compare(bonus, other.bonus) != 0) {
+                return false;
+            }
+
+            return type.unwrapKey().equals(other.type.unwrapKey()) && (type.unwrapKey().isPresent() || type.value() == other.type.value());
+        }
+    }
     public record Snapshot(List<CookingEntry> entries, @Nullable Quality previewQuality) { }
 }
